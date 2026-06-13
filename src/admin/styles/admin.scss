@@ -1,0 +1,14 @@
+@use 'tokens';
+@use 'layout';
+@use 'components';
+
+/* Reset spacing WP admin adds */
+#slr-admin-root {
+  margin: 0;
+}
+
+/* Hide native select styles inside SLR app */
+.slr-app select.slr-input,
+.slr-app input.slr-input {
+  appearance: none;
+}

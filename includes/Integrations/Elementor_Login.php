@@ -1,0 +1,115 @@
+<?php
+/**
+ * Elementor login widget replacement.
+ *
+ * @package SLR
+ */
+
+namespace SLR\Integrations;
+
+use SLR\Settings;
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/**
+ * Class Elementor_Login
+ */
+class Elementor_Login {
+
+	/**
+	 * Constructor.
+	 */
+	public function __construct() {
+		add_action( 'elementor/widget/render_content', array( $this, 'replace_login_widget' ), 10, 2 );
+		add_action( 'elementor/dynamic_tags/register', array( $this, 'register_dynamic_tags' ) );
+	}
+
+	/**
+	 * Check if enabled.
+	 *
+	 * @return bool
+	 */
+	private function is_enabled() {
+		if ( ! did_action( 'elementor/loaded' ) ) {
+			return false;
+		}
+		$integrations = Settings::get( 'integrations' );
+		return Settings::to_bool( $integrations['replace_elementor'] ?? false );
+	}
+
+	/**
+	 * Replace Elementor login widget content.
+	 *
+	 * @param string              $content Widget content.
+	 * @param \Elementor\Widget_Base $widget Widget instance.
+	 * @return string
+	 */
+	public function replace_login_widget( $content, $widget ) {
+		if ( ! $this->is_enabled() || is_user_logged_in() ) {
+			return $content;
+		}
+
+		if ( 'login' !== $widget->get_name() ) {
+			return $content;
+		}
+
+		$page_url = $this->get_dedicated_page_url();
+
+		ob_start();
+		?>
+		<div class="slr-elementor-login-replace">
+			<button type="button" class="elementor-button elementor-size-sm" data-slr-open="login">
+				<?php esc_html_e( 'Log In', 'smart-login-registration' ); ?>
+			</button>
+			<?php if ( $page_url ) : ?>
+				<a href="<?php echo esc_url( $page_url ); ?>" data-slr-open="register"><?php esc_html_e( 'Register', 'smart-login-registration' ); ?></a>
+			<?php endif; ?>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	/**
+	 * Register Elementor dynamic tags.
+	 *
+	 * @param \Elementor\Core\DynamicTags\Manager $manager Tags manager.
+	 * @return void
+	 */
+	public function register_dynamic_tags( $manager ) {
+		if ( ! class_exists( '\Elementor\Core\DynamicTags\Data_Tag' ) ) {
+			return;
+		}
+
+		if ( method_exists( $manager, 'register_group' ) ) {
+			$manager->register_group(
+				'slr',
+				array(
+					'title' => __( 'SLR', 'smart-login-registration' ),
+				)
+			);
+		} elseif ( method_exists( $manager, 'register_tag_group' ) ) {
+			$manager->register_tag_group(
+				'slr',
+				array(
+					'title' => __( 'SLR', 'smart-login-registration' ),
+				)
+			);
+		}
+
+		require_once SLR_PLUGIN_DIR . 'includes/Elementor/DynamicTags/SlrOpenPopupTag.php';
+		$manager->register( new \SLR\Elementor\DynamicTags\SlrOpenPopupTag() );
+	}
+
+	/**
+	 * Get dedicated page URL.
+	 *
+	 * @return string
+	 */
+	private function get_dedicated_page_url() {
+		$general = Settings::get( 'general' );
+		$page_id = (int) ( $general['dedicated_page_id'] ?? 0 );
+		return $page_id ? ( get_permalink( $page_id ) ?: '' ) : '';
+	}
+}

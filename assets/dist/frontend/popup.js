@@ -1,0 +1,1 @@
+import{a as o,c as s,j as t,r as a,S as n}from"../chunks/main-DJ4ub7FZ.js";import{e as c}from"../chunks/slr-bridge-BxqbAC5U.js";c();const r=window.SLR_CONFIG,e=document.getElementById("slr-root");r&&e&&(o(r.style),s.createRoot(e).render(t.jsx(a.StrictMode,{children:t.jsx(n,{config:r})})));

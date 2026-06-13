@@ -1,0 +1,59 @@
+{
+  "_main-DJ4ub7FZ.js": {
+    "file": "chunks/main-DJ4ub7FZ.js",
+    "name": "main",
+    "imports": [
+      "_slr-bridge-BxqbAC5U.js"
+    ],
+    "dynamicImports": [
+      "node_modules/@simplewebauthn/browser/dist/bundle/index.js",
+      "node_modules/@simplewebauthn/browser/dist/bundle/index.js"
+    ],
+    "css": [
+      "frontend/main.css"
+    ]
+  },
+  "_main.css": {
+    "file": "frontend/main.css",
+    "src": "_main.css"
+  },
+  "_slr-bridge-BxqbAC5U.js": {
+    "file": "chunks/slr-bridge-BxqbAC5U.js",
+    "name": "slr-bridge"
+  },
+  "node_modules/@simplewebauthn/browser/dist/bundle/index.js": {
+    "file": "chunks/index-BQAGQHkb.js",
+    "name": "index",
+    "src": "node_modules/@simplewebauthn/browser/dist/bundle/index.js",
+    "isDynamicEntry": true
+  },
+  "src/frontend/bootstrap.ts": {
+    "file": "frontend/bootstrap.js",
+    "name": "src/frontend/bootstrap.ts",
+    "src": "src/frontend/bootstrap.ts",
+    "isEntry": true,
+    "imports": [
+      "_slr-bridge-BxqbAC5U.js"
+    ]
+  },
+  "src/frontend/main-page.tsx": {
+    "file": "frontend/page.js",
+    "name": "src/frontend/main-page.tsx",
+    "src": "src/frontend/main-page.tsx",
+    "isEntry": true,
+    "imports": [
+      "_main-DJ4ub7FZ.js",
+      "_slr-bridge-BxqbAC5U.js"
+    ]
+  },
+  "src/frontend/main-popup.tsx": {
+    "file": "frontend/popup.js",
+    "name": "src/frontend/main-popup.tsx",
+    "src": "src/frontend/main-popup.tsx",
+    "isEntry": true,
+    "imports": [
+      "_main-DJ4ub7FZ.js",
+      "_slr-bridge-BxqbAC5U.js"
+    ]
+  }
+}

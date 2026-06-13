@@ -1,0 +1,27 @@
+{
+  "name": "kazi-sadib-reza/smart-login-registration",
+  "description": "Smart Login Registration WordPress plugin",
+  "version": "1.0.0",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "php": ">=8.0",
+    "giggsey/libphonenumber-for-php": "^8.13"
+  },
+  "config": {
+    "sort-packages": true,
+    "preferred-install": "dist",
+    "allow-plugins": {
+      "php-http/discovery": true
+    },
+    "platform": {
+      "php": "8.0"
+    }
+  },
+  "scripts": {
+    "install:win": "composer install --prefer-source",
+    "post-install-cmd": [
+      "@php -r \"echo 'SLR: Composer dependencies installed.\\n';\""
+    ]
+  }
+}
