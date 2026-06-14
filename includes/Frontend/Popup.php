@@ -8,6 +8,7 @@
 namespace SLR\Frontend;
 
 use SLR\Assets;
+use SLR\Integrations\Integration_Availability;
 use SLR\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -67,7 +68,7 @@ class Popup {
 	 */
 	private function print_early_click_guard() {
 		$integrations = Settings::get( 'integrations' );
-		if ( ! Settings::to_bool( $integrations['replace_tutor'] ?? false ) ) {
+		if ( ! Integration_Availability::is_tutor_available() || ! Settings::to_bool( $integrations['replace_tutor'] ?? false ) ) {
 			return;
 		}
 		?>

@@ -7,6 +7,7 @@
 
 namespace SLR\Api;
 
+use SLR\Integrations\Integration_Availability;
 use SLR\Services\GoogleOAuthService;
 use SLR\Services\LoginPageService;
 use SLR\Services\MailService;
@@ -143,15 +144,17 @@ class SettingsController {
 	 * @return array
 	 */
 	private function sanitize_integrations( $section ) {
-		$keys = array( 'replace_wp_login', 'replace_woocommerce', 'replace_tutor', 'replace_elementor' );
+		if ( ! is_array( $section ) ) {
+			return array();
+		}
 
-		foreach ( $keys as $key ) {
+		foreach ( array( 'replace_wp_login', 'replace_woocommerce', 'replace_tutor', 'replace_elementor' ) as $key ) {
 			if ( array_key_exists( $key, $section ) ) {
 				$section[ $key ] = Settings::to_bool( $section[ $key ] );
 			}
 		}
 
-		return $section;
+		return Integration_Availability::sanitize_settings( $section );
 	}
 
 	/**
@@ -198,7 +201,8 @@ class SettingsController {
 		$settings['mail']['google_redirect_uri'] = $google_oauth->get_redirect_uri();
 
 		$settings['auth']['has_sms_provider'] = ! empty( apply_filters( 'slr_sms_providers', array() ) );
-		$settings['auth']['has_tutor_lms']    = function_exists( 'tutor_utils' );
+		$settings['auth']['has_tutor_lms']    = Integration_Availability::is_tutor_available();
+		$settings['integration_plugins']      = Integration_Availability::get_plugin_map();
 
 		return rest_ensure_response( $settings );
 	}

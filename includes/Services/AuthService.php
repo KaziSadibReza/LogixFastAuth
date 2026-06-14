@@ -250,6 +250,9 @@ class AuthService {
 
 		$credentials = apply_filters( 'slr_login_credentials', $credentials, $user );
 
+		// Clear any existing auth cookies before issuing a new session.
+		wp_clear_auth_cookie();
+
 		$new_logged_in_cookie = '';
 		$cookie_capture       = function ( $cookie ) use ( &$new_logged_in_cookie ) {
 			$new_logged_in_cookie = $cookie;

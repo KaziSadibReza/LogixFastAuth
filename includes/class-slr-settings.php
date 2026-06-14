@@ -7,6 +7,8 @@
 
 namespace SLR;
 
+use SLR\Integrations\Integration_Availability;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -185,7 +187,7 @@ class Settings {
 			'dedicatedLoginUrl' => $dedicated_url,
 			'redirectTo'        => $redirect_to,
 			'integrations'      => array(
-				'replaceTutor' => self::to_bool( $integrations['replace_tutor'] ?? false ),
+				'replaceTutor' => Integration_Availability::is_tutor_available() && self::to_bool( $integrations['replace_tutor'] ?? false ),
 			),
 			'defaultMode' => $all['general']['default_mode'],
 			'otpTtl'                 => (int) ( $all['security']['otp_ttl'] ?? 600 ),

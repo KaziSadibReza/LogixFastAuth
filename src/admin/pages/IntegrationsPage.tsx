@@ -3,6 +3,7 @@ import { useSettings } from '../context/SettingsContext';
 import { Card, Icon, IntegrationIconCard, IntegrationToggleCard, IntegrationsPageSkeleton } from '../ui';
 
 type IntegrationKey = 'replace_wp_login' | 'replace_woocommerce' | 'replace_tutor' | 'replace_elementor';
+type PluginKey = 'wordpress' | 'woocommerce' | 'tutor' | 'elementor';
 
 type IntegrationItem = {
   key: IntegrationKey;
@@ -11,6 +12,20 @@ type IntegrationItem = {
   iconVariant: 'wp' | 'woo' | 'tutor' | 'elementor';
   description: string;
   requiresDedicatedPage?: boolean;
+};
+
+const pluginKeyByIntegration: Record<IntegrationKey, PluginKey> = {
+  replace_wp_login: 'wordpress',
+  replace_woocommerce: 'woocommerce',
+  replace_tutor: 'tutor',
+  replace_elementor: 'elementor',
+};
+
+const defaultPluginAvailability: Record<PluginKey, boolean> = {
+  wordpress: true,
+  woocommerce: false,
+  tutor: false,
+  elementor: false,
 };
 
 const loginIntegrations: IntegrationItem[] = [
@@ -77,6 +92,8 @@ export function IntegrationsPage() {
 
   const integ = settings.integrations;
   const hasDedicatedPage = Boolean(settings.general.dedicated_page_id);
+  const plugins = { ...defaultPluginAvailability, ...settings.integration_plugins };
+  const showProfileSync = plugins.woocommerce || plugins.tutor;
 
   return (
     <>
@@ -100,92 +117,113 @@ export function IntegrationsPage() {
             </p>
           )}
           <div className="slr-integration-toggle-grid">
-            {loginIntegrations.map((item) => (
-              <IntegrationToggleCard
-                key={item.key}
-                icon={item.icon}
-                iconVariant={item.iconVariant}
-                title={item.label}
-                description={
-                  item.requiresDedicatedPage && !hasDedicatedPage
-                    ? `${item.description} Set a dedicated login page in General for redirects.`
-                    : item.description
-                }
-                active={Boolean(integ[item.key])}
-                onChange={(checked) => updateSection('integrations', { [item.key]: checked })}
-              />
-            ))}
+            {loginIntegrations.map((item) => {
+              const pluginKey = pluginKeyByIntegration[item.key];
+              const isAvailable = plugins[pluginKey];
+              const unavailableHint = `${item.label} is not installed or not active.`;
+
+              return (
+                <IntegrationToggleCard
+                  key={item.key}
+                  icon={item.icon}
+                  iconVariant={item.iconVariant}
+                  title={item.label}
+                  description={
+                    !isAvailable
+                      ? unavailableHint
+                      : item.requiresDedicatedPage && !hasDedicatedPage
+                        ? `${item.description} Set a dedicated login page in General for redirects.`
+                        : item.description
+                  }
+                  active={isAvailable && Boolean(integ[item.key])}
+                  disabled={!isAvailable}
+                  hint={unavailableHint}
+                  onChange={(checked) => {
+                    if (!isAvailable) {
+                      return;
+                    }
+                    updateSection('integrations', { [item.key]: checked });
+                  }}
+                />
+              );
+            })}
           </div>
         </div>
       </Card>
 
-      <div className="slr-page-columns slr-page-columns--split">
-        <Card
-          className="slr-card--flush-body"
-          title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon">
-                <Icon icon={Link2} size={18} />
+      {showProfileSync && (
+        <div className="slr-page-columns slr-page-columns--split">
+          <Card
+            className="slr-card--flush-body"
+            title={
+              <span className="slr-card-title-row">
+                <span className="slr-card-title-icon">
+                  <Icon icon={Link2} size={18} />
+                </span>
+                Profile field sync
               </span>
-              Profile field sync
-            </span>
-          }
-          description="Registration data syncs to existing WooCommerce and Tutor profile fields."
-          bodyClassName="slr-card-body--flush"
-        >
-          <div className="slr-integrations-panel">
-            <div className="slr-icon-card-grid">
-              <IntegrationIconCard
-                icon={ShoppingCart}
-                iconVariant="woo"
-                title="WooCommerce"
-                description="Customer billing & profile fields"
-                code="billing_*"
-                badge={{ variant: 'default', label: 'Auto-sync' }}
-              />
-              <IntegrationIconCard
-                icon={GraduationCap}
-                iconVariant="tutor"
-                title="Tutor LMS"
-                description="My Profile dashboard fields"
-                code="phone_number"
-                badge={{ variant: 'success', label: 'Integrated' }}
-              />
+            }
+            description="Registration data syncs to existing WooCommerce and Tutor profile fields."
+            bodyClassName="slr-card-body--flush"
+          >
+            <div className="slr-integrations-panel">
+              <div className="slr-icon-card-grid">
+                {plugins.woocommerce && (
+                  <IntegrationIconCard
+                    icon={ShoppingCart}
+                    iconVariant="woo"
+                    title="WooCommerce"
+                    description="Customer billing & profile fields"
+                    code="billing_*"
+                    badge={{ variant: 'default', label: 'Auto-sync' }}
+                  />
+                )}
+                {plugins.tutor && (
+                  <IntegrationIconCard
+                    icon={GraduationCap}
+                    iconVariant="tutor"
+                    title="Tutor LMS"
+                    description="My Profile dashboard fields"
+                    code="phone_number"
+                    badge={{ variant: 'success', label: 'Integrated' }}
+                  />
+                )}
+              </div>
             </div>
-          </div>
-        </Card>
+          </Card>
 
-        <Card
-          className="slr-card--flush-body"
-          title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon slr-card-title-icon--success">
-                <Icon icon={Link2} size={18} />
+          <Card
+            className="slr-card--flush-body"
+            title={
+              <span className="slr-card-title-row">
+                <span className="slr-card-title-icon slr-card-title-icon--success">
+                  <Icon icon={Link2} size={18} />
+                </span>
+                Field mappings
               </span>
-              Field mappings
-            </span>
-          }
-          description="How SLR registration fields map to each platform."
-          bodyClassName="slr-card-body--flush"
-        >
-          <div className="slr-integrations-panel">
-            <div className="slr-field-mapping-list">
-              {fieldSyncMappings.map((row) => (
-                <div key={row.label} className="slr-field-mapping-row">
-                  <div className="slr-field-mapping-label">{row.label}</div>
-                  <div className="slr-field-mapping-targets">
-                    {row.targets.map((code) => (
-                      <code key={code} className="slr-icon-card__code">
-                        {code}
-                      </code>
-                    ))}
+            }
+            description="How SLR registration fields map to each platform."
+            bodyClassName="slr-card-body--flush"
+          >
+            <div className="slr-integrations-panel">
+              <div className="slr-field-mapping-list">
+                {fieldSyncMappings.map((row) => (
+                  <div key={row.label} className="slr-field-mapping-row">
+                    <div className="slr-field-mapping-label">{row.label}</div>
+                    <div className="slr-field-mapping-targets">
+                      {row.targets.map((code) => (
+                        <code key={code} className="slr-icon-card__code">
+                          {code}
+                        </code>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        </Card>
-      </div>
+          </Card>
+        </div>
+      )}
     </>
   );
 }

@@ -107,6 +107,12 @@ export interface SlrSettings {
     otp_max_attempts: number;
     webauthn_rp_id: string;
   };
+  integration_plugins?: {
+    wordpress: boolean;
+    woocommerce: boolean;
+    tutor: boolean;
+    elementor: boolean;
+  };
 }
 
 export type SlrRedirectType = 'stay' | 'default' | 'page' | 'url';

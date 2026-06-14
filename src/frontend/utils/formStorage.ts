@@ -1,6 +1,7 @@
 import type { SlrMode } from '@shared/types';
 
-const STORAGE_KEY = 'slr_form_session';
+const FORM_STORAGE_KEY = 'slr_form_session';
+const SECURE_STORAGE_KEY = 'slr_secure_session';
 
 export type OtpPurpose = 'register' | 'login' | 'reset';
 
@@ -25,55 +26,108 @@ export interface SlrFormSession {
     phone: string;
     usePhone: boolean;
   };
+}
+
+interface SlrSecureSession {
   otp: SlrOtpSession | null;
   resetToken: string;
 }
 
-const defaultSession = (): SlrFormSession => ({
+const defaultFormSession = (): SlrFormSession => ({
   loginEmail: '',
   register: { fullName: '', email: '', phone: '' },
   forgot: { email: '', phone: '', usePhone: false },
+});
+
+const defaultSecureSession = (): SlrSecureSession => ({
   otp: null,
   resetToken: '',
 });
 
-export function loadFormSession(): SlrFormSession {
-  if (typeof window === 'undefined') return defaultSession();
+function readStorage<T>(key: string, storage: Storage, fallback: () => T): T {
+  if (typeof window === 'undefined') {
+    return fallback();
+  }
+
   try {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
-    if (!raw) return defaultSession();
-    const parsed = JSON.parse(raw) as Partial<SlrFormSession>;
-    return {
-      ...defaultSession(),
-      ...parsed,
-      register: { ...defaultSession().register, ...parsed.register },
-      forgot: { ...defaultSession().forgot, ...parsed.forgot },
-    };
+    const raw = storage.getItem(key);
+    if (!raw) {
+      return fallback();
+    }
+
+    return { ...fallback(), ...(JSON.parse(raw) as Partial<T>) };
   } catch {
-    return defaultSession();
+    return fallback();
   }
 }
 
-export function saveFormSession(patch: Partial<SlrFormSession>): SlrFormSession {
-  const next = { ...loadFormSession(), ...patch };
+function writeStorage<T>(key: string, storage: Storage, value: T): void {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  storage.setItem(key, JSON.stringify(value));
+}
+
+function loadSecureSession(): SlrSecureSession {
+  return readStorage(SECURE_STORAGE_KEY, window.sessionStorage, defaultSecureSession);
+}
+
+function saveSecureSession(patch: Partial<SlrSecureSession>): SlrSecureSession {
+  const next = { ...loadSecureSession(), ...patch };
+  writeStorage(SECURE_STORAGE_KEY, window.sessionStorage, next);
+  return next;
+}
+
+export function loadFormSession(): SlrFormSession & SlrSecureSession {
+  const form = readStorage(FORM_STORAGE_KEY, window.localStorage, defaultFormSession);
+  const secure = typeof window === 'undefined' ? defaultSecureSession() : loadSecureSession();
+
+  return {
+    ...form,
+    register: { ...defaultFormSession().register, ...form.register },
+    forgot: { ...defaultFormSession().forgot, ...form.forgot },
+    otp: secure.otp,
+    resetToken: secure.resetToken,
+  };
+}
+
+export function saveFormSession(patch: Partial<SlrFormSession & SlrSecureSession>): SlrFormSession & SlrSecureSession {
+  const current = loadFormSession();
+  const next = { ...current, ...patch };
+
   if (patch.register) {
-    next.register = { ...loadFormSession().register, ...patch.register };
+    next.register = { ...current.register, ...patch.register };
   }
+
   if (patch.forgot) {
-    next.forgot = { ...loadFormSession().forgot, ...patch.forgot };
+    next.forgot = { ...current.forgot, ...patch.forgot };
   }
-  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+
+  writeStorage(FORM_STORAGE_KEY, window.localStorage, {
+    loginEmail: next.loginEmail,
+    register: next.register,
+    forgot: next.forgot,
+  });
+
+  saveSecureSession({
+    otp: 'otp' in patch ? patch.otp ?? null : current.otp,
+    resetToken: 'resetToken' in patch ? patch.resetToken ?? '' : current.resetToken,
+  });
+
   return next;
 }
 
 export function saveOtpSession(session: SlrOtpSession | null): void {
-  saveFormSession({ otp: session });
+  saveSecureSession({ otp: session });
 }
 
 export function getActiveOtpSession(): SlrOtpSession | null {
-  const { otp } = loadFormSession();
+  const { otp } = loadSecureSession();
   if (!otp || otp.expiresAt <= Date.now()) {
-    if (otp) saveOtpSession(null);
+    if (otp) {
+      saveOtpSession(null);
+    }
     return null;
   }
   return otp;
@@ -85,8 +139,10 @@ export function getActiveOtpSessionForPurpose(purpose: OtpPurpose): SlrOtpSessio
 }
 
 export function extendOtpSession(expiresAt: number): void {
-  const { otp } = loadFormSession();
-  if (!otp) return;
+  const { otp } = loadSecureSession();
+  if (!otp) {
+    return;
+  }
   saveOtpSession({ ...otp, expiresAt });
 }
 
@@ -101,7 +157,7 @@ export function isSessionExpiredError(message: string): boolean {
 }
 
 export function getStoredPendingToken(identifier: string, channel: string): string | undefined {
-  const { otp } = loadFormSession();
+  const { otp } = loadSecureSession();
   if (!otp || otp.identifier !== identifier || otp.channel !== channel) {
     return undefined;
   }
@@ -113,5 +169,5 @@ export function clearOtpSession(): void {
 }
 
 export function clearResetToken(): void {
-  saveFormSession({ resetToken: '' });
+  saveSecureSession({ resetToken: '' });
 }

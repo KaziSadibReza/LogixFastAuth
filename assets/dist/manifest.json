@@ -1,6 +1,6 @@
 {
-  "_main-DJ4ub7FZ.js": {
-    "file": "chunks/main-DJ4ub7FZ.js",
+  "_main-yFs5Iu3R.js": {
+    "file": "chunks/main-yFs5Iu3R.js",
     "name": "main",
     "imports": [
       "_slr-bridge-BxqbAC5U.js"
@@ -42,7 +42,7 @@
     "src": "src/frontend/main-page.tsx",
     "isEntry": true,
     "imports": [
-      "_main-DJ4ub7FZ.js",
+      "_main-yFs5Iu3R.js",
       "_slr-bridge-BxqbAC5U.js"
     ]
   },
@@ -52,7 +52,7 @@
     "src": "src/frontend/main-popup.tsx",
     "isEntry": true,
     "imports": [
-      "_main-DJ4ub7FZ.js",
+      "_main-yFs5Iu3R.js",
       "_slr-bridge-BxqbAC5U.js"
     ]
   }

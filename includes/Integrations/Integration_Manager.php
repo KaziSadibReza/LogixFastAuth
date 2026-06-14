@@ -23,12 +23,37 @@ class Integration_Manager {
 	 */
 	public function __construct() {
 		new WordPress_Login();
-		new WooCommerce_Login();
-		new Tutor_Login();
-		new Tutor_Passkeys();
-		new Elementor_Login();
 
+		add_action( 'plugins_loaded', array( $this, 'load_third_party_integrations' ), 20 );
+		add_action( 'elementor/loaded', array( $this, 'load_elementor_integration' ) );
 		add_action( 'admin_notices', array( $this, 'conflict_notices' ) );
+	}
+
+	/**
+	 * Load WooCommerce and Tutor integrations after other plugins bootstrap.
+	 *
+	 * @return void
+	 */
+	public function load_third_party_integrations() {
+		if ( Integration_Availability::is_woocommerce_available() ) {
+			new WooCommerce_Login();
+		}
+
+		if ( Integration_Availability::is_tutor_available() ) {
+			new Tutor_Login();
+			new Tutor_Passkeys();
+		}
+	}
+
+	/**
+	 * Load Elementor integration once Elementor has booted.
+	 *
+	 * @return void
+	 */
+	public function load_elementor_integration() {
+		if ( Integration_Availability::is_elementor_available() ) {
+			new Elementor_Login();
+		}
 	}
 
 	/**

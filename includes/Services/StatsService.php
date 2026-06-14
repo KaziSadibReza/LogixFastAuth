@@ -7,6 +7,7 @@
 
 namespace SLR\Services;
 
+use SLR\Integrations\Integration_Availability;
 use SLR\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -85,7 +86,7 @@ class StatsService {
 
 		$active_integrations = 0;
 		foreach ( array( 'replace_wp_login', 'replace_woocommerce', 'replace_tutor', 'replace_elementor' ) as $key ) {
-			if ( ! empty( $integ[ $key ] ) ) {
+			if ( ! empty( $integ[ $key ] ) && Integration_Availability::is_setting_available( $key ) ) {
 				++$active_integrations;
 			}
 		}
