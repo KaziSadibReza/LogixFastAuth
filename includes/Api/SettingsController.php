@@ -176,7 +176,19 @@ class SettingsController {
 	 * @return \WP_REST_Response
 	 */
 	public function get_settings() {
-		$settings = Settings::get_all();
+		return rest_ensure_response( $this->format_settings_response( Settings::get_all() ) );
+	}
+
+	/**
+	 * Prepare settings payload for admin API responses.
+	 *
+	 * @param array $settings Raw settings.
+	 * @return array
+	 */
+	private function format_settings_response( $settings ) {
+		if ( ! is_array( $settings ) ) {
+			$settings = array();
+		}
 
 		if ( ! empty( $settings['integrations'] ) && is_array( $settings['integrations'] ) ) {
 			$settings['integrations'] = $this->sanitize_integrations( $settings['integrations'] );
@@ -196,15 +208,15 @@ class SettingsController {
 			$settings['mail']['google_client_secret'] = '********';
 		}
 
-		$google_oauth                         = new GoogleOAuthService();
-		$settings['mail']['google_configured'] = $google_oauth->is_configured();
+		$google_oauth                            = new GoogleOAuthService();
+		$settings['mail']['google_configured']   = $google_oauth->is_configured();
 		$settings['mail']['google_redirect_uri'] = $google_oauth->get_redirect_uri();
 
 		$settings['auth']['has_sms_provider'] = ! empty( apply_filters( 'slr_sms_providers', array() ) );
 		$settings['auth']['has_tutor_lms']    = Integration_Availability::is_tutor_available();
 		$settings['integration_plugins']      = Integration_Availability::get_plugin_map();
 
-		return rest_ensure_response( $settings );
+		return $settings;
 	}
 
 	/**
@@ -260,17 +272,7 @@ class SettingsController {
 			}
 		}
 
-		$result = Settings::get_all();
-
-		if ( ! empty( $result['integrations'] ) && is_array( $result['integrations'] ) ) {
-			$result['integrations'] = $this->sanitize_integrations( $result['integrations'] );
-		}
-
-		if ( ! empty( $result['auth'] ) && is_array( $result['auth'] ) ) {
-			$result['auth'] = $this->sanitize_auth( $result['auth'] );
-		}
-
-		return rest_ensure_response( $result );
+		return rest_ensure_response( $this->format_settings_response( Settings::get_all() ) );
 	}
 
 	/**

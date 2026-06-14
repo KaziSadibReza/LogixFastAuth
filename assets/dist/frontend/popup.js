@@ -1,1 +1,1 @@
-import{a as o,c as s,j as t,r as a,S as n}from"../chunks/main-yFs5Iu3R.js";import{e as c}from"../chunks/slr-bridge-BxqbAC5U.js";c();const r=window.SLR_CONFIG,e=document.getElementById("slr-root");r&&e&&(o(r.style),s.createRoot(e).render(t.jsx(a.StrictMode,{children:t.jsx(n,{config:r})})));
+import{a as o,c as s,j as t,r as a,S as n}from"../chunks/main-C-D4jHew.js";import{e as c}from"../chunks/slr-bridge-BcnOibz4.js";c();const r=window.SLR_CONFIG,e=document.getElementById("slr-root");r&&e&&(o(r.style),s.createRoot(e).render(t.jsx(a.StrictMode,{children:t.jsx(n,{config:r})})));

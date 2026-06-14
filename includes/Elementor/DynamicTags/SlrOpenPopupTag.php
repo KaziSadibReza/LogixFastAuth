@@ -9,6 +9,7 @@ namespace SLR\Elementor\DynamicTags;
 
 use Elementor\Core\DynamicTags\Data_Tag;
 use Elementor\Modules\DynamicTags\Module as TagsModule;
+use SLR\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -82,6 +83,11 @@ class SlrOpenPopupTag extends Data_Tag {
 	 * @return string
 	 */
 	public function get_value( array $options = array() ) {
+		$integrations = Settings::get( 'integrations' );
+		if ( ! Settings::to_bool( $integrations['replace_elementor'] ?? false ) ) {
+			return '#';
+		}
+
 		$mode = $this->get_settings( 'mode' );
 
 		if ( ! in_array( $mode, array( 'login', 'register' ), true ) ) {

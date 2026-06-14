@@ -187,7 +187,8 @@ class Settings {
 			'dedicatedLoginUrl' => $dedicated_url,
 			'redirectTo'        => $redirect_to,
 			'integrations'      => array(
-				'replaceTutor' => Integration_Availability::is_tutor_available() && self::to_bool( $integrations['replace_tutor'] ?? false ),
+				'replaceTutor'     => Integration_Availability::is_tutor_available() && self::to_bool( $integrations['replace_tutor'] ?? false ),
+				'replaceElementor' => Integration_Availability::is_elementor_available() && self::to_bool( $integrations['replace_elementor'] ?? false ),
 			),
 			'defaultMode' => $all['general']['default_mode'],
 			'otpTtl'                 => (int) ( $all['security']['otp_ttl'] ?? 600 ),

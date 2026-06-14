@@ -19,14 +19,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Integration_Manager {
 
 	/**
+	 * Whether Elementor integration has been bootstrapped.
+	 *
+	 * @var bool
+	 */
+	private $elementor_loaded = false;
+
+	/**
 	 * Constructor.
 	 */
 	public function __construct() {
 		new WordPress_Login();
 
 		add_action( 'plugins_loaded', array( $this, 'load_third_party_integrations' ), 20 );
-		add_action( 'elementor/loaded', array( $this, 'load_elementor_integration' ) );
+		add_action( 'elementor/init', array( $this, 'load_elementor_integration' ) );
 		add_action( 'admin_notices', array( $this, 'conflict_notices' ) );
+
+		if ( did_action( 'elementor/init' ) ) {
+			$this->load_elementor_integration();
+		}
 	}
 
 	/**
@@ -46,14 +57,17 @@ class Integration_Manager {
 	}
 
 	/**
-	 * Load Elementor integration once Elementor has booted.
+	 * Load Elementor integration after Elementor components are ready.
 	 *
 	 * @return void
 	 */
 	public function load_elementor_integration() {
-		if ( Integration_Availability::is_elementor_available() ) {
-			new Elementor_Login();
+		if ( $this->elementor_loaded || ! Integration_Availability::is_elementor_available() ) {
+			return;
 		}
+
+		$this->elementor_loaded = true;
+		new Elementor_Login();
 	}
 
 	/**

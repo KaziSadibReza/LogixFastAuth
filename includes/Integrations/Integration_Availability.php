@@ -56,20 +56,33 @@ class Integration_Availability {
 	}
 
 	/**
-	 * Whether Elementor Pro is installed and active.
+	 * Whether Elementor is installed and active.
 	 *
 	 * @return bool
 	 */
 	public static function is_elementor_available() {
 		if ( did_action( 'elementor/loaded' ) ) {
-			return defined( 'ELEMENTOR_PRO_VERSION' );
+			return true;
 		}
 
 		if ( ! function_exists( 'is_plugin_active' ) ) {
 			require_once ABSPATH . 'wp-admin/includes/plugin.php';
 		}
 
-		return is_plugin_active( 'elementor/elementor.php' ) && is_plugin_active( 'elementor-pro/elementor-pro.php' );
+		return is_plugin_active( 'elementor/elementor.php' );
+	}
+
+	/**
+	 * Whether Elementor Pro is installed and active.
+	 *
+	 * @return bool
+	 */
+	public static function is_elementor_pro_available() {
+		if ( defined( 'ELEMENTOR_PRO_VERSION' ) ) {
+			return true;
+		}
+
+		return class_exists( '\ElementorPro\Plugin' );
 	}
 
 	/**

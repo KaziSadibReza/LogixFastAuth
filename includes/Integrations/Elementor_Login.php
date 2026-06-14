@@ -40,6 +40,15 @@ class Elementor_Login {
 	}
 
 	/**
+	 * Whether the Elementor Pro login widget should be replaced.
+	 *
+	 * @return bool
+	 */
+	private function is_widget_replacement_enabled() {
+		return $this->is_enabled() && Integration_Availability::is_elementor_pro_available();
+	}
+
+	/**
 	 * Replace Elementor login widget content.
 	 *
 	 * @param string              $content Widget content.
@@ -47,7 +56,7 @@ class Elementor_Login {
 	 * @return string
 	 */
 	public function replace_login_widget( $content, $widget ) {
-		if ( ! $this->is_enabled() || is_user_logged_in() ) {
+		if ( ! $this->is_widget_replacement_enabled() || is_user_logged_in() ) {
 			return $content;
 		}
 
@@ -78,7 +87,7 @@ class Elementor_Login {
 	 * @return void
 	 */
 	public function register_dynamic_tags( $manager ) {
-		if ( ! class_exists( '\Elementor\Core\DynamicTags\Data_Tag' ) ) {
+		if ( ! $this->is_enabled() || ! class_exists( '\Elementor\Core\DynamicTags\Data_Tag' ) ) {
 			return;
 		}
 

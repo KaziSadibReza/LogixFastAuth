@@ -87,7 +87,42 @@ function parseModeFromHref(href: string): SlrMode | null {
   return null;
 }
 
+function isTutorPopupTrigger(el: HTMLElement): boolean {
+  return Boolean(
+    el.closest('.slr-tutor-login-replace, .slr-tutor-login-replace-wrap, .slr-tutor-login-popup-only')
+  );
+}
+
+function isElementorPopupTrigger(el: HTMLElement): boolean {
+  return Boolean(el.closest('.slr-elementor-login-replace'));
+}
+
+function canOpenSlrTrigger(el: HTMLElement): boolean {
+  const integrations = config?.integrations;
+  if (!integrations) {
+    return false;
+  }
+
+  if (isTutorPopupTrigger(el)) {
+    return Boolean(integrations.replaceTutor);
+  }
+
+  if (isElementorPopupTrigger(el)) {
+    return Boolean(integrations.replaceElementor);
+  }
+
+  return Boolean(integrations.replaceTutor || integrations.replaceElementor);
+}
+
+function canOpenSlrHashLink(): boolean {
+  return Boolean(config?.integrations?.replaceElementor);
+}
+
 function openFromLocationHash(): void {
+  if (!canOpenSlrHashLink()) {
+    return;
+  }
+
   const mode = parseModeFromHref(window.location.hash);
   if (mode) openPopup(mode);
 }
@@ -203,6 +238,10 @@ export function ensureSlrBridge(): void {
   document.addEventListener('click', (event) => {
     const target = (event.target as HTMLElement).closest<HTMLElement>('[data-slr-open]');
     if (target) {
+      if (!canOpenSlrTrigger(target)) {
+        return;
+      }
+
       event.preventDefault();
       const mode = (target.getAttribute('data-slr-open') || 'login') as SlrMode;
       openPopup(mode);
@@ -210,7 +249,7 @@ export function ensureSlrBridge(): void {
     }
 
     const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href*="slr-open-"]');
-    if (!link) return;
+    if (!link || !canOpenSlrHashLink()) return;
 
     const mode = parseModeFromHref(link.getAttribute('href') || '');
     if (!mode) return;

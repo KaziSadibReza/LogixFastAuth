@@ -58,7 +58,7 @@ const loginIntegrations: IntegrationItem[] = [
     label: 'Elementor',
     icon: PenLine,
     iconVariant: 'elementor',
-    description: 'Swap the Elementor Pro login widget for an SLR trigger.',
+    description: 'Replace the Elementor Pro login widget and enable SLR dynamic tags.',
   },
 ];
 

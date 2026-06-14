@@ -29,6 +29,7 @@ export interface SlrConfig {
   redirectTo?: string;
   integrations?: {
     replaceTutor: boolean;
+    replaceElementor: boolean;
   };
   defaultMode: 'login' | 'register';
   auth: SlrAuthConfig;
