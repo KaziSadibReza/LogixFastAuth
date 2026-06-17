@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Integrations;
+namespace SLR\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Settings;
 
@@ -163,11 +163,14 @@ class WooCommerce_Login {
 	 * @return string
 	 */
 	private function get_current_url() {
-		if ( empty( $_SERVER['HTTP_HOST'] ) || empty( $_SERVER['REQUEST_URI'] ) ) {
+		$host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+		if ( '' === $host || '' === $uri ) {
 			return function_exists( 'wc_get_page_permalink' ) ? (string) wc_get_page_permalink( 'myaccount' ) : '';
 		}
 
 		$scheme = is_ssl() ? 'https://' : 'http://';
-		return $scheme . wp_unslash( $_SERVER['HTTP_HOST'] ) . wp_unslash( $_SERVER['REQUEST_URI'] );
+		return $scheme . $host . $uri;
 	}
 }

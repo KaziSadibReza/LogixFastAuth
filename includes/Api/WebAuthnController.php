@@ -5,11 +5,12 @@
  * @package SLR
  */
 
-namespace SLR\Api;
+namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Database\WebAuthnRepository;
 use SLR\Services\AuthService;
 use SLR\Services\RateLimiter;
+use SLR\Services\SpamProtection;
 use SLR\Services\WebAuthnService;
 use WP_REST_Server;
 
@@ -175,13 +176,19 @@ class WebAuthnController {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function login_options( $request ) {
-		$data  = $request->get_json_params() ?: array();
-		$email = sanitize_email( $data['email'] ?? '' );
+		$data = $request->get_json_params() ?: array();
 
-		$rate = ( new RateLimiter() )->check( 'webauthn', RateLimiter::get_client_ip() );
+		$spam = ( new SpamProtection() )->verify( $data );
+		if ( is_wp_error( $spam ) ) {
+			return $spam;
+		}
+
+		$rate = RateLimiter::throttle_scoped( 'webauthn' );
 		if ( is_wp_error( $rate ) ) {
 			return $rate;
 		}
+
+		$email  = sanitize_email( $data['email'] ?? '' );
 
 		$result = ( new WebAuthnService() )->get_login_options( $email );
 		if ( is_wp_error( $result ) ) {
@@ -197,12 +204,24 @@ class WebAuthnController {
 	 * @return \WP_REST_Response|\WP_Error
 	 */
 	public function login_verify( $request ) {
-		$data        = $request->get_json_params() ?: array();
+		$data = $request->get_json_params() ?: array();
+
+		$spam = ( new SpamProtection() )->verify( $data );
+		if ( is_wp_error( $spam ) ) {
+			return $spam;
+		}
+
+		$rate = RateLimiter::throttle_scoped( 'webauthn' );
+		if ( is_wp_error( $rate ) ) {
+			return $rate;
+		}
+
 		$session_key = sanitize_text_field( $data['sessionKey'] ?? '' );
-		$response    = $data['response'] ?? array();
+		$response    = is_array( $data['response'] ?? null ) ? $data['response'] : array();
 
 		$user_id = ( new WebAuthnService() )->verify_login( $session_key, $response );
 		if ( is_wp_error( $user_id ) ) {
+			( new RateLimiter() )->record_failure( 'webauthn', RateLimiter::get_client_ip() );
 			return $user_id;
 		}
 

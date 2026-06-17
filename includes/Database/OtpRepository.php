@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Database;
+namespace SLR\Database; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Activator;
 
@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class OtpRepository
  */
+// phpcs:disable WordPress.DB.DirectDatabaseQuery
 class OtpRepository {
 
 	/**
@@ -55,9 +56,6 @@ class OtpRepository {
 		}
 
 		if ( false === $inserted ) {
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! empty( $wpdb->last_error ) ) {
-				error_log( '[SLR] OTP insert failed: ' . $wpdb->last_error );
-			}
 			return false;
 		}
 
@@ -108,6 +106,7 @@ class OtpRepository {
 
 		return $wpdb->get_row(
 			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is wpdb-prefixed and internal.
 				"SELECT * FROM {$this->table()} WHERE identifier = %s AND channel = %s AND purpose = %s ORDER BY id DESC LIMIT 1",
 				$identifier,
 				$channel,
@@ -124,6 +123,7 @@ class OtpRepository {
 	 */
 	public function increment_attempts( $id ) {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is wpdb-prefixed and internal.
 		$wpdb->query( $wpdb->prepare( "UPDATE {$this->table()} SET attempts = attempts + 1 WHERE id = %d", $id ) );
 	}
 
@@ -138,3 +138,4 @@ class OtpRepository {
 		$wpdb->delete( $this->table(), array( 'id' => $id ), array( '%d' ) );
 	}
 }
+// phpcs:enable WordPress.DB.DirectDatabaseQuery

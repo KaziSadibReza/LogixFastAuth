@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Integrations;
+namespace SLR\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Settings;
 
@@ -348,12 +348,15 @@ class Tutor_Login {
 			}
 		}
 
-		if ( empty( $_SERVER['HTTP_HOST'] ) || empty( $_SERVER['REQUEST_URI'] ) ) {
+		$host = isset( $_SERVER['HTTP_HOST'] ) ? sanitize_text_field( wp_unslash( $_SERVER['HTTP_HOST'] ) ) : '';
+		$uri  = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_URI'] ) ) : '';
+
+		if ( '' === $host || '' === $uri ) {
 			return '';
 		}
 
 		$scheme = is_ssl() ? 'https' : 'http';
-		return $scheme . '://' . wp_unslash( $_SERVER['HTTP_HOST'] ) . wp_unslash( $_SERVER['REQUEST_URI'] );
+		return $scheme . '://' . $host . $uri;
 	}
 
 	/**
@@ -409,6 +412,7 @@ class Tutor_Login {
 			return false;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Tutor product-to-course mapping uses postmeta.
 		$course_id = (int) $wpdb->get_var(
 			$wpdb->prepare(
 				"SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = %s AND meta_value = %s LIMIT 1",

@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Services;
+namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Database\OtpRepository;
 use SLR\Settings;
@@ -35,7 +35,7 @@ class OtpService {
 	 */
 	public function __construct() {
 		$this->repository = new OtpRepository();
-		$this->mail       = new MailService();
+		$this->mail       = MailService::instance();
 	}
 
 	/**
@@ -186,7 +186,7 @@ class OtpService {
 	 * @return true|WP_Error
 	 */
 	private function send_sms_otp( $phone, $code, $purpose ) {
-		$providers = apply_filters( 'slr_sms_providers', array() );
+		$providers = apply_filters( 'slr_sms_providers', array() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 
 		if ( empty( $providers ) ) {
 			return new WP_Error( 'slr_no_sms_provider', __( 'No SMS provider configured.', 'smart-login-registration' ), array( 'status' => 503 ) );

@@ -3,6 +3,7 @@ import type { SlrConfig } from '@shared/types';
 export type RedirectAction = 'stay' | 'navigate';
 
 export interface AuthRedirectResult {
+  user_id?: number;
   redirect?: string;
   redirect_action?: RedirectAction;
   nonce?: string;

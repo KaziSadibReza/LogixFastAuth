@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR;
+namespace SLR; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Services\LoginPageService;
 
@@ -90,6 +90,7 @@ class Activator {
 	 */
 	private static function table_exists( $table_name ) {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Schema check during activation only.
 		return $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) === $table_name;
 	}
 

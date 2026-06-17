@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Services;
+namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Activator;
 use SLR\Database\PendingRegistrationRepository;
@@ -100,7 +100,7 @@ class PendingRegistrationService {
 			);
 		}
 
-		$mail            = new MailService();
+		$mail            = MailService::instance();
 		$round_trip_json = $mail->decrypt_secret( $encrypted );
 		if ( $round_trip_json !== $json ) {
 			return new WP_Error(
@@ -196,7 +196,7 @@ class PendingRegistrationService {
 			return $record;
 		}
 
-		$mail    = new MailService();
+		$mail    = MailService::instance();
 		$decoded = json_decode( $mail->decrypt_secret( $record->data_encrypted ), true );
 		if ( ! is_array( $decoded ) || empty( $decoded['email'] ) || ! array_key_exists( 'password', $decoded ) || '' === $decoded['password'] ) {
 			$this->repository->delete_by_token( $record->token );

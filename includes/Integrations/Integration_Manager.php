@@ -5,9 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Integrations;
-
-use SLR\Settings;
+namespace SLR\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -33,7 +31,6 @@ class Integration_Manager {
 
 		add_action( 'plugins_loaded', array( $this, 'load_third_party_integrations' ), 20 );
 		add_action( 'elementor/init', array( $this, 'load_elementor_integration' ) );
-		add_action( 'admin_notices', array( $this, 'conflict_notices' ) );
 
 		if ( did_action( 'elementor/init' ) ) {
 			$this->load_elementor_integration();
@@ -48,6 +45,7 @@ class Integration_Manager {
 	public function load_third_party_integrations() {
 		if ( Integration_Availability::is_woocommerce_available() ) {
 			new WooCommerce_Login();
+			new WooCommerce_Passkeys();
 		}
 
 		if ( Integration_Availability::is_tutor_available() ) {
@@ -68,28 +66,5 @@ class Integration_Manager {
 
 		$this->elementor_loaded = true;
 		new Elementor_Login();
-	}
-
-	/**
-	 * Show admin conflict notices.
-	 *
-	 * @return void
-	 */
-	public function conflict_notices() {
-		if ( ! current_user_can( 'manage_options' ) ) {
-			return;
-		}
-
-		$screen = get_current_screen();
-		if ( ! $screen || strpos( $screen->id, 'slr' ) === false ) {
-			return;
-		}
-
-		$auth = Settings::get( 'auth' );
-		if ( ! empty( $auth['email_otp_enabled'] ) && class_exists( 'TUTOR_PRO_VERSION' ) ) {
-			echo '<div class="notice notice-warning"><p>';
-			echo esc_html__( 'SLR Email OTP is enabled. Disable Tutor Pro Auth addon 2FA to avoid double verification.', 'smart-login-registration' );
-			echo '</p></div>';
-		}
 	}
 }

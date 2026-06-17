@@ -94,6 +94,7 @@ export function SlrApp({ config, initialOpen = false, initialMode }: SlrAppProps
   const [view, setView] = useState<View>(activeOtp ? 'otp' : 'form');
   const [otpState, setOtpState] = useState<SlrOtpSession | null>(activeOtp);
   const [resetToken, setResetToken] = useState(saved.resetToken || '');
+  const [loginFormKey, setLoginFormKey] = useState(0);
   const pendingRedirectRef = useRef<{ result: AuthRedirectResult; kind: 'login' | 'register' } | null>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -390,7 +391,9 @@ export function SlrApp({ config, initialOpen = false, initialMode }: SlrAppProps
             <div key={mode} className="slr-form-panel">
               {mode === 'login' ? (
                 <LoginForm
+                  key={`login-${loginFormKey}`}
                   config={config}
+                  passwordAutoComplete={loginFormKey > 0 ? 'new-password' : 'current-password'}
                   onOtpRequired={(id, ch) => {
                     const existing = getActiveOtpSessionForPurpose('login');
                     if (existing && existing.identifier === id && existing.channel === ch) {
@@ -449,9 +452,14 @@ export function SlrApp({ config, initialOpen = false, initialMode }: SlrAppProps
           <ResetPasswordForm
             config={config}
             resetToken={resetToken}
-            onSuccess={() => {
+            onSuccess={(result) => {
               setResetToken('');
               saveFormSession({ resetToken: '' });
+              if (result.user_id) {
+                handleLoginSuccess(result);
+                return;
+              }
+              setLoginFormKey((key) => key + 1);
               setMode('login');
               setView('form');
             }}

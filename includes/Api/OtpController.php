@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Api;
+namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Services\AuthService;
 use SLR\Services\RedirectService;
@@ -13,6 +13,7 @@ use SLR\Services\StatsService;
 use SLR\Services\OtpService;
 use SLR\Services\PendingRegistrationService;
 use SLR\Services\RateLimiter;
+use SLR\Services\SpamProtection;
 use SLR\Settings;
 use WP_REST_Server;
 
@@ -60,6 +61,11 @@ class OtpController {
 	 */
 	public function send( $request ) {
 		$data = $request->get_json_params() ?: array();
+
+		$spam = ( new SpamProtection() )->verify( $data );
+		if ( is_wp_error( $spam ) ) {
+			return $spam;
+		}
 
 		$identifier    = $this->sanitize_identifier( $data['identifier'] ?? '', $data['channel'] ?? 'email' );
 		$channel       = sanitize_key( $data['channel'] ?? 'email' );
@@ -131,6 +137,11 @@ class OtpController {
 	public function verify( $request ) {
 		$data = $request->get_json_params() ?: array();
 
+		$spam = ( new SpamProtection() )->verify( $data );
+		if ( is_wp_error( $spam ) ) {
+			return $spam;
+		}
+
 		$identifier    = $this->sanitize_identifier( $data['identifier'] ?? '', $data['channel'] ?? 'email' );
 		$code          = sanitize_text_field( $data['code'] ?? '' );
 		$channel       = sanitize_key( $data['channel'] ?? 'email' );
@@ -161,6 +172,10 @@ class OtpController {
 
 		$verified = ( new OtpService() )->verify( $identifier, $code, $channel, $purpose );
 		if ( is_wp_error( $verified ) ) {
+			$limiter = new RateLimiter();
+			$ip      = RateLimiter::get_client_ip();
+			$limiter->record_failure( 'otp_verify', $ip );
+			$limiter->record_failure( 'otp_verify', $purpose . ':' . strtolower( $identifier ) );
 			return $verified;
 		}
 
@@ -278,12 +293,6 @@ class OtpController {
 	 * @return true|\WP_Error
 	 */
 	private function check_rate_limit( $action, $identifier, $purpose ) {
-		$limiter = new RateLimiter();
-		$ip_rate = $limiter->check( $action, RateLimiter::get_client_ip() );
-		if ( is_wp_error( $ip_rate ) ) {
-			return $ip_rate;
-		}
-
-		return $limiter->check( $action, $purpose . ':' . strtolower( $identifier ) );
+		return RateLimiter::throttle_scoped( $action, $purpose . ':' . strtolower( $identifier ) );
 	}
 }

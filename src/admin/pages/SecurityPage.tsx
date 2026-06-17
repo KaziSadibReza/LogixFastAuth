@@ -41,13 +41,13 @@ function formatWindow(seconds: number): string {
 
 export function SecurityPage() {
   const { settings, updateSection, loading } = useSettings();
-  const { rateBlocks, blocksLoading, ensureRateBlocks, refreshRateBlocks } = useAdminData();
+  const { rateBlocks, blocksLoading, refreshRateBlocks } = useAdminData();
   const [unblocking, setUnblocking] = useState<string | null>(null);
 
   useEffect(() => {
     if (loading || !settings) return;
-    void ensureRateBlocks();
-  }, [loading, settings, ensureRateBlocks]);
+    void refreshRateBlocks();
+  }, [loading, settings, refreshRateBlocks]);
 
   const handleUnblock = async (id: string) => {
     setUnblocking(id);

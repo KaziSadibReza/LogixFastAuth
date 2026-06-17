@@ -1,6 +1,11 @@
 /* SLR Admin — design tokens */
 
-:root {
+#slr-admin-root,
+.slr-app,
+#slr-select-menu-portal,
+.slr-modal-backdrop,
+.slr-toaster,
+.slr-appearance-preview-fullscreen {
   --slr-primary: #d6336c;
   --slr-primary-50: #fdf2f8;
   --slr-primary-100: #fce7f3;

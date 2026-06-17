@@ -256,6 +256,15 @@ $slr-scopes: '.slr-overlay', '.slr-country-dropdown';
     text-decoration: none !important;
     cursor: pointer !important;
 
+    .slr-flag-emoji {
+      display: inline-block !important;
+      flex-shrink: 0 !important;
+      width: 1.375em !important;
+      height: 1.375em !important;
+      object-fit: contain !important;
+      vertical-align: -0.1em !important;
+    }
+
     &[aria-expanded='true'] {
       border-color: var(--slr-primary) !important;
       background: var(--slr-background) !important;
@@ -435,6 +444,15 @@ $slr-scopes: '.slr-overlay', '.slr-country-dropdown';
       cursor: pointer !important;
       appearance: none !important;
       -webkit-appearance: none !important;
+
+      .slr-flag-emoji {
+        display: inline-block !important;
+        flex-shrink: 0 !important;
+        width: 1.375em !important;
+        height: 1.375em !important;
+        object-fit: contain !important;
+        vertical-align: -0.1em !important;
+      }
 
       &:hover,
       &.active {

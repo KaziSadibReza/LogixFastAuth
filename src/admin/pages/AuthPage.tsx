@@ -9,11 +9,13 @@ import {
   ShieldCheck,
   ShoppingCart,
   Smartphone,
+  UserRound,
   UserRoundPlus,
 } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
 import {
   Badge,
+  Button,
   Card,
   Icon,
   IntegrationIconCard,
@@ -76,6 +78,10 @@ export function AuthPage() {
   }
 
   const a = settings.auth;
+  const passkeyUrls = settings.passkey_manage_urls;
+  const plugins = settings.integration_plugins;
+  const profilePasskeysUrl =
+    passkeyUrls?.profile || window.SLR_ADMIN?.profilePasskeysUrl || 'profile.php#slr-passkey-manager';
 
   return (
     <>
@@ -170,30 +176,55 @@ export function AuthPage() {
             {a.webauthn_enabled && (
               <div className="slr-auth-passkey-integrations">
                 <div className="slr-integration-panel-head">
-                  <h4 className="slr-integration-panel-title">Dashboard integrations</h4>
+                  <h4 className="slr-integration-panel-title">Where users manage passkeys</h4>
                   <p className="slr-integration-panel-desc">
-                    Users manage passkeys from their Tutor LMS account settings.
+                    Passkeys are managed on the user&apos;s own account — not in this settings panel.
+                    Site administrators can manage their passkeys on the WordPress profile screen.
                   </p>
                 </div>
+
+                <div className="slr-auth-passkey-admin-link">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    icon={UserRound}
+                    onClick={() => window.open(profilePasskeysUrl, '_blank', 'noopener,noreferrer')}
+                  >
+                    Manage your passkeys
+                  </Button>
+                  <span className="slr-auth-passkey-admin-hint">Opens your WordPress user profile</span>
+                </div>
+
                 <div className="slr-icon-card-grid">
                   <IntegrationIconCard
-                    icon={GraduationCap}
-                    iconVariant="tutor"
-                    title="Tutor LMS"
-                    description="Dashboard → Settings → Passkeys"
-                    code="settings/passkeys"
-                    badge={
-                      a.has_tutor_lms
-                        ? { variant: 'success', label: 'Integrated' }
-                        : { variant: 'warning', label: 'Not installed' }
-                    }
+                    icon={UserRound}
+                    iconVariant="default"
+                    title="WordPress profile"
+                    description="Users → Profile → Passkeys"
+                    code="profile.php"
+                    badge={{ variant: 'success', label: 'Always available' }}
                   />
+                  {plugins?.woocommerce && passkeyUrls?.woocommerce && (
+                    <IntegrationIconCard
+                      icon={ShoppingCart}
+                      iconVariant="woo"
+                      title="WooCommerce"
+                      description="My Account → Passkeys"
+                      code="my-account/passkeys"
+                      badge={{ variant: 'success', label: 'Integrated' }}
+                    />
+                  )}
+                  {a.has_tutor_lms && passkeyUrls?.tutor && (
+                    <IntegrationIconCard
+                      icon={GraduationCap}
+                      iconVariant="tutor"
+                      title="Tutor LMS"
+                      description="Dashboard → Settings → Passkeys"
+                      code="settings/passkeys"
+                      badge={{ variant: 'success', label: 'Integrated' }}
+                    />
+                  )}
                 </div>
-                {!a.has_tutor_lms && (
-                  <p className="slr-passkey-integration-hint">
-                    Install and activate Tutor LMS to show the Passkeys tab in the student dashboard.
-                  </p>
-                )}
               </div>
             )}
           </div>

@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Elementor\DynamicTags;
+namespace SLR\Elementor\DynamicTags; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use Elementor\Core\DynamicTags\Data_Tag;
 use Elementor\Modules\DynamicTags\Module as TagsModule;

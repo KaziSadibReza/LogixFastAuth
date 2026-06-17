@@ -47,6 +47,7 @@ export interface SlrAdminConfig {
   apiUrl: string;
   nonce: string;
   homeUrl: string;
+  profilePasskeysUrl: string;
   pages: string;
   frontendCssUrls?: string[];
   i18n: Record<string, string>;
@@ -93,6 +94,7 @@ export interface SlrSettings {
     google_configured?: boolean;
     google_redirect_uri?: string;
   };
+  mail_smtp_conflicts?: Array<{ slug: string; name: string }>;
   integrations: {
     replace_wp_login: boolean;
     replace_woocommerce: boolean;
@@ -113,6 +115,11 @@ export interface SlrSettings {
     woocommerce: boolean;
     tutor: boolean;
     elementor: boolean;
+  };
+  passkey_manage_urls?: {
+    profile: string;
+    tutor?: string;
+    woocommerce?: string;
   };
 }
 

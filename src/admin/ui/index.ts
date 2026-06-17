@@ -37,3 +37,5 @@ export { IntegrationIconCard } from './IntegrationIconCard';
 export { IntegrationToggleCard } from './IntegrationToggleCard';
 export { GoogleIcon } from './GoogleIcon';
 export { TransportIconCard } from './TransportIconCard';
+export { HelpTooltip } from './HelpTooltip';
+export { NoticeBanner } from './NoticeBanner';

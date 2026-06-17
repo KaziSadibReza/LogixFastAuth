@@ -571,14 +571,13 @@
   }
 }
 
-.slr-flag-img {
-  display: block;
-  width: 22px;
-  height: 15px;
-  object-fit: cover;
-  border-radius: 3px;
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08);
+.slr-flag-emoji {
+  display: inline-block;
   flex-shrink: 0;
+  width: 1.375em;
+  height: 1.375em;
+  object-fit: contain;
+  vertical-align: -0.1em;
 }
 
 .slr-phone-input-wrap {
@@ -683,9 +682,8 @@
     color: var(--slr-text);
     transition: background var(--slr-transition);
 
-    .slr-flag-img {
-      width: 20px;
-      height: 14px;
+    .slr-flag-emoji {
+      font-size: 20px;
     }
 
     &:hover,
@@ -943,7 +941,7 @@
 
 .slr-toast {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 10px;
   padding: 12px 14px;
   border-radius: 12px;
@@ -1124,4 +1122,11 @@
     height: 46px;
     font-size: 1.125rem;
   }
+}
+
+.slr-elementor-login-replace {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
 }

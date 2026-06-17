@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Services;
+namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Integrations\Integration_Availability;
 use SLR\Settings;

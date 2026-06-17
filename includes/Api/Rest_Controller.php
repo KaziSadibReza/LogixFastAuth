@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Api;
+namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

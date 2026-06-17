@@ -7,10 +7,12 @@ import { useSlrToast } from './SlrToaster';
 import { clearOtpSession, clearResetToken } from '../utils/formStorage';
 import type { SlrConfig } from '@shared/types';
 
+import type { AuthRedirectResult } from '../utils/redirect';
+
 interface ResetPasswordFormProps {
   config: SlrConfig;
   resetToken: string;
-  onSuccess: () => void;
+  onSuccess: (result: AuthRedirectResult) => void;
 }
 
 export function ResetPasswordForm({ config, resetToken, onSuccess }: ResetPasswordFormProps) {
@@ -36,11 +38,11 @@ export function ResetPasswordForm({ config, resetToken, onSuccess }: ResetPasswo
 
     setLoading(true);
     try {
-      await resetPassword(resetToken, password);
+      const result = await resetPassword(resetToken, password);
       clearOtpSession();
       clearResetToken();
       toast.success(config.i18n.passwordResetSuccess || 'Password updated. You can sign in now.');
-      onSuccess();
+      onSuccess(result);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : config.i18n.errorGeneric);
     } finally {

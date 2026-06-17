@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Database;
+namespace SLR\Database; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Activator;
 
@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class PendingRegistrationRepository
  */
+// phpcs:disable WordPress.DB.DirectDatabaseQuery
 class PendingRegistrationRepository {
 
 	/**
@@ -56,9 +57,6 @@ class PendingRegistrationRepository {
 		}
 
 		if ( false === $inserted ) {
-			if ( defined( 'WP_DEBUG' ) && WP_DEBUG && ! empty( $wpdb->last_error ) ) {
-				error_log( '[SLR] Pending registration insert failed: ' . $wpdb->last_error );
-			}
 			return false;
 		}
 
@@ -86,6 +84,7 @@ class PendingRegistrationRepository {
 
 		return $wpdb->get_row(
 			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is wpdb-prefixed and internal.
 				"SELECT * FROM {$this->table()} WHERE token = %s LIMIT 1",
 				$token
 			)
@@ -104,6 +103,7 @@ class PendingRegistrationRepository {
 
 		return $wpdb->get_row(
 			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is wpdb-prefixed and internal.
 				"SELECT * FROM {$this->table()} WHERE identifier_hash = %s AND channel = %s ORDER BY id DESC LIMIT 1",
 				$identifier_hash,
 				$channel
@@ -162,6 +162,7 @@ class PendingRegistrationRepository {
 	public function purge_expired() {
 		global $wpdb;
 
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table name is wpdb-prefixed; purge job scans expiry.
 		$rows = $wpdb->get_results( "SELECT id, expires_at FROM {$this->table()}" );
 		if ( empty( $rows ) ) {
 			return;
@@ -174,3 +175,4 @@ class PendingRegistrationRepository {
 		}
 	}
 }
+// phpcs:enable WordPress.DB.DirectDatabaseQuery

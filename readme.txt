@@ -1,43 +1,107 @@
-=== Smart Login Registration (SLR) ===
+=== Smart Login Registration ===
 Contributors: kazisadibreza
-Tags: login, registration, otp, webauthn, woocommerce, tutor
-Requires at least: 6.0
-Tested up to: 6.8
-Requires PHP: 8.0
-Stable tag: 1.0.0
+Tags: login, registration, otp, webauthn, woocommerce
+Requires at least: 6.8
+Tested up to: 7.0
+Requires PHP: 8.1
+Stable tag: 1.0.1
 License: GPLv2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Ultra-fast, secure login/registration with React UI, OTP, WebAuthn, and WooCommerce/Tutor integration.
+Modern WordPress login and registration with OTP, passkeys, Gmail SMTP, and deep WooCommerce / Tutor LMS integration.
 
 == Description ==
 
-Smart Login Registration replaces WordPress, WooCommerce, Tutor, and Elementor login forms with a modern React-powered experience.
+Smart Login Registration (SLR) replaces default WordPress, WooCommerce, Tutor LMS, and Elementor login forms with a fast, mobile-friendly React interface.
+
+**Features**
+
+* Email, phone, and username login
+* OTP verification (email and SMS)
+* Passkeys (WebAuthn)
+* Gmail SMTP via Google OAuth (admin mail settings)
+* Popup and dedicated login page modes
+* WooCommerce checkout and My Account login replacement
+* Tutor LMS dashboard passkey management
+* Elementor dynamic tags and popup triggers
+* Rate limiting, spam protection, and security controls
+* Admin settings UI with integrations toggles
+
+**How it works**
+
+PHP handles WordPress integration, REST API, and security. The frontend UI is built with React and loaded from `assets/dist/`.
+
+== External services ==
+
+This plugin contacts external services only when a site administrator enables and configures them:
+
+* **Google (Gmail SMTP)** — If you choose Google mail transport and connect a Google account in SLR settings, the plugin sends OAuth requests to Google and may send email through Gmail. Data sent includes OAuth tokens and message content you choose to send. See [Google's Privacy Policy](https://policies.google.com/privacy).
+* **SMS providers** — If you register an SMS provider with the `slr_sms_providers` filter, OTP codes are sent to that provider using API credentials you supply. What data is sent depends on the provider you configure.
+* **Google Fonts** — The login UI and admin settings may load the Urbanist font from `fonts.googleapis.com` for typography.
+
+SLR does not send site usage data to the plugin author. Login and registration counters are stored locally in your WordPress database.
 
 == Installation ==
 
-1. Upload the plugin to `/wp-content/plugins/smart-login-registration/`
-2. Activate through the 'Plugins' menu
-3. Go to SLR admin menu and configure settings
-4. Select a dedicated login page
+1. Upload the plugin folder to `/wp-content/plugins/smart-login-registration/`
+2. Activate the plugin through the **Plugins** menu in WordPress
+3. Open **SLR** in the admin sidebar
+4. Configure general settings and choose a dedicated login page (optional)
+5. Enable integrations (WooCommerce, Tutor LMS, Elementor) as needed
 
-== Development ==
+**Requirements**
 
-npm install && npm run build
+* WordPress 6.8 or later
+* PHP 8.1 or later
+* HTTPS recommended for passkeys and OAuth
 
-This generates assets/dist/manifest.json — PHP reads this to enqueue the correct JS/CSS files.
+== Frequently Asked Questions ==
 
-Composer (optional, for libphonenumber phone validation):
-1. cd wp-content/plugins/smart-login-registration
-2. composer install
+= Does this work without WooCommerce or Tutor LMS? =
 
-If you see "zip extension and unzip/7z commands are both missing" on Windows, either:
-- Enable zip in php.ini: uncomment `extension=zip` and restart terminal, OR
-- Run: composer install --prefer-source
-- Or: composer run install:win
+Yes. Core login, registration, OTP, and passkeys work on any WordPress site. WooCommerce and Tutor features activate only when those plugins are installed and enabled in SLR settings.
 
-Without Composer, phone validation uses a basic fallback — the plugin still works.
+= Do I need Node.js on my server? =
+
+No. The plugin ships with pre-built assets in `assets/dist/`. Node.js is only needed if you want to rebuild the frontend from source.
+
+= Where is the source code? =
+
+The public development repository (React/TypeScript source in `src/`, build config, and full history):
+
+https://github.com/KaziSadibReza/Smart-Login-Registration/tree/development
+
+= How do I rebuild the frontend? =
+
+Clone the development branch, then:
+
+1. `npm install`
+2. `npm run build`
+
+This updates `assets/dist/` and `assets/dist/manifest.json`.
+
+= What data does this plugin send externally? =
+
+Nothing by default. External requests happen only when you configure Gmail SMTP, register an SMS provider, or when the UI loads Google Fonts. See the **External services** section above.
+
+== Screenshots ==
+
+1. Admin settings dashboard
+2. Login popup on the frontend
+3. Dedicated login page
 
 == Changelog ==
 
+= 1.0.1 =
+* Plugin Check and WordPress.org packaging improvements
+* Security hardening for redirects and integrations
+* Admin menu icon and styling fixes
+* Readme privacy and external services documentation
+
 = 1.0.0 =
 * Initial release
+
+== Upgrade Notice ==
+
+= 1.0.1 =
+Maintenance release with security and WordPress.org compliance updates.

@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Services;
+namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Database\WebAuthnRepository;
 use SLR\Integrations\Tutor_Sync;
@@ -52,8 +52,16 @@ class AuthService {
 			return new WP_Error( 'slr_password_short', __( 'Password must be at least 8 characters.', 'smart-login-registration' ), array( 'status' => 400 ) );
 		}
 
+		if ( strlen( (string) $password ) > 4096 ) {
+			return new WP_Error( 'slr_password_long', __( 'Password is too long.', 'smart-login-registration' ), array( 'status' => 400 ) );
+		}
+
 		if ( email_exists( $email ) ) {
-			return new WP_Error( 'slr_email_exists', __( 'An account with this email already exists.', 'smart-login-registration' ), array( 'status' => 409 ) );
+			return new WP_Error(
+				'slr_register_unavailable',
+				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'smart-login-registration' ),
+				array( 'status' => 400 )
+			);
 		}
 
 		if ( ! empty( $phone ) ) {
@@ -65,7 +73,11 @@ class AuthService {
 			$phone = $validated;
 
 			if ( $this->resolve_user_id_by_phone( $phone ) ) {
-				return new WP_Error( 'slr_phone_exists', __( 'An account with this phone number already exists.', 'smart-login-registration' ), array( 'status' => 409 ) );
+				return new WP_Error(
+					'slr_register_unavailable',
+					__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'smart-login-registration' ),
+					array( 'status' => 400 )
+				);
 			}
 		}
 
@@ -110,11 +122,19 @@ class AuthService {
 		}
 
 		if ( email_exists( $pending['email'] ) ) {
-			return new WP_Error( 'slr_email_exists', __( 'An account with this email already exists.', 'smart-login-registration' ), array( 'status' => 409 ) );
+			return new WP_Error(
+				'slr_register_unavailable',
+				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'smart-login-registration' ),
+				array( 'status' => 400 )
+			);
 		}
 
 		if ( ! empty( $pending['phone'] ) && $this->resolve_user_id_by_phone( $pending['phone'] ) ) {
-			return new WP_Error( 'slr_phone_exists', __( 'An account with this phone number already exists.', 'smart-login-registration' ), array( 'status' => 409 ) );
+			return new WP_Error(
+				'slr_register_unavailable',
+				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'smart-login-registration' ),
+				array( 'status' => 400 )
+			);
 		}
 
 		return $this->create_user( $pending );
@@ -163,7 +183,11 @@ class AuthService {
 		$username   = $this->generate_username( $email );
 
 		if ( ! empty( $phone ) && $this->resolve_user_id_by_phone( $phone ) ) {
-			return new WP_Error( 'slr_phone_exists', __( 'An account with this phone number already exists.', 'smart-login-registration' ), array( 'status' => 409 ) );
+			return new WP_Error(
+				'slr_register_unavailable',
+				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'smart-login-registration' ),
+				array( 'status' => 400 )
+			);
 		}
 
 		$user_id = wp_insert_user(
@@ -214,7 +238,7 @@ class AuthService {
 			)
 		);
 
-		do_action( 'slr_user_registered', $user_id, $data );
+		do_action( 'slr_user_registered', $user_id, $data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 	}
 
 	/**
@@ -244,54 +268,110 @@ class AuthService {
 
 		$credentials = array(
 			'user_login'    => $user->user_login,
-			'user_password' => $password,
+			'user_password' => (string) $password,
 			'remember'      => $remember,
 		);
 
-		$credentials = apply_filters( 'slr_login_credentials', $credentials, $user );
+		$credentials = apply_filters( 'slr_login_credentials', $credentials, $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 
-		// Clear any existing auth cookies before issuing a new session.
-		wp_clear_auth_cookie();
-
-		$new_logged_in_cookie = '';
-		$cookie_capture       = function ( $cookie ) use ( &$new_logged_in_cookie ) {
-			$new_logged_in_cookie = $cookie;
-		};
-		add_action( 'set_logged_in_cookie', $cookie_capture );
-
-		$signed_in = wp_signon( $credentials, is_ssl() );
-
-		remove_action( 'set_logged_in_cookie', $cookie_capture );
-
-		if ( is_wp_error( $signed_in ) ) {
-			do_action( 'slr_login_failed', $signed_in, $user );
+		if ( ! $this->verify_user_password( (int) $user->ID, $credentials['user_password'] ) ) {
+			do_action( 'slr_login_failed', new WP_Error( 'slr_invalid_password', __( 'Invalid password.', 'smart-login-registration' ) ), $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 			return new WP_Error( 'slr_login_failed', __( 'Invalid email/phone or password.', 'smart-login-registration' ), array( 'status' => 401 ) );
 		}
 
-		if ( $new_logged_in_cookie ) {
-			$_COOKIE[ LOGGED_IN_COOKIE ] = $new_logged_in_cookie;
+		return $this->authenticate_user( (int) $user->ID, $remember );
+	}
+
+	/**
+	 * Verify a password against the latest hash stored for a user.
+	 *
+	 * Reads user_pass directly from the database so login still works
+	 * immediately after wp_set_password(), even when object cache is stale.
+	 *
+	 * @param int    $user_id  User ID.
+	 * @param string $password Plaintext password.
+	 * @return bool
+	 */
+	private function verify_user_password( $user_id, $password ) {
+		$user_id = (int) $user_id;
+
+		if ( $user_id <= 0 || '' === (string) $password ) {
+			return false;
 		}
 
-		// wp_signon() does NOT call wp_set_current_user(), so the global
-		// $current_user is still the anonymous user from the start of this REST
-		// request. Without this, wp_create_nonce() below would bind the nonce
-		// to uid=0, and the next REST call (which authenticates as the real
-		// user via the new cookie) would fail with "Cookie check failed".
-		wp_set_current_user( $signed_in->ID );
+		$this->refresh_user_auth_cache_by_id( $user_id );
 
-		Tutor_Sync::on_login_success( $signed_in );
-		StatsService::record_login();
+		$hash = $this->get_fresh_user_pass_hash( $user_id );
+		if ( ! is_string( $hash ) || '' === $hash ) {
+			return false;
+		}
 
-		$redirect     = RedirectService::resolve_login( $signed_in );
-		$has_passkeys = ! empty( ( new WebAuthnRepository() )->get_by_user( $signed_in->ID ) );
+		if ( ! wp_check_password( $password, $hash, $user_id ) ) {
+			return false;
+		}
 
-		return array(
-			'user_id'         => $signed_in->ID,
-			'nonce'           => wp_create_nonce( 'wp_rest' ),
-			'has_passkeys'    => $has_passkeys,
-			'redirect'        => $redirect['url'],
-			'redirect_action' => $redirect['action'],
+		if ( wp_password_needs_rehash( $hash, $user_id ) ) {
+			wp_set_password( $password, $user_id );
+			$this->refresh_user_auth_cache_by_id( $user_id );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Load the current password hash straight from the database.
+	 *
+	 * @param int $user_id User ID.
+	 * @return string|null
+	 */
+	private function get_fresh_user_pass_hash( $user_id ) {
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Must read user_pass from DB; object cache can be stale after wp_set_password().
+		$hash = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT user_pass FROM {$wpdb->users} WHERE ID = %d LIMIT 1",
+				(int) $user_id
+			)
 		);
+
+		return is_string( $hash ) && '' !== $hash ? $hash : null;
+	}
+
+	/**
+	 * Bust cached user auth data before verifying a password.
+	 *
+	 * @param WP_User $user User object.
+	 * @return void
+	 */
+	private function refresh_user_auth_cache( WP_User $user ) {
+		$this->refresh_user_auth_cache_by_id( (int) $user->ID );
+	}
+
+	/**
+	 * Bust cached user auth data for a user ID.
+	 *
+	 * @param int $user_id User ID.
+	 * @return void
+	 */
+	private function refresh_user_auth_cache_by_id( $user_id ) {
+		$user_id = (int) $user_id;
+		if ( $user_id <= 0 ) {
+			return;
+		}
+
+		clean_user_cache( $user_id );
+		wp_cache_delete( $user_id, 'users' );
+		wp_cache_delete( $user_id, 'user_meta' );
+
+		$user = get_userdata( $user_id );
+		if ( ! $user instanceof WP_User ) {
+			return;
+		}
+
+		wp_cache_delete( $user->user_login, 'userlogins' );
+		wp_cache_delete( $user->user_email, 'useremail' );
+		wp_cache_delete( strtolower( $user->user_email ), 'useremail' );
 	}
 
 	/**
@@ -304,8 +384,7 @@ class AuthService {
 		$identifier = trim( (string) $identifier );
 
 		if ( is_email( $identifier ) ) {
-			$user = get_user_by( 'email', sanitize_email( $identifier ) );
-			return $user instanceof WP_User ? $user : null;
+			return $this->resolve_user_by_email( $identifier );
 		}
 
 		$user_id = $this->resolve_user_id_by_phone( $identifier );
@@ -315,6 +394,58 @@ class AuthService {
 
 		$user = get_user_by( 'id', $user_id );
 		return $user instanceof WP_User ? $user : null;
+	}
+
+	/**
+	 * Resolve a user by email (case-insensitive).
+	 *
+	 * @param string $email Email address.
+	 * @return WP_User|null
+	 */
+	private function resolve_user_by_email( $email ) {
+		$email = sanitize_email( $email );
+		if ( ! is_email( $email ) ) {
+			return null;
+		}
+
+		$user = get_user_by( 'email', $email );
+		if ( $user instanceof WP_User ) {
+			return $user;
+		}
+
+		if ( $email !== strtolower( $email ) ) {
+			$user = get_user_by( 'email', strtolower( $email ) );
+			if ( $user instanceof WP_User ) {
+				return $user;
+			}
+		}
+
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Case-insensitive email fallback when get_user_by() misses mixed-case addresses.
+		$user_id = $wpdb->get_var(
+			$wpdb->prepare(
+				"SELECT ID FROM {$wpdb->users} WHERE LOWER(user_email) = LOWER(%s) LIMIT 1",
+				$email
+			)
+		);
+
+		if ( $user_id ) {
+			$user = get_user_by( 'id', (int) $user_id );
+			if ( $user instanceof WP_User ) {
+				return $user;
+			}
+		}
+
+		$local_part = strstr( $email, '@', true );
+		if ( is_string( $local_part ) && '' !== $local_part ) {
+			$user = get_user_by( 'login', sanitize_user( $local_part, true ) );
+			if ( $user instanceof WP_User ) {
+				return $user;
+			}
+		}
+
+		return null;
 	}
 
 	/**
@@ -330,6 +461,7 @@ class AuthService {
 		}
 
 		foreach ( array( 'slr_phone', 'billing_phone', 'phone_number' ) as $meta_key ) {
+			// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Phone lookup across known meta keys.
 			$users = get_users(
 				array(
 					'meta_key'     => $meta_key,
@@ -339,6 +471,7 @@ class AuthService {
 					'fields'       => 'ID',
 				)
 			);
+			// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 
 			if ( ! empty( $users ) ) {
 				return (int) $users[0];
@@ -406,7 +539,7 @@ class AuthService {
 			$_COOKIE[ LOGGED_IN_COOKIE ] = $new_logged_in_cookie;
 		}
 
-		do_action( 'wp_login', $user->user_login, $user );
+		do_action( 'wp_login', $user->user_login, $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core hook.
 
 		Tutor_Sync::on_login_success( $user );
 		StatsService::record_login();
@@ -445,7 +578,7 @@ class AuthService {
 			return $user_id;
 		}
 
-		$user = get_user_by( 'email', sanitize_email( $identifier ) );
+		$user = $this->resolve_user_by_email( $identifier );
 		if ( ! $user ) {
 			return new WP_Error(
 				'slr_user_not_found',
@@ -466,7 +599,7 @@ class AuthService {
 	 */
 	public function resolve_user_for_reset( $identifier, $channel = 'email' ) {
 		if ( 'email' === $channel ) {
-			$user = get_user_by( 'email', sanitize_email( $identifier ) );
+			$user = $this->resolve_user_by_email( $identifier );
 			if ( ! $user ) {
 				return new WP_Error( 'slr_user_not_found', __( 'No account found with that email.', 'smart-login-registration' ), array( 'status' => 404 ) );
 			}
@@ -519,6 +652,10 @@ class AuthService {
 			return new WP_Error( 'slr_password_short', __( 'Password must be at least 8 characters.', 'smart-login-registration' ), array( 'status' => 400 ) );
 		}
 
+		if ( strlen( $password ) > 4096 ) {
+			return new WP_Error( 'slr_password_long', __( 'Password is too long.', 'smart-login-registration' ), array( 'status' => 400 ) );
+		}
+
 		$payload = get_transient( 'slr_pwreset_' . $reset_token );
 		if ( ! is_array( $payload ) || empty( $payload['user_id'] ) ) {
 			return new WP_Error( 'slr_reset_expired', __( 'Reset session expired. Please start again.', 'smart-login-registration' ), array( 'status' => 400 ) );
@@ -531,7 +668,18 @@ class AuthService {
 		}
 
 		wp_set_password( $password, $user_id );
+		$this->refresh_user_auth_cache_by_id( $user_id );
 		delete_transient( 'slr_pwreset_' . $reset_token );
+
+		if ( ! $this->verify_user_password( $user_id, $password ) ) {
+			return new WP_Error(
+				'slr_password_update_failed',
+				__( 'Could not save the new password. Please try again.', 'smart-login-registration' ),
+				array( 'status' => 500 )
+			);
+		}
+
+		RateLimiter::clear_for_ip( RateLimiter::get_client_ip() );
 
 		// Invalidate all existing sessions for this user so that any
 		// previously-issued auth cookies can no longer be used after the
@@ -542,6 +690,7 @@ class AuthService {
 		return array(
 			'success' => true,
 			'message' => __( 'Password updated. You can sign in now.', 'smart-login-registration' ),
+			'user_id' => $user_id,
 		);
 	}
 

@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Services;
+namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Settings;
 
@@ -94,6 +94,7 @@ class LoginPageService {
 			return self::format_page_response( $existing_id, false );
 		}
 
+		// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Login page resolved once by meta marker.
 		$by_meta = get_posts(
 			array(
 				'post_type'      => 'page',
@@ -105,6 +106,7 @@ class LoginPageService {
 				'order'          => 'ASC',
 			)
 		);
+		// phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value
 
 		if ( ! empty( $by_meta[0] ) ) {
 			$page_id = (int) $by_meta[0]->ID;
@@ -123,7 +125,7 @@ class LoginPageService {
 
 		$page_id = wp_insert_post(
 			array(
-				'post_title'   => __( self::DEFAULT_PAGE_TITLE, 'smart-login-registration' ),
+				'post_title'   => __( 'Sign In & Register', 'smart-login-registration' ),
 				'post_name'    => self::DEFAULT_PAGE_SLUG,
 				'post_status'  => 'publish',
 				'post_type'    => 'page',
@@ -179,7 +181,7 @@ class LoginPageService {
 		wp_update_post(
 			array(
 				'ID'         => $page_id,
-				'post_title' => __( self::DEFAULT_PAGE_TITLE, 'smart-login-registration' ),
+				'post_title' => __( 'Sign In & Register', 'smart-login-registration' ),
 			)
 		);
 	}

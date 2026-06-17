@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR;
+namespace SLR; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -60,7 +60,7 @@ class Assets {
 			return rtrim( (string) constant( 'SLR_DEV_URL' ), '/' );
 		}
 
-		return rtrim( (string) apply_filters( 'slr_dev_server_url', '' ), '/' );
+		return rtrim( (string) apply_filters( 'slr_dev_server_url', '' ), '/' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 	}
 
 	/**
@@ -291,7 +291,7 @@ class Assets {
 	 * @return void
 	 */
 	public static function enqueue_frontend_config( $handle = 'slr-config' ) {
-		wp_register_script( $handle, false, array(), null, true );
+		wp_register_script( $handle, false, array(), SLR_VERSION, true );
 		wp_enqueue_script( $handle );
 		wp_localize_script( $handle, 'SLR_CONFIG', \SLR\Settings::get_public_config() );
 	}
@@ -317,7 +317,7 @@ class Assets {
 		self::init_vite_dev_script_printer();
 
 		// Handle exists for wp_localize_script; actual module loads via print_vite_dev_scripts().
-		wp_register_script( $handle, false, array(), null, true );
+		wp_register_script( $handle, false, array(), SLR_VERSION, true );
 		wp_enqueue_script( $handle );
 	}
 
@@ -360,9 +360,9 @@ class Assets {
 
 		foreach ( self::$vite_dev_entries as $handle => $src_path ) {
 			$entry_url = $dev_url . '/' . $src_path;
-			$script_id = esc_attr( $handle . '-vite' );
+			$script_id = $handle . '-vite';
 			?>
-<script type="module" id="<?php echo $script_id; ?>">
+<script type="module" id="<?php echo esc_attr( $script_id ); ?>">
 import RefreshRuntime from <?php echo wp_json_encode( $refresh_url ); ?>;
 RefreshRuntime.injectIntoGlobalHook(window);
 window.$RefreshReg$ = () => {};

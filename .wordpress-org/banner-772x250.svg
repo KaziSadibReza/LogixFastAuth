@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 772 250" width="772" height="250" role="img" aria-label="Smart Login Registration banner">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="772" y2="250" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#1f0c2e"/>
+      <stop offset="1" stop-color="#3a1240"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="170" cy="125" r="230" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d6336c" stop-opacity="0.40"/>
+      <stop offset="1" stop-color="#d6336c" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="slrGrad" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#d6336c"/>
+      <stop offset="0.55" stop-color="#c2349a"/>
+      <stop offset="1" stop-color="#ae3ec9"/>
+    </linearGradient>
+    <linearGradient id="accentLine" x1="280" y1="0" x2="490" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d6336c"/>
+      <stop offset="1" stop-color="#ae3ec9"/>
+    </linearGradient>
+  </defs>
+  <rect width="772" height="250" fill="url(#bg)"/>
+  <rect width="772" height="250" fill="url(#glow)"/>
+  <g transform="translate(75,50) scale(2.34375)">
+    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#slrGrad)"/>
+    <circle cx="32" cy="22" r="7.5" fill="none" stroke="#ffffff" stroke-width="5.5"/>
+    <path d="M32 30 V49" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round"/>
+    <path d="M32 42 H40" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round"/>
+  </g>
+  <text x="280" y="111" font-family="'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="49" font-weight="800" letter-spacing="-1" fill="#ffffff">Smart Login</text>
+  <text x="280" y="161" font-family="'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="49" font-weight="800" letter-spacing="-1" fill="#ffffff">Registration</text>
+  <rect x="282" y="176" width="64" height="4" rx="2" fill="url(#accentLine)"/>
+  <text x="282" y="206" font-family="'Segoe UI', system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif" font-size="19" font-weight="500" fill="#e9c8f5">Secure login, OTP &amp; passkeys for WordPress</text>
+</svg>

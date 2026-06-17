@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Frontend;
+namespace SLR\Frontend; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Assets;
 use SLR\Settings;
@@ -49,7 +49,7 @@ class Frontend_Assets {
 			'slr-font-urbanist',
 			'https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap',
 			array(),
-			null
+			SLR_VERSION
 		);
 
 		if ( Assets::is_dev_mode() ) {
@@ -110,7 +110,7 @@ class Frontend_Assets {
 	 * @return void
 	 */
 	private function register_dev_assets() {
-		wp_register_style( 'slr-frontend', false, array(), null );
+		wp_register_style( 'slr-frontend', false, array(), SLR_VERSION );
 		Assets::enqueue_frontend_config( 'slr-config' );
 	}
 

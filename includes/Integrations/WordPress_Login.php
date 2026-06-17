@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Integrations;
+namespace SLR\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Settings;
 
@@ -74,6 +74,7 @@ class WordPress_Login {
 			return;
 		}
 
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- wp-login.php public query args.
 		$action = isset( $_REQUEST['action'] ) ? sanitize_text_field( wp_unslash( $_REQUEST['action'] ) ) : 'login';
 		$allowed = array( 'logout', 'postpass', 'confirm_admin_email', 'rp', 'resetpass' );
 
@@ -86,10 +87,18 @@ class WordPress_Login {
 			return;
 		}
 
-		if ( ! empty( $_REQUEST['redirect_to'] ) ) {
-			$redirect = wp_validate_redirect( wp_unslash( $_REQUEST['redirect_to'] ), '' );
-			if ( $redirect ) {
-				$page_url = add_query_arg( 'redirect_to', rawurlencode( $redirect ), $page_url );
+		$raw_redirect = filter_input( INPUT_GET, 'redirect_to', FILTER_UNSAFE_RAW );
+		if ( ! is_string( $raw_redirect ) || '' === $raw_redirect ) {
+			$raw_redirect = filter_input( INPUT_POST, 'redirect_to', FILTER_UNSAFE_RAW );
+		}
+
+		if ( is_string( $raw_redirect ) && '' !== $raw_redirect ) {
+			$raw_redirect = sanitize_url( wp_unslash( $raw_redirect ) );
+			if ( '' !== $raw_redirect ) {
+				$redirect = wp_validate_redirect( $raw_redirect, '' );
+				if ( $redirect ) {
+					$page_url = add_query_arg( 'redirect_to', rawurlencode( $redirect ), $page_url );
+				}
 			}
 		}
 

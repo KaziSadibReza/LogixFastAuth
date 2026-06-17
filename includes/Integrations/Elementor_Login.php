@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Integrations;
+namespace SLR\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Settings;
 
@@ -64,17 +64,15 @@ class Elementor_Login {
 			return $content;
 		}
 
-		$page_url = $this->get_dedicated_page_url();
-
 		ob_start();
 		?>
 		<div class="slr-elementor-login-replace">
 			<button type="button" class="elementor-button elementor-size-sm" data-slr-open="login">
 				<?php esc_html_e( 'Log In', 'smart-login-registration' ); ?>
 			</button>
-			<?php if ( $page_url ) : ?>
-				<a href="<?php echo esc_url( $page_url ); ?>" data-slr-open="register"><?php esc_html_e( 'Register', 'smart-login-registration' ); ?></a>
-			<?php endif; ?>
+			<button type="button" class="elementor-button elementor-button-link elementor-size-sm" data-slr-open="register">
+				<?php esc_html_e( 'Register', 'smart-login-registration' ); ?>
+			</button>
 		</div>
 		<?php
 		return ob_get_clean();
@@ -109,16 +107,5 @@ class Elementor_Login {
 
 		require_once SLR_PLUGIN_DIR . 'includes/Elementor/DynamicTags/SlrOpenPopupTag.php';
 		$manager->register( new \SLR\Elementor\DynamicTags\SlrOpenPopupTag() );
-	}
-
-	/**
-	 * Get dedicated page URL.
-	 *
-	 * @return string
-	 */
-	private function get_dedicated_page_url() {
-		$general = Settings::get( 'general' );
-		$page_id = (int) ( $general['dedicated_page_id'] ?? 0 );
-		return $page_id ? ( get_permalink( $page_id ) ?: '' ) : '';
 	}
 }

@@ -1,4 +1,4 @@
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Eye, EyeOff, KeyRound, Lock, Mail, ShieldCheck } from 'lucide-react';
 import { login, webauthnLogin } from '../api/auth';
 import { SlrCountryPhone } from './SlrCountryPhone';
@@ -21,6 +21,7 @@ interface LoginFormProps {
   onOtpRequired: (identifier: string, channel: string) => void;
   onForgotPassword: () => void;
   onSuccess: (result: AuthRedirectResult) => void;
+  passwordAutoComplete?: 'current-password' | 'new-password';
 }
 
 type LoginMode = 'password' | 'otp';
@@ -33,7 +34,13 @@ function canUsePhoneOtpLogin(config: SlrConfig): boolean {
   return config.auth.otpLogin && config.auth.phoneOtp;
 }
 
-export function LoginForm({ config, onOtpRequired, onForgotPassword, onSuccess }: LoginFormProps) {
+export function LoginForm({
+  config,
+  onOtpRequired,
+  onForgotPassword,
+  onSuccess,
+  passwordAutoComplete = 'current-password',
+}: LoginFormProps) {
   const toast = useSlrToast();
   const otpLoginAvailable = canUseOtpLogin(config);
   const phoneOtpAvailable = canUsePhoneOtpLogin(config);
@@ -44,6 +51,7 @@ export function LoginForm({ config, onOtpRequired, onForgotPassword, onSuccess }
   const [email, setEmail] = useState(() => loadFormSession().loginEmail);
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordFieldReady, setPasswordFieldReady] = useState(passwordAutoComplete !== 'new-password');
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -54,6 +62,13 @@ export function LoginForm({ config, onOtpRequired, onForgotPassword, onSuccess }
     () => loginMode === 'otp' && emailOtpAvailable && phoneOtpAvailable,
     [loginMode, emailOtpAvailable, phoneOtpAvailable]
   );
+
+  useEffect(() => {
+    if (passwordAutoComplete === 'new-password') {
+      setPassword('');
+      setPasswordFieldReady(false);
+    }
+  }, [passwordAutoComplete]);
 
   const clearField = (field: LoginField) => {
     setFieldErrors((prev) => {
@@ -96,9 +111,9 @@ export function LoginForm({ config, onOtpRequired, onForgotPassword, onSuccess }
 	  });
       if (result.requiresOtp) {
         onOtpRequired(email, result.otpChannel || 'email');
-        return;
+      } else {
+        onSuccess(result);
       }
-      onSuccess(result);
     } catch (err) {
       const message = err instanceof Error ? err.message : config.i18n.errorGeneric;
       showError(message, mapApiErrorToLoginFields(message));
@@ -282,7 +297,9 @@ export function LoginForm({ config, onOtpRequired, onForgotPassword, onSuccess }
             setPassword(e.target.value);
             clearField('password');
           }}
-          autoComplete="current-password"
+          autoComplete={passwordAutoComplete}
+          readOnly={!passwordFieldReady}
+          onFocus={() => setPasswordFieldReady(true)}
           placeholder="Enter your password"
           hasError={fieldErrors.password}
           suffix={

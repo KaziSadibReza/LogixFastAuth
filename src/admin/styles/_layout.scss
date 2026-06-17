@@ -67,7 +67,7 @@
         box-shadow: none !important;
       }
 
-      &.active::before {
+      &.slr-nav-link--active::before {
         display: none;
       }
     }
@@ -189,7 +189,7 @@
       color: #fafafa;
     }
 
-    &.active {
+    &.slr-nav-link--active {
       background: rgba(214, 51, 108, 0.14);
       color: #fda4c8;
 

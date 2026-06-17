@@ -9,6 +9,7 @@
     "postbuild": "node -e \"const fs=require('fs');const p='assets/dist/manifest.json';console.log(fs.existsSync(p)?'manifest.json generated at assets/dist/manifest.json':'WARN: manifest.json missing — run npm run build');\"",
     "preview": "vite preview",
     "sync:production": "node scripts/sync-production.mjs",
+    "package:org": "node scripts/package-org.mjs",
     "publish:production": "node scripts/sync-production.mjs --push"
   },
   "dependencies": {

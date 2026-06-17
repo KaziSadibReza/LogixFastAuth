@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Services;
+namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Settings;
 
@@ -188,12 +188,12 @@ class RedirectService {
 		}
 
 		if ( 'login' === $kind && $context instanceof \WP_User ) {
-			$url = apply_filters( 'slr_login_redirect', $url, $context );
+			$url = apply_filters( 'slr_login_redirect', $url, $context ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 		}
 
 		if ( 'register' === $kind ) {
 			$user_id = is_int( $context ) ? $context : 0;
-			$url     = apply_filters( 'slr_register_redirect', $url, $user_id );
+			$url     = apply_filters( 'slr_register_redirect', $url, $user_id ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 		}
 
 		return (string) $url;
@@ -220,6 +220,6 @@ class RedirectService {
 			$url = home_url( '/' );
 		}
 
-		return (string) apply_filters( 'slr_logged_in_login_page_redirect', $url, $user );
+		return (string) apply_filters( 'slr_logged_in_login_page_redirect', $url, $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 	}
 }

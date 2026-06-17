@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Services;
+namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -88,7 +88,7 @@ class EmailTemplate {
 				<table role="presentation" width="520" cellspacing="0" cellpadding="0" border="0" bgcolor="#ffffff" style="width:100%;max-width:520px;background-color:#ffffff;border-radius:20px;border:1px solid #ece8e6;">
 					<!-- Header -->
 					<tr>
-						<td align="center" bgcolor="<?php echo $accent; ?>" style="background-color:<?php echo $accent; ?>;padding:32px 40px;text-align:center;">
+						<td align="center" bgcolor="<?php echo esc_attr( $accent ); ?>" style="background-color:<?php echo esc_attr( $accent ); ?>;padding:32px 40px;text-align:center;">
 							<p style="margin:0 0 8px;font-size:13px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#ffffff;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;"><?php echo esc_html( $site_name ); ?></p>
 							<h1 style="margin:0;font-size:26px;font-weight:700;color:#ffffff;line-height:1.3;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;"><?php echo esc_html( $heading ); ?></h1>
 						</td>
@@ -113,7 +113,7 @@ class EmailTemplate {
 					<tr>
 						<td align="center" style="padding:20px 40px 32px;border-top:1px solid #f0ecea;text-align:center;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
 							<p style="margin:0 0 4px;font-size:12px;color:#9a9ab0;">
-								<a href="<?php echo esc_url( $site_url ); ?>" style="color:<?php echo $accent; ?>;text-decoration:none;font-weight:600;"><?php echo esc_html( $site_name ); ?></a>
+								<a href="<?php echo esc_url( $site_url ); ?>" style="color:<?php echo esc_attr( $accent ); ?>;text-decoration:none;font-weight:600;"><?php echo esc_html( $site_name ); ?></a>
 							</p>
 							<p style="margin:0;font-size:11px;color:#b8b8c8;">&copy; <?php echo esc_html( $year ); ?> <?php echo esc_html( $site_name ); ?></p>
 						</td>

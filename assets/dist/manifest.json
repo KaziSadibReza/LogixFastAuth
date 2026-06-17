@@ -1,6 +1,6 @@
 {
-  "_main-C-D4jHew.js": {
-    "file": "chunks/main-C-D4jHew.js",
+  "_main-D30-TV4o.js": {
+    "file": "chunks/main-D30-TV4o.js",
     "name": "main",
     "imports": [
       "_slr-bridge-BcnOibz4.js"
@@ -42,7 +42,7 @@
     "src": "src/frontend/main-page.tsx",
     "isEntry": true,
     "imports": [
-      "_main-C-D4jHew.js",
+      "_main-D30-TV4o.js",
       "_slr-bridge-BcnOibz4.js"
     ]
   },
@@ -52,7 +52,7 @@
     "src": "src/frontend/main-popup.tsx",
     "isEntry": true,
     "imports": [
-      "_main-C-D4jHew.js",
+      "_main-D30-TV4o.js",
       "_slr-bridge-BcnOibz4.js"
     ]
   }

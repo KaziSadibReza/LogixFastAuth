@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Services;
+namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Settings;
 use WP_Error;
@@ -31,7 +31,7 @@ class GoogleOAuthService {
 		if ( ! empty( $mail['google_client_id'] ) ) {
 			return (string) $mail['google_client_id'];
 		}
-		return (string) apply_filters( 'slr_google_client_id', '' );
+		return (string) apply_filters( 'slr_google_client_id', '' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 	}
 
 	/**
@@ -42,9 +42,9 @@ class GoogleOAuthService {
 	public function get_client_secret() {
 		$mail = Settings::get( 'mail' );
 		if ( ! empty( $mail['google_client_secret'] ) ) {
-			return ( new MailService() )->decrypt_secret( $mail['google_client_secret'] );
+			return ( MailService::instance() )->decrypt_secret( $mail['google_client_secret'] );
 		}
-		return (string) apply_filters( 'slr_google_client_secret', '' );
+		return (string) apply_filters( 'slr_google_client_secret', '' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 	}
 
 	/**
@@ -117,8 +117,26 @@ class GoogleOAuthService {
 			return new WP_Error( 'slr_google_state_invalid', __( 'OAuth session expired. Please try again.', 'smart-login-registration' ), array( 'status' => 400 ) );
 		}
 
-		if ( ! is_user_logged_in() || ! current_user_can( 'manage_options' ) || (int) $session['user_id'] !== get_current_user_id() ) {
-			return new WP_Error( 'slr_google_unauthorized', __( 'You must finish Google authorization from the same administrator session that started it.', 'smart-login-registration' ), array( 'status' => 403 ) );
+		$owner_id = (int) $session['user_id'];
+		$owner    = get_user_by( 'id', $owner_id );
+
+		if ( ! $owner || ! user_can( $owner, 'manage_options' ) ) {
+			return new WP_Error(
+				'slr_google_unauthorized',
+				__( 'OAuth session is not valid for an administrator.', 'smart-login-registration' ),
+				array( 'status' => 403 )
+			);
+		}
+
+		$current_id = get_current_user_id();
+
+		// REST callbacks often arrive without auth cookies; trust the signed state owner instead.
+		if ( $current_id > 0 && $current_id !== $owner_id ) {
+			return new WP_Error(
+				'slr_google_unauthorized',
+				__( 'You must finish Google authorization from the same administrator session that started it.', 'smart-login-registration' ),
+				array( 'status' => 403 )
+			);
 		}
 
 		if ( empty( $code ) ) {
@@ -163,9 +181,7 @@ class GoogleOAuthService {
 
 		if ( $account_email ) {
 			$updates['google_account_email'] = $account_email;
-			if ( empty( $mail['from_email'] ) || $mail['from_email'] === get_option( 'admin_email' ) ) {
-				$updates['from_email'] = $account_email;
-			}
+			$updates['from_email']           = $account_email;
 		}
 
 		Settings::update( 'mail', wp_parse_args( $updates, $mail ) );
@@ -201,12 +217,14 @@ class GoogleOAuthService {
 	 * @return string
 	 */
 	public function admin_redirect_url( $status, $message = '' ) {
-		$url = admin_url( 'admin.php?page=slr#/mail' );
-		$args = array( 'google' => $status );
+		$base = add_query_arg( 'page', 'slr', admin_url( 'admin.php' ) );
+		$hash = array( 'google' => $status );
+
 		if ( $message ) {
-			$args['google_message'] = rawurlencode( $message );
+			$hash['google_message'] = $message;
 		}
-		return add_query_arg( $args, $url );
+
+		return $base . '#/mail?' . http_build_query( $hash, '', '&', PHP_QUERY_RFC3986 );
 	}
 
 	/**

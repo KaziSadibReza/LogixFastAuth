@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR;
+namespace SLR; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Integrations\Integration_Availability;
 
@@ -169,10 +169,13 @@ class Settings {
 		$integrations = $all['integrations'] ?? array();
 		$page_id      = (int) ( $all['general']['dedicated_page_id'] ?? 0 );
 		$dedicated_url = $page_id ? ( get_permalink( $page_id ) ?: '' ) : '';
-		$redirect_to   = '';
-
-		if ( ! empty( $_GET['redirect_to'] ) ) {
-			$redirect_to = wp_validate_redirect( wp_unslash( $_GET['redirect_to'] ), '' );
+		$redirect_to = '';
+		$raw_redirect = filter_input( INPUT_GET, 'redirect_to', FILTER_UNSAFE_RAW );
+		if ( is_string( $raw_redirect ) && '' !== $raw_redirect ) {
+			$raw_redirect = sanitize_url( wp_unslash( $raw_redirect ) );
+			if ( '' !== $raw_redirect ) {
+				$redirect_to = wp_validate_redirect( $raw_redirect, '' );
+			}
 		}
 
 		return array(
@@ -196,10 +199,10 @@ class Settings {
 			'auth'        => array(
 				'emailOtp'    => (bool) $all['auth']['email_otp_enabled'],
 				'phoneOtp'    => (bool) $all['auth']['phone_otp_enabled'],
-				'webauthn'    => false,
+				'webauthn'    => (bool) $all['auth']['webauthn_enabled'],
 				'otpLogin'    => (bool) $all['auth']['otp_login_enabled'],
 				'requirePhone' => (bool) $all['auth']['require_phone'],
-				'hasSmsProvider' => ! empty( apply_filters( 'slr_sms_providers', array() ) ),
+				'hasSmsProvider' => ! empty( apply_filters( 'slr_sms_providers', array() ) ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 			),
 			'style'       => $all['appearance'],
 			'redirects'   => \SLR\Services\RedirectService::get_public_config(),

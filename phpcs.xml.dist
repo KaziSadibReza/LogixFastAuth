@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<ruleset name="Smart Login Registration">
+	<description>WordPress coding standards for Smart Login Registration.</description>
+
+	<file>.</file>
+
+	<exclude-pattern>/vendor/</exclude-pattern>
+	<exclude-pattern>/node_modules/</exclude-pattern>
+	<exclude-pattern>/src/</exclude-pattern>
+	<exclude-pattern>/scripts/</exclude-pattern>
+	<exclude-pattern>/build/</exclude-pattern>
+	<exclude-pattern>/.wordpress-org/</exclude-pattern>
+
+	<rule ref="WordPress">
+		<exclude name="WordPress.NamingConventions.PrefixAllGlobals"/>
+	</rule>
+
+	<config name="minimum_supported_wp_version" value="6.8"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="smart-login-registration"/>
+			</property>
+		</properties>
+	</rule>
+</ruleset>

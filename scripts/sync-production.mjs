@@ -13,7 +13,8 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const WORKTREE = path.join(ROOT, '.worktree-production');
+const OLD_WORKTREE = path.join(ROOT, '.worktree-production');
+const WORKTREE = path.resolve(ROOT, '..', '.slr-production-worktree');
 const PRODUCTION_BRANCH = 'production';
 const REMOTE = 'origin';
 
@@ -24,6 +25,9 @@ const PRODUCTION_PATHS = [
 	'templates',
 	'languages',
 	'assets/dist',
+	'assets/css',
+	'assets/js',
+	'assets/images',
 	'composer.json',
 	'composer.lock',
 ];
@@ -67,7 +71,12 @@ function parseArgs(argv) {
 }
 
 function branchExists(name) {
-	return runOrNull(`git show-ref --verify --quiet refs/heads/${name}; echo $?`) === '0';
+	try {
+		run(`git show-ref --verify --quiet refs/heads/${name}`);
+		return true;
+	} catch {
+		return false;
+	}
 }
 
 function worktreeExists() {
@@ -106,7 +115,26 @@ function buildAssets(skipBuild) {
 	}
 }
 
+function migrateLegacyWorktree() {
+	if (!fs.existsSync(path.join(OLD_WORKTREE, '.git'))) {
+		return;
+	}
+
+	console.log('Removing legacy in-repo production worktree (.worktree-production)...');
+	try {
+		run(`git worktree remove --force "${OLD_WORKTREE}"`);
+	} catch {
+		// Worktree metadata may already be stale; continue with directory cleanup.
+	}
+
+	if (fs.existsSync(OLD_WORKTREE)) {
+		fs.rmSync(OLD_WORKTREE, { recursive: true, force: true });
+	}
+}
+
 function ensureWorktree() {
+	migrateLegacyWorktree();
+
 	if (worktreeExists()) {
 		return;
 	}
@@ -150,11 +178,6 @@ function copyProductionFiles() {
 	for (const relativePath of PRODUCTION_PATHS) {
 		copyPath(relativePath);
 	}
-
-	fs.copyFileSync(
-		path.join(ROOT, 'scripts/production.gitignore'),
-		path.join(WORKTREE, '.gitignore')
-	);
 }
 
 function installComposerDependencies() {

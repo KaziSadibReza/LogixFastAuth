@@ -5,10 +5,11 @@
  * @package SLR
  */
 
-namespace SLR\Api;
+namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Integrations\Integration_Availability;
 use SLR\Services\GoogleOAuthService;
+use SLR\Services\Passkey_Surfaces;
 use SLR\Services\LoginPageService;
 use SLR\Services\MailService;
 use SLR\Services\StatsService;
@@ -164,8 +165,7 @@ class SettingsController {
 	 * @return array
 	 */
 	private function sanitize_auth( $section ) {
-		// Keep passkeys unavailable until server-side WebAuthn verification exists.
-		$section['webauthn_enabled'] = false;
+		$section['webauthn_enabled'] = Settings::to_bool( $section['webauthn_enabled'] ?? false );
 
 		return $section;
 	}
@@ -212,9 +212,11 @@ class SettingsController {
 		$settings['mail']['google_configured']   = $google_oauth->is_configured();
 		$settings['mail']['google_redirect_uri'] = $google_oauth->get_redirect_uri();
 
-		$settings['auth']['has_sms_provider'] = ! empty( apply_filters( 'slr_sms_providers', array() ) );
+		$settings['auth']['has_sms_provider'] = ! empty( apply_filters( 'slr_sms_providers', array() ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 		$settings['auth']['has_tutor_lms']    = Integration_Availability::is_tutor_available();
 		$settings['integration_plugins']      = Integration_Availability::get_plugin_map();
+		$settings['passkey_manage_urls']      = Passkey_Surfaces::get_manage_urls();
+		$settings['mail_smtp_conflicts']      = MailService::get_smtp_plugin_conflicts();
 
 		return $settings;
 	}
@@ -285,7 +287,7 @@ class SettingsController {
 		$data = $request->get_json_params() ?: array();
 		$to   = sanitize_email( $data['email'] ?? get_option( 'admin_email' ) );
 
-		$result = ( new MailService() )->send_test( $to );
+		$result = MailService::instance()->send_test( $to );
 
 		if ( is_wp_error( $result ) ) {
 			return $result;
@@ -336,7 +338,7 @@ class SettingsController {
 	 * @return \WP_REST_Response
 	 */
 	public function get_sms_providers() {
-		$providers = apply_filters( 'slr_sms_providers', array() );
+		$providers = apply_filters( 'slr_sms_providers', array() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 		$list      = array();
 
 		foreach ( $providers as $provider ) {

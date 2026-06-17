@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Database;
+namespace SLR\Database; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class WebAuthnRepository
  */
+// phpcs:disable WordPress.DB.DirectDatabaseQuery
 class WebAuthnRepository {
 
 	/**
@@ -60,7 +61,11 @@ class WebAuthnRepository {
 	public function get_by_user( $user_id ) {
 		global $wpdb;
 		return $wpdb->get_results(
-			$wpdb->prepare( "SELECT * FROM {$this->table()} WHERE user_id = %d", $user_id )
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is wpdb-prefixed and internal.
+				"SELECT * FROM {$this->table()} WHERE user_id = %d",
+				$user_id
+			)
 		);
 	}
 
@@ -73,7 +78,11 @@ class WebAuthnRepository {
 	public function get_by_credential_id( $credential_id ) {
 		global $wpdb;
 		return $wpdb->get_row(
-			$wpdb->prepare( "SELECT * FROM {$this->table()} WHERE credential_id = %s", $credential_id )
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is wpdb-prefixed and internal.
+				"SELECT * FROM {$this->table()} WHERE credential_id = %s",
+				$credential_id
+			)
 		);
 	}
 
@@ -94,6 +103,24 @@ class WebAuthnRepository {
 			),
 			array( 'id' => $id ),
 			array( '%d', '%s' ),
+			array( '%d' )
+		);
+	}
+
+	/**
+	 * Update stored credential source JSON.
+	 *
+	 * @param int    $id         Record ID.
+	 * @param string $public_key Serialized credential source.
+	 * @return void
+	 */
+	public function update_public_key( $id, $public_key ) {
+		global $wpdb;
+		$wpdb->update(
+			$this->table(),
+			array( 'public_key' => $public_key ),
+			array( 'id' => (int) $id ),
+			array( '%s' ),
 			array( '%d' )
 		);
 	}
@@ -124,7 +151,12 @@ class WebAuthnRepository {
 	public function count_by_user( $user_id ) {
 		global $wpdb;
 		return (int) $wpdb->get_var(
-			$wpdb->prepare( "SELECT COUNT(*) FROM {$this->table()} WHERE user_id = %d", $user_id )
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Table name is wpdb-prefixed and internal.
+				"SELECT COUNT(*) FROM {$this->table()} WHERE user_id = %d",
+				$user_id
+			)
 		);
 	}
 }
+// phpcs:enable WordPress.DB.DirectDatabaseQuery

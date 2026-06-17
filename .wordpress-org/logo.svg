@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="512" height="512" role="img" aria-label="Smart Login Registration">
+  <defs>
+    <linearGradient id="slrGrad" x1="4" y1="4" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#d6336c"/>
+      <stop offset="0.55" stop-color="#c2349a"/>
+      <stop offset="1" stop-color="#ae3ec9"/>
+    </linearGradient>
+    <radialGradient id="slrGloss" cx="26" cy="12" r="40" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="0.55" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#slrGrad)"/>
+  <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#slrGloss)"/>
+  <circle cx="32" cy="22" r="7.5" fill="none" stroke="#ffffff" stroke-width="5.5"/>
+  <path d="M32 30 V49" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round"/>
+  <path d="M32 42 H40" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round"/>
+</svg>

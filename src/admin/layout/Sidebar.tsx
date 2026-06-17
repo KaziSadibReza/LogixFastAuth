@@ -13,6 +13,23 @@ import {
 } from 'lucide-react';
 import { Icon } from '../ui/Icon';
 
+function BrandMark() {
+  return (
+    <svg viewBox="0 0 64 64" width="28" height="28" aria-hidden="true">
+      <defs>
+        <linearGradient id="slr-bm" x1="4" y1="4" x2="60" y2="60" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stopColor="var(--slr-primary)" />
+          <stop offset="1" stopColor="var(--slr-primary)" />
+        </linearGradient>
+      </defs>
+      <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#slr-bm)" />
+      <circle cx="32" cy="22" r="7.5" fill="none" stroke="#fff" strokeWidth="5.5" />
+      <path d="M32 30V49" stroke="#fff" strokeWidth="5.5" strokeLinecap="round" />
+      <path d="M32 42H40" stroke="#fff" strokeWidth="5.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 interface SidebarProps {
   collapsed: boolean;
   mobileOpen: boolean;
@@ -42,8 +59,8 @@ export function Sidebar({ collapsed, mobileOpen, onClose, onToggleCollapse, i18n
       />
       <aside className={`slr-sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
         <div className="slr-brand">
-          <span className="slr-brand-mark" aria-hidden="true">
-            <Icon icon={Lock} size={16} />
+          <span className="slr-brand-mark">
+            <BrandMark />
           </span>
           <span className="slr-brand-title">
             <strong>SLR</strong>
@@ -58,7 +75,7 @@ export function Sidebar({ collapsed, mobileOpen, onClose, onToggleCollapse, i18n
               to={item.to}
               end={item.to === '/'}
               title={collapsed ? i18n[item.labelKey] : undefined}
-              className={({ isActive }) => (isActive ? 'active' : '')}
+              className={({ isActive }) => (isActive ? 'slr-nav-link--active' : '')}
               onClick={onClose}
             >
               <span className="slr-nav-icon">

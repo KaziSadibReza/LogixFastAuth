@@ -86,7 +86,7 @@ export function forgotPassword(data: { email?: string; phone?: string }): Promis
   });
 }
 
-export function resetPassword(resetToken: string, password: string): Promise<{ success: boolean; message: string }> {
+export function resetPassword(resetToken: string, password: string): Promise<AuthResponse> {
   const config = getConfig();
   return apiRequest(config.apiUrl, config.nonce, '/auth/reset-password', {
     method: 'POST',

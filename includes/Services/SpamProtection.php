@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Services;
+namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Settings;
 use WP_Error;
@@ -34,7 +34,7 @@ class SpamProtection {
 			}
 		}
 
-		$verified = apply_filters( 'slr_spam_verify', true, $data );
+		$verified = apply_filters( 'slr_spam_verify', true, $data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 		if ( is_wp_error( $verified ) ) {
 			return $verified;
 		}

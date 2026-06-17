@@ -14,6 +14,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { disconnectGoogle, getGoogleOAuthUrl, testSmtp } from '../api/settings';
+import { GoogleOAuthSetupGuide } from '../components/GoogleOAuthSetupGuide';
 import { useSettings } from '../context/SettingsContext';
 import {
   Badge,
@@ -21,9 +22,11 @@ import {
   Card,
   Field,
   GoogleIcon,
+  HelpTooltip,
   Icon,
   Input,
   IntegrationIconCard,
+  NoticeBanner,
   Select,
   MailPageSkeleton,
   TransportIconCard,
@@ -40,21 +43,21 @@ const transports = [
   {
     value: 'wp_mail',
     title: 'WordPress mail',
-    description: 'Uses your host default mail handler.',
+    description: 'Uses your host default mail handler for all site email.',
     variant: 'wp' as const,
     icon: Mail,
   },
   {
     value: 'smtp',
     title: 'Custom SMTP',
-    description: 'Connect your own SMTP server.',
+    description: 'Routes all WordPress email through your SMTP server.',
     variant: 'smtp' as const,
     icon: Server,
   },
   {
     value: 'google',
     title: 'Google SMTP',
-    description: 'One-click Gmail OAuth setup.',
+    description: 'Routes all WordPress email through Gmail OAuth.',
     variant: 'google' as const,
     customIcon: <GoogleIcon size={22} />,
   },
@@ -65,6 +68,7 @@ export function MailPage() {
   const [testing, setTesting] = useState(false);
   const [connecting, setConnecting] = useState(false);
   const [disconnecting, setDisconnecting] = useState(false);
+  const [conflictDismissed, setConflictDismissed] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const toast = useToast();
 
@@ -91,6 +95,10 @@ export function MailPage() {
 
   const m = settings.mail;
   const auth = settings.auth;
+  const smtpConflicts = settings.mail_smtp_conflicts ?? [];
+  const showConflictNotice = !conflictDismissed && smtpConflicts.length > 0;
+  const conflictNames = smtpConflicts.map((plugin) => plugin.name).join(', ');
+  const usingSlrSmtp = m.transport === 'smtp' || m.transport === 'google';
 
   const transportBadge =
     m.transport === 'wp_mail'
@@ -157,6 +165,29 @@ export function MailPage() {
 
   return (
     <>
+      {showConflictNotice && (
+        <NoticeBanner
+          variant={usingSlrSmtp ? 'warning' : 'info'}
+          title={usingSlrSmtp ? 'Another SMTP plugin is active' : 'SMTP handled by another plugin'}
+          onDismiss={() => setConflictDismissed(true)}
+        >
+          {usingSlrSmtp ? (
+            <>
+              <p>
+                <strong>{conflictNames}</strong> may also configure <code>wp_mail()</code>. Running two SMTP
+                handlers can cause duplicate or failed delivery.
+              </p>
+              <p>Disable the other plugin or switch SLR to <strong>WordPress mail</strong> to avoid conflicts.</p>
+            </>
+          ) : (
+            <p>
+              <strong>{conflictNames}</strong> is active, so site email is likely routed through that plugin. SLR is
+              currently set to <strong>WordPress mail</strong>.
+            </p>
+          )}
+        </NoticeBanner>
+      )}
+
       <Card
         className="slr-card--flush-body"
         title={
@@ -167,7 +198,7 @@ export function MailPage() {
             Delivery method
           </span>
         }
-        description="Choose how SLR sends OTP and notification emails."
+        description="Choose how this site sends email — SLR OTPs, WooCommerce, WordPress, and other plugins."
         actions={<Badge variant={transportBadge.variant} dot>{transportBadge.label}</Badge>}
         bodyClassName="slr-card-body--flush"
       >
@@ -237,11 +268,16 @@ export function MailPage() {
             <div className="slr-mail-transport-config slr-mail-google-panel">
               <div className="slr-mail-google-columns">
                 <div className="slr-mail-google-credentials">
-                  <div className="slr-integration-panel-head">
-                    <h4 className="slr-integration-panel-title">Google OAuth credentials</h4>
-                    <p className="slr-integration-panel-desc">
-                      Create a Google Cloud OAuth app once, then connect with one click.
-                    </p>
+                  <div className="slr-integration-panel-head slr-integration-panel-head--with-help">
+                    <div>
+                      <h4 className="slr-integration-panel-title">Google OAuth credentials</h4>
+                      <p className="slr-integration-panel-desc">
+                        Create a Google Cloud OAuth app once, then connect with one click.
+                      </p>
+                    </div>
+                    <HelpTooltip label="How to get Google OAuth credentials">
+                      <GoogleOAuthSetupGuide />
+                    </HelpTooltip>
                   </div>
                   <div className="slr-form-stack">
                     <Field label="Client ID" required>
@@ -268,6 +304,8 @@ export function MailPage() {
                   </div>
                 </div>
 
+                <div className="slr-mail-google-divider" aria-hidden="true" />
+
                 <div className="slr-mail-google-connect">
                   {m.google_connected ? (
                     <div className="slr-google-connected-card">
@@ -276,8 +314,12 @@ export function MailPage() {
                       </div>
                       <div className="slr-google-connected-card__body">
                         <strong>Connected to Google</strong>
-                        <span>{m.google_account_email || m.from_email}</span>
-                        <Badge variant="success">Active</Badge>
+                        <div className="slr-google-connected-card__meta">
+                          <span>{m.google_account_email || m.from_email}</span>
+                          <Badge variant="success" dot>
+                            Active
+                          </Badge>
+                        </div>
                       </div>
                       <Button variant="secondary" onClick={handleGoogleDisconnect} loading={disconnecting}>
                         Disconnect

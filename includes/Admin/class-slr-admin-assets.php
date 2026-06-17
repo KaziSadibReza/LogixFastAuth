@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Admin;
+namespace SLR\Admin; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin namespace prefix.
 
 use SLR\Assets;
 
@@ -45,7 +45,7 @@ class Admin_Assets {
 			'slr-font-urbanist',
 			'https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap',
 			array(),
-			null
+			SLR_VERSION
 		);
 
 		if ( Assets::is_dev_mode() ) {
@@ -73,8 +73,9 @@ class Admin_Assets {
 			array(
 				'apiUrl'           => rest_url( 'slr/v1' ),
 				'nonce'            => wp_create_nonce( 'wp_rest' ),
-				'homeUrl'          => admin_url(),
-				'pages'            => rest_url( 'slr/v1/settings/pages' ),
+				'homeUrl'            => admin_url(),
+				'profilePasskeysUrl' => admin_url( 'profile.php#slr-passkey-manager' ),
+				'pages'              => rest_url( 'slr/v1/settings/pages' ),
 				'frontendCssUrls'  => $frontend_css_urls,
 				'i18n'    => array(
 					'title'        => __( 'Smart Login Registration', 'smart-login-registration' ),

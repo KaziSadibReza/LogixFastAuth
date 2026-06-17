@@ -5,7 +5,7 @@
  * @package SLR
  */
 
-namespace SLR\Api;
+namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
 use SLR\Services\AuthService;
 use SLR\Services\StatsService;
@@ -95,7 +95,7 @@ class AuthController {
 			return $spam;
 		}
 
-		$rate = ( new RateLimiter() )->check( 'register', RateLimiter::get_client_ip() );
+		$rate = RateLimiter::throttle_scoped( 'register' );
 		if ( is_wp_error( $rate ) ) {
 			return $rate;
 		}
@@ -103,7 +103,7 @@ class AuthController {
 		$auth           = Settings::get( 'auth' );
 		$email_otp_on   = ! empty( $auth['email_otp_enabled'] );
 		$phone_otp_on   = ! empty( $auth['phone_otp_enabled'] );
-		$has_sms        = $phone_otp_on && ! empty( apply_filters( 'slr_sms_providers', array() ) );
+		$has_sms        = $phone_otp_on && ! empty( apply_filters( 'slr_sms_providers', array() ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 		$has_phone_data = ! empty( $data['phone'] );
 		$preferred      = sanitize_text_field( $data['preferred_channel'] ?? '' );
 
@@ -123,6 +123,7 @@ class AuthController {
 		if ( $otp_channel ) {
 			$result = $auth_service->stage_registration( $data, $otp_channel );
 			if ( is_wp_error( $result ) ) {
+				( new RateLimiter() )->record_failure( 'register', RateLimiter::get_client_ip() );
 				return $result;
 			}
 
@@ -147,14 +148,18 @@ class AuthController {
 		$result = $auth_service->register( $data );
 
 		if ( is_wp_error( $result ) ) {
+			( new RateLimiter() )->record_failure( 'register', RateLimiter::get_client_ip() );
 			return $result;
 		}
 
 		$login_result = $auth_service->authenticate_user( $result['user_id'] );
 
 		if ( is_wp_error( $login_result ) ) {
+			( new RateLimiter() )->record_failure( 'register', RateLimiter::get_client_ip() );
 			return $login_result;
 		}
+
+		RateLimiter::clear_for_key( 'register', RateLimiter::get_client_ip() );
 
 		StatsService::record_registration();
 
@@ -188,7 +193,7 @@ class AuthController {
 				$channel = ! empty( $data['phone'] ) && empty( $data['email'] ) ? 'phone' : 'email';
 			}
 
-			$has_sms = ! empty( apply_filters( 'slr_sms_providers', array() ) );
+			$has_sms = ! empty( apply_filters( 'slr_sms_providers', array() ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
 
 			if ( 'phone' === $channel ) {
 				if ( empty( $auth['phone_otp_enabled'] ) || ! $has_sms ) {
@@ -226,6 +231,11 @@ class AuthController {
 				) );
 			}
 
+			$otp_rate = RateLimiter::throttle_scoped( 'otp_send', 'login:' . strtolower( $identifier ) );
+			if ( is_wp_error( $otp_rate ) ) {
+				return $otp_rate;
+			}
+
 			$otp = ( new OtpService() )->send( $identifier, $channel, 'login' );
 			if ( is_wp_error( $otp ) ) {
 				return $otp;
@@ -240,8 +250,13 @@ class AuthController {
 		$result = ( new AuthService() )->login( $data );
 
 		if ( is_wp_error( $result ) ) {
+			if ( in_array( $result->get_error_code(), array( 'slr_invalid_credentials', 'slr_login_failed' ), true ) ) {
+				( new RateLimiter() )->record_failure( 'login', RateLimiter::get_client_ip() );
+			}
 			return $result;
 		}
+
+		RateLimiter::clear_for_key( 'login', RateLimiter::get_client_ip() );
 
 		return rest_ensure_response( $result );
 	}
@@ -270,7 +285,7 @@ class AuthController {
 			return $spam;
 		}
 
-		$rate = ( new RateLimiter() )->check( 'forgot_password', RateLimiter::get_client_ip() );
+		$rate = RateLimiter::throttle_scoped( 'forgot_password' );
 		if ( is_wp_error( $rate ) ) {
 			return $rate;
 		}
@@ -320,7 +335,12 @@ class AuthController {
 	public function reset_password( $request ) {
 		$data = $request->get_json_params() ?: array();
 
-		$rate = ( new RateLimiter() )->check( 'reset_password', RateLimiter::get_client_ip() );
+		$spam = ( new SpamProtection() )->verify( $data );
+		if ( is_wp_error( $spam ) ) {
+			return $spam;
+		}
+
+		$rate = RateLimiter::throttle_scoped( 'reset_password' );
 		if ( is_wp_error( $rate ) ) {
 			return $rate;
 		}
@@ -328,11 +348,20 @@ class AuthController {
 		$reset_token = sanitize_text_field( $data['reset_token'] ?? '' );
 		$password    = $data['password'] ?? '';
 
-		$result = ( new AuthService() )->complete_password_reset( $reset_token, $password );
+		$auth_service = new AuthService();
+		$result       = $auth_service->complete_password_reset( $reset_token, $password );
 		if ( is_wp_error( $result ) ) {
+			( new RateLimiter() )->record_failure( 'reset_password', RateLimiter::get_client_ip() );
 			return $result;
 		}
 
-		return rest_ensure_response( $result );
+		RateLimiter::clear_for_ip( RateLimiter::get_client_ip() );
+
+		$auth_result = $auth_service->authenticate_user( (int) $result['user_id'] );
+		if ( is_wp_error( $auth_result ) ) {
+			return rest_ensure_response( $result );
+		}
+
+		return rest_ensure_response( array_merge( $result, $auth_result ) );
 	}
 }
