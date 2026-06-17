@@ -5,16 +5,19 @@
  * @package SLR
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-$service_file = dirname( __FILE__ ) . '/includes/Services/class-slr-uninstall-service.php';
-if ( ! file_exists( $service_file ) ) {
+if ( ! file_exists( dirname( __FILE__ ) . '/includes/Services/class-slr-uninstall-service.php' ) ) {
 	return;
 }
 
-require_once $service_file;
+require_once dirname( __FILE__ ) . '/includes/Services/class-slr-uninstall-service.php';
 
 if ( ! \SLR\Services\UninstallService::should_purge_data() ) {
 	return;

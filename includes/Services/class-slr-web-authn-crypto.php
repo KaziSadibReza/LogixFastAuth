@@ -43,6 +43,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class WebAuthnCrypto {
 
+	const LOGIN_SESSION_TTL = 900;
+
 	/**
 	 * Whether the WebAuthn PHP library is available.
 	 *
@@ -171,24 +173,30 @@ class WebAuthnCrypto {
 			$rp_id,
 			$allow_creds,
 			PublicKeyCredentialRequestOptions::USER_VERIFICATION_REQUIREMENT_PREFERRED,
-			300000
+			600000
 		);
 
 		$session_key = 'slr_webauthn_login_' . wp_generate_password( 16, false );
-		$payload     = $options->jsonSerialize();
+		$payload     = $this->normalize_request_options_payload( $options->jsonSerialize() );
+		$options_json = wp_json_encode( $payload );
+
+		if ( ! is_string( $options_json ) || '' === $options_json ) {
+			return new WP_Error( 'slr_webauthn_invalid', __( 'Passkey sign-in could not be started.', 'smart-login-registration' ), array( 'status' => 500 ) );
+		}
 
 		set_transient(
 			$session_key,
 			array(
 				'email'   => $email,
-				'options' => $payload,
+				'options' => $options_json,
 			),
-			300
+			self::LOGIN_SESSION_TTL
 		);
 
 		return array(
-			'options'    => $payload,
-			'sessionKey' => $session_key,
+			'options'     => $payload,
+			'sessionKey'  => $session_key,
+			'session_key' => $session_key,
 		);
 	}
 
@@ -206,11 +214,14 @@ class WebAuthnCrypto {
 		}
 
 		$session = get_transient( $session_key );
-		if ( ! is_array( $session ) || empty( $session['options'] ) ) {
-			return new WP_Error( 'slr_webauthn_expired', __( 'Login session expired.', 'smart-login-registration' ), array( 'status' => 400 ) );
+		$options_array = $this->decode_stored_request_options( $session );
+		if ( null === $options_array ) {
+			if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+				// phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug only.
+				error_log( 'SLR WebAuthn login session missing or expired for key prefix: ' . substr( $session_key, 0, 24 ) );
+			}
+			return new WP_Error( 'slr_webauthn_expired', __( 'Login session expired. Please try passkey sign-in again.', 'smart-login-registration' ), array( 'status' => 400 ) );
 		}
-
-		delete_transient( $session_key );
 
 		$credential_id = $this->sanitize_credential_id( $response['id'] ?? '' );
 		if ( '' === $credential_id ) {
@@ -233,7 +244,7 @@ class WebAuthnCrypto {
 		}
 
 		try {
-			$request_options = PublicKeyCredentialRequestOptions::createFromArray( $session['options'] );
+			$request_options = PublicKeyCredentialRequestOptions::createFromArray( $options_array );
 			$public_key_cred   = $this->load_credential( $response );
 			if ( is_wp_error( $public_key_cred ) ) {
 				return $public_key_cred;
@@ -249,6 +260,8 @@ class WebAuthnCrypto {
 
 			$repo->update_counter( (int) $credential->id, (int) $updated->counter );
 			$repo->update_public_key( (int) $credential->id, wp_json_encode( $updated->jsonSerialize() ) );
+
+			delete_transient( $session_key );
 
 			return (int) $credential->user_id;
 		} catch ( Throwable $exception ) {
@@ -281,6 +294,57 @@ class WebAuthnCrypto {
 		);
 
 		return true;
+	}
+
+	/**
+	 * Normalize WebAuthn request options for JSON transient storage.
+	 *
+	 * @param array<string, mixed> $payload Serialized request options.
+	 * @return array<string, mixed>
+	 */
+	private function normalize_request_options_payload( array $payload ) {
+		if ( empty( $payload['allowCredentials'] ) || ! is_array( $payload['allowCredentials'] ) ) {
+			return $payload;
+		}
+
+		$normalized = array();
+		foreach ( $payload['allowCredentials'] as $descriptor ) {
+			if ( $descriptor instanceof \Webauthn\PublicKeyCredentialDescriptor ) {
+				$normalized[] = $descriptor->jsonSerialize();
+				continue;
+			}
+			if ( is_array( $descriptor ) ) {
+				$normalized[] = $descriptor;
+			}
+		}
+
+		$payload['allowCredentials'] = $normalized;
+
+		return $payload;
+	}
+
+	/**
+	 * Decode stored login options from a transient payload.
+	 *
+	 * @param mixed $session Stored transient value.
+	 * @return array<string, mixed>|null
+	 */
+	private function decode_stored_request_options( $session ) {
+		if ( ! is_array( $session ) || ! isset( $session['options'] ) ) {
+			return null;
+		}
+
+		$stored_options = $session['options'];
+		if ( is_string( $stored_options ) ) {
+			$decoded = json_decode( $stored_options, true );
+			return is_array( $decoded ) && ! empty( $decoded['challenge'] ) ? $decoded : null;
+		}
+
+		if ( is_array( $stored_options ) && ! empty( $stored_options['challenge'] ) ) {
+			return $this->normalize_request_options_payload( $stored_options );
+		}
+
+		return null;
 	}
 
 	/**

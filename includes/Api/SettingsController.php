@@ -12,6 +12,7 @@ use SLR\Services\GoogleOAuthService;
 use SLR\Services\Passkey_Surfaces;
 use SLR\Services\LoginPageService;
 use SLR\Services\MailService;
+use SLR\Services\Phone_Sync_Service;
 use SLR\Services\StatsService;
 use SLR\Settings;
 use WP_REST_Server;
@@ -127,6 +128,16 @@ class SettingsController {
 				'permission_callback' => array( $this, 'admin_permission' ),
 			)
 		);
+
+		register_rest_route(
+			'slr/v1',
+			'/settings/phone-sync',
+			array(
+				'methods'             => WP_REST_Server::CREATABLE,
+				'callback'            => array( $this, 'sync_phone_fields' ),
+				'permission_callback' => array( $this, 'admin_permission' ),
+			)
+		);
 	}
 
 	/**
@@ -217,6 +228,7 @@ class SettingsController {
 		$settings['integration_plugins']      = Integration_Availability::get_plugin_map();
 		$settings['passkey_manage_urls']      = Passkey_Surfaces::get_manage_urls();
 		$settings['mail_smtp_conflicts']      = MailService::get_smtp_plugin_conflicts();
+		$settings['phone_sync_preview']       = Phone_Sync_Service::get_preview();
 
 		return $settings;
 	}
@@ -408,5 +420,23 @@ class SettingsController {
 	public function google_disconnect() {
 		( new GoogleOAuthService() )->disconnect();
 		return rest_ensure_response( array( 'success' => true ) );
+	}
+
+	/**
+	 * Sync SLR / WooCommerce / Tutor phone profile fields.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function sync_phone_fields( $request ) {
+		$data   = $request->get_json_params() ?: array();
+		$target = sanitize_key( $data['target'] ?? Phone_Sync_Service::TARGET_ALL );
+		$result = Phone_Sync_Service::sync( $target );
+
+		if ( is_wp_error( $result ) ) {
+			return $result;
+		}
+
+		return rest_ensure_response( $result );
 	}
 }

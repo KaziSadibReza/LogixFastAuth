@@ -183,7 +183,7 @@ class WebAuthnController {
 			return $spam;
 		}
 
-		$rate = RateLimiter::throttle_scoped( 'webauthn' );
+		$rate = RateLimiter::check_scoped( 'webauthn' );
 		if ( is_wp_error( $rate ) ) {
 			return $rate;
 		}
@@ -194,7 +194,7 @@ class WebAuthnController {
 		if ( is_wp_error( $result ) ) {
 			return $result;
 		}
-		return rest_ensure_response( $result );
+		return $this->nocache_response( $result );
 	}
 
 	/**
@@ -216,8 +216,12 @@ class WebAuthnController {
 			return $rate;
 		}
 
-		$session_key = sanitize_text_field( $data['sessionKey'] ?? '' );
+		$session_key = sanitize_text_field( $data['sessionKey'] ?? $data['session_key'] ?? '' );
 		$response    = is_array( $data['response'] ?? null ) ? $data['response'] : array();
+
+		if ( '' === $session_key ) {
+			return new \WP_Error( 'slr_webauthn_expired', __( 'Login session expired. Please try passkey sign-in again.', 'smart-login-registration' ), array( 'status' => 400 ) );
+		}
 
 		$user_id = ( new WebAuthnService() )->verify_login( $session_key, $response );
 		if ( is_wp_error( $user_id ) ) {
@@ -230,6 +234,20 @@ class WebAuthnController {
 			return $auth_result;
 		}
 
-		return rest_ensure_response( $auth_result );
+		return $this->nocache_response( $auth_result );
+	}
+
+	/**
+	 * Prevent cached WebAuthn challenge responses (each session key is single-use).
+	 *
+	 * @param mixed $data Response data.
+	 * @return \WP_REST_Response
+	 */
+	private function nocache_response( $data ) {
+		$response = rest_ensure_response( $data );
+		$response->header( 'Cache-Control', 'no-store, no-cache, must-revalidate, max-age=0' );
+		$response->header( 'Pragma', 'no-cache' );
+
+		return $response;
 	}
 }

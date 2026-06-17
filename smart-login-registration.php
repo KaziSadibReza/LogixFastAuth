@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: Smart Login Registration
- * Plugin URI:  https://github.com/KaziSadibReza
+ * Plugin URI:  https://github.com/KaziSadibReza/Smart-Login-Registration
  * Description: Ultra-fast, secure login/registration ecosystem with React UI, OTP, WebAuthn, and deep WooCommerce/Tutor integration.
  * Version:     1.0.1
  * Author:      Kazi Sadib Reza

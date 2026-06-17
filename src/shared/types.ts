@@ -121,6 +121,11 @@ export interface SlrSettings {
     tutor?: string;
     woocommerce?: string;
   };
+  phone_sync_preview?: {
+    users_with_phone: number;
+    woocommerce: { available: boolean; pending: number };
+    tutor: { available: boolean; pending: number };
+  };
 }
 
 export type SlrRedirectType = 'stay' | 'default' | 'page' | 'url';

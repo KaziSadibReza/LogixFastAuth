@@ -7,6 +7,7 @@
 
 namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
 
+use SLR\Database\WebAuthnRepository;
 use SLR\Integrations\Integration_Availability;
 use SLR\Settings;
 
@@ -49,23 +50,13 @@ class UninstallService {
 	 * @return array<string, mixed>
 	 */
 	public static function get_preview() {
-		global $wpdb;
-
 		$general    = Settings::get( 'general' );
 		$page_id    = (int) ( $general['dedicated_page_id'] ?? 0 );
 		$login_page = $page_id > 0 ? get_post( $page_id ) : null;
 
-		$passkey_rows   = 0;
-		$webauthn_table = $wpdb->prefix . 'slr_webauthn_credentials';
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Admin preview.
-		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $webauthn_table ) ) === $webauthn_table ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Admin preview.
-			$passkey_rows = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$webauthn_table}" );
-		}
-
 		return array(
 			'phone_users'        => Phone_Profile::count_slr_phone_users(),
-			'passkey_rows'       => $passkey_rows,
+			'passkey_rows'       => ( new WebAuthnRepository() )->count_all(),
 			'login_page_title'   => $login_page instanceof \WP_Post ? $login_page->post_title : '',
 			'uses_slr_phone'     => Phone_Profile::uses_slr_field(),
 			'woocommerce_active' => Integration_Availability::is_woocommerce_available(),
@@ -94,8 +85,8 @@ class UninstallService {
 		);
 
 		foreach ( $tables as $table ) {
-			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange -- Uninstall cleanup.
-			$wpdb->query( "DROP TABLE IF EXISTS {$table}" );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- SLR-owned tables from $wpdb->prefix; uninstall cleanup.
+			$wpdb->query( "DROP TABLE IF EXISTS `{$table}`" );
 		}
 
 		$options = array(
@@ -120,10 +111,10 @@ class UninstallService {
 		);
 
 		// SLR field only — never billing_phone (WooCommerce) or phone_number (Tutor LMS).
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Uninstall cleanup.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Uninstall cleanup.
 		$wpdb->delete( $wpdb->usermeta, array( 'meta_key' => self::SLR_PHONE_META ) );
 
-		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Uninstall cleanup.
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Uninstall cleanup.
 		$wpdb->delete( $wpdb->postmeta, array( 'meta_key' => self::META_PAGE_TYPE ) );
 
 		if ( $page_id > 0 ) {

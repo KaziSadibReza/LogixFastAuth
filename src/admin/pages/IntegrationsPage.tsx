@@ -1,6 +1,8 @@
-import { Globe, GraduationCap, Link2, PenLine, Plug, ShoppingCart, type LucideIcon } from 'lucide-react';
+import { Globe, GraduationCap, Link2, PenLine, Plug, RefreshCw, ShoppingCart, type LucideIcon } from 'lucide-react';
+import { useCallback, useState } from 'react';
+import { syncPhoneFields, type PhoneSyncTarget } from '../api/integrations';
 import { useSettings } from '../context/SettingsContext';
-import { Card, Icon, IntegrationIconCard, IntegrationToggleCard, IntegrationsPageSkeleton } from '../ui';
+import { Card, Icon, IntegrationIconCard, IntegrationToggleCard, IntegrationsPageSkeleton, useToast } from '../ui';
 
 type IntegrationKey = 'replace_wp_login' | 'replace_woocommerce' | 'replace_tutor' | 'replace_elementor';
 type PluginKey = 'wordpress' | 'woocommerce' | 'tutor' | 'elementor';
@@ -84,7 +86,32 @@ const fieldSyncMappings = [
 ];
 
 export function IntegrationsPage() {
-  const { settings, updateSection, loading } = useSettings();
+  const { settings, updateSection, loading, reload } = useSettings();
+  const toast = useToast();
+  const [syncingTarget, setSyncingTarget] = useState<PhoneSyncTarget | null>(null);
+
+  const runPhoneSync = useCallback(
+    async (target: PhoneSyncTarget, label: string) => {
+      setSyncingTarget(target);
+      try {
+        const result = await syncPhoneFields(target);
+        await reload();
+        if (result.updated_users <= 0) {
+          toast.info('All phone fields are already in sync.', label);
+          return;
+        }
+        toast.success(
+          `Updated ${result.updated_users} user${result.updated_users === 1 ? '' : 's'} (${result.updated_fields} field${result.updated_fields === 1 ? '' : 's'}).`,
+          label
+        );
+      } catch (e) {
+        toast.error(e instanceof Error ? e.message : 'Phone sync failed.', label);
+      } finally {
+        setSyncingTarget(null);
+      }
+    },
+    [reload, toast]
+  );
 
   if (loading || !settings) {
     return <IntegrationsPageSkeleton />;
@@ -94,6 +121,31 @@ export function IntegrationsPage() {
   const hasDedicatedPage = Boolean(settings.general.dedicated_page_id);
   const plugins = { ...defaultPluginAvailability, ...settings.integration_plugins };
   const showProfileSync = plugins.woocommerce || plugins.tutor;
+  const phonePreview = settings.phone_sync_preview;
+
+  const canSyncPhones = (target: 'woocommerce' | 'tutor') => {
+    const preview = target === 'woocommerce' ? phonePreview?.woocommerce : phonePreview?.tutor;
+    return Boolean(preview?.available && preview.pending > 0);
+  };
+
+  const getPhoneSyncAction = (target: PhoneSyncTarget, pending?: number) => {
+    if (target !== 'woocommerce' && target !== 'tutor') {
+      return undefined;
+    }
+    if (!canSyncPhones(target)) {
+      return undefined;
+    }
+
+    return {
+      label: `Sync phone numbers (${pending ?? 0} user${pending === 1 ? '' : 's'})`,
+      icon: RefreshCw,
+      loading: syncingTarget === target,
+      disabled: syncingTarget !== null,
+      onClick: () => {
+        void runPhoneSync(target, target === 'woocommerce' ? 'WooCommerce phone sync' : 'Tutor phone sync');
+      },
+    };
+  };
 
   return (
     <>
@@ -121,6 +173,17 @@ export function IntegrationsPage() {
               const pluginKey = pluginKeyByIntegration[item.key];
               const isAvailable = plugins[pluginKey];
               const unavailableHint = `${item.label} is not installed or not active.`;
+              const syncTarget =
+                item.key === 'replace_woocommerce' ? 'woocommerce' : item.key === 'replace_tutor' ? 'tutor' : null;
+              const syncAction =
+                syncTarget && canSyncPhones(syncTarget)
+                  ? getPhoneSyncAction(
+                      syncTarget,
+                      syncTarget === 'woocommerce'
+                        ? phonePreview?.woocommerce.pending
+                        : phonePreview?.tutor.pending
+                    )
+                  : undefined;
 
               return (
                 <IntegrationToggleCard
@@ -138,6 +201,7 @@ export function IntegrationsPage() {
                   active={isAvailable && Boolean(integ[item.key])}
                   disabled={!isAvailable}
                   hint={unavailableHint}
+                  syncAction={syncAction}
                   onChange={(checked) => {
                     if (!isAvailable) {
                       return;
@@ -163,7 +227,7 @@ export function IntegrationsPage() {
                 Profile field sync
               </span>
             }
-            description="Registration data syncs to existing WooCommerce and Tutor profile fields."
+            description="Registration data syncs to existing WooCommerce and Tutor profile fields. Use sync when you install WooCommerce or Tutor after SLR has already collected phones."
             bodyClassName="slr-card-body--flush"
           >
             <div className="slr-integrations-panel">
@@ -173,9 +237,21 @@ export function IntegrationsPage() {
                     icon={ShoppingCart}
                     iconVariant="woo"
                     title="WooCommerce"
-                    description="Customer billing & profile fields"
-                    code="billing_*"
-                    badge={{ variant: 'default', label: 'Auto-sync' }}
+                    description={
+                      phonePreview?.woocommerce.pending
+                        ? `${phonePreview.woocommerce.pending} user${phonePreview.woocommerce.pending === 1 ? '' : 's'} need billing_phone synced from SLR.`
+                        : 'Customer billing phone is in sync.'
+                    }
+                    code="billing_phone"
+                    badge={{
+                      variant: phonePreview?.woocommerce.pending ? 'warning' : 'default',
+                      label: phonePreview?.woocommerce.pending ? `${phonePreview.woocommerce.pending} pending` : 'Auto-sync',
+                    }}
+                    action={
+                      canSyncPhones('woocommerce')
+                        ? getPhoneSyncAction('woocommerce', phonePreview?.woocommerce.pending)
+                        : undefined
+                    }
                   />
                 )}
                 {plugins.tutor && (
@@ -183,9 +259,21 @@ export function IntegrationsPage() {
                     icon={GraduationCap}
                     iconVariant="tutor"
                     title="Tutor LMS"
-                    description="My Profile dashboard fields"
+                    description={
+                      phonePreview?.tutor.pending
+                        ? `${phonePreview.tutor.pending} user${phonePreview.tutor.pending === 1 ? '' : 's'} need phone_number synced from SLR.`
+                        : 'Tutor profile phone is in sync.'
+                    }
                     code="phone_number"
-                    badge={{ variant: 'success', label: 'Integrated' }}
+                    badge={{
+                      variant: phonePreview?.tutor.pending ? 'warning' : 'success',
+                      label: phonePreview?.tutor.pending ? `${phonePreview.tutor.pending} pending` : 'Integrated',
+                    }}
+                    action={
+                      canSyncPhones('tutor')
+                        ? getPhoneSyncAction('tutor', phonePreview?.tutor.pending)
+                        : undefined
+                    }
                   />
                 )}
               </div>

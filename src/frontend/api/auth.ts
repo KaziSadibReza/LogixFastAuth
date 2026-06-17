@@ -133,18 +133,31 @@ export async function webauthnRegister(): Promise<{ success: boolean }> {
 export async function webauthnLogin(email?: string): Promise<AuthResponse> {
   const config = getConfig();
   const { startAuthentication } = await import('@simplewebauthn/browser');
+  const webauthnTimeoutMs = 120_000;
 
-  const optionsRes = await apiRequest<{ options: PublicKeyCredentialRequestOptions; sessionKey: string }>(
-    config.apiUrl,
-    config.nonce,
-    '/webauthn/login/options',
-    { method: 'POST', body: JSON.stringify({ email }) }
-  );
+  const optionsRes = await apiRequest<{
+    options?: PublicKeyCredentialRequestOptions;
+    sessionKey?: string;
+    session_key?: string;
+    challenge?: string;
+  }>(config.apiUrl, config.nonce, '/webauthn/login/options', {
+    method: 'POST',
+    body: JSON.stringify({ email }),
+    timeoutMs: webauthnTimeoutMs,
+  });
 
-  const authResp = await startAuthentication({ optionsJSON: optionsRes.options as never });
+  const sessionKey = optionsRes.sessionKey ?? optionsRes.session_key;
+  const options = optionsRes.options ?? optionsRes;
+
+  if (!sessionKey) {
+    throw new Error('Passkey session could not be started. Please try again.');
+  }
+
+  const authResp = await startAuthentication({ optionsJSON: options as never });
 
   return apiRequest(config.apiUrl, config.nonce, '/webauthn/login/verify', {
     method: 'POST',
-    body: JSON.stringify({ sessionKey: optionsRes.sessionKey, response: authResp }),
+    body: JSON.stringify({ sessionKey, response: authResp }),
+    timeoutMs: webauthnTimeoutMs,
   });
 }

@@ -111,6 +111,29 @@ class RateLimiter {
 	}
 
 	/**
+	 * Read-only scoped rate-limit check (does not increment counters).
+	 *
+	 * @param string      $action            Action identifier.
+	 * @param string|null $identifier_scoped Optional scoped key (e.g. purpose:email).
+	 * @return true|WP_Error
+	 */
+	public static function check_scoped( $action, $identifier_scoped = null ) {
+		$limiter = new self();
+		$ip      = self::get_client_ip();
+
+		$ip_rate = $limiter->check( $action, $ip );
+		if ( is_wp_error( $ip_rate ) ) {
+			return $ip_rate;
+		}
+
+		if ( null !== $identifier_scoped && '' !== $identifier_scoped ) {
+			return $limiter->check( $action, $identifier_scoped );
+		}
+
+		return true;
+	}
+
+	/**
 	 * Record a request attempt for an action.
 	 *
 	 * @param string $action Action identifier.

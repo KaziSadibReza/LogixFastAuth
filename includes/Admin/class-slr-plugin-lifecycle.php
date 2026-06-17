@@ -75,6 +75,9 @@ class Plugin_Lifecycle {
 		$appearance = Settings::get( 'appearance' );
 		$preview    = UninstallService::get_preview();
 
+		/* translators: %d: number of passkeys stored by SLR. */
+		$passkey_count_label = __( '%d passkey(s) will be removed.', 'smart-login-registration' );
+
 		wp_localize_script(
 			'slr-plugin-lifecycle',
 			'SLR_LIFECYCLE',
@@ -106,7 +109,7 @@ class Plugin_Lifecycle {
 					'deactivatePurge' => __( 'Deactivate and delete data', 'smart-login-registration' ),
 					'deleteKeep'      => __( 'Delete plugin (keep data)', 'smart-login-registration' ),
 					'deletePurge'     => __( 'Delete plugin and data', 'smart-login-registration' ),
-					'passkeyCount'    => __( '%d passkey(s) will be removed.', 'smart-login-registration' ),
+					'passkeyCount'    => $passkey_count_label,
 					'working'         => __( 'Working…', 'smart-login-registration' ),
 				),
 			)

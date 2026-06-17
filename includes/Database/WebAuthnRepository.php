@@ -158,5 +158,27 @@ class WebAuthnRepository {
 			)
 		);
 	}
+
+	/**
+	 * Count all stored credentials (lifecycle preview / uninstall summary).
+	 *
+	 * @return int
+	 */
+	public function count_all() {
+		global $wpdb;
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Table existence check.
+		if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $this->table() ) ) !== $this->table() ) {
+			return 0;
+		}
+
+		return (int) $wpdb->get_var(
+			$wpdb->prepare(
+				// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- Table name is wpdb-prefixed and internal.
+				"SELECT COUNT(*) FROM {$this->table()} WHERE 1 = %d",
+				1
+			)
+		);
+	}
 }
 // phpcs:enable WordPress.DB.DirectDatabaseQuery

@@ -82,10 +82,16 @@ class Phone_Profile {
 			return;
 		}
 
+		if (
+			! isset( $_POST['_wpnonce'] )
+			|| ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['_wpnonce'] ) ), 'update-user_' . $user_id )
+		) {
+			return;
+		}
+
 		foreach ( Phone_Profile_Service::get_profile_fields() as $meta_key => $field ) {
 			$input_name = 'slr_profile_' . $meta_key;
 
-			// phpcs:ignore WordPress.Security.NonceVerification.Missing -- Core profile save nonce verified by WordPress.
 			if ( ! isset( $_POST[ $input_name ] ) ) {
 				continue;
 			}
