@@ -20,6 +20,7 @@ const REMOTE = 'origin';
 
 const PRODUCTION_PATHS = [
 	'smart-login-registration.php',
+	'uninstall.php',
 	'readme.txt',
 	'includes',
 	'templates',
@@ -54,6 +55,7 @@ function parseArgs(argv) {
 		message: 'chore: sync production build',
 		push: false,
 		skipBuild: false,
+		skipCommit: false,
 	};
 
 	for (let i = 0; i < argv.length; i += 1) {
@@ -62,6 +64,8 @@ function parseArgs(argv) {
 			args.push = true;
 		} else if (arg === '--skip-build') {
 			args.skipBuild = true;
+		} else if (arg === '--skip-commit') {
+			args.skipCommit = true;
 		} else if (arg === '--message' && argv[i + 1]) {
 			args.message = argv[++i];
 		}
@@ -244,7 +248,20 @@ function main() {
 	copyProductionFiles();
 	installComposerDependencies();
 
-	const committed = commitProduction(args.message);
+	let committed = false;
+	if (args.skipCommit) {
+		const status = run('git status --porcelain', { cwd: WORKTREE });
+		if (status.trim()) {
+			run('git add -A', { cwd: WORKTREE, stdio: 'inherit' });
+			committed = true;
+			console.log('Production files staged (--skip-commit). Commit manually to avoid co-author trailers.');
+		} else {
+			console.log('Production worktree is already up to date.');
+		}
+	} else {
+		committed = commitProduction(args.message);
+	}
+
 	if (args.push && committed) {
 		pushProduction();
 	}

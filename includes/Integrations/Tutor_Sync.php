@@ -24,7 +24,7 @@ class Tutor_Sync {
 	 * @return void
 	 */
 	public static function on_register( $user_id, $data = array() ) {
-		if ( ! empty( $data['phone'] ) ) {
+		if ( ! empty( $data['phone'] ) && function_exists( 'tutor_utils' ) ) {
 			update_user_meta( $user_id, 'phone_number', sanitize_text_field( $data['phone'] ) );
 		}
 

@@ -78,8 +78,9 @@ export function AuthPage() {
   }
 
   const a = settings.auth;
-  const passkeyUrls = settings.passkey_manage_urls;
   const plugins = settings.integration_plugins;
+  const usesSlrPhone = !plugins?.woocommerce && !plugins?.tutor;
+  const passkeyUrls = settings.passkey_manage_urls;
   const profilePasskeysUrl =
     passkeyUrls?.profile || window.SLR_ADMIN?.profilePasskeysUrl || 'profile.php#slr-passkey-manager';
 
@@ -270,17 +271,29 @@ export function AuthPage() {
               <div className="slr-integration-panel-head">
                 <h4 className="slr-integration-panel-title">Profile field sync</h4>
                 <p className="slr-integration-panel-desc">
-                  When a user registers via SLR, their phone is saved to existing profile fields:
+                  {usesSlrPhone
+                    ? 'When WooCommerce and Tutor LMS are not active, phone is stored in the SLR profile field below. Admins and users can edit it on the WordPress profile screen.'
+                    : 'When a user registers via SLR, their phone is saved to existing profile fields:'}
                 </p>
               </div>
               <div className="slr-icon-card-grid">
+                {usesSlrPhone && (
+                  <IntegrationIconCard
+                    icon={Phone}
+                    iconVariant="default"
+                    title="SLR profile"
+                    description="WordPress user profile field"
+                    code="slr_phone"
+                    badge={{ variant: 'success', label: 'Primary' }}
+                  />
+                )}
                 <IntegrationIconCard
                   icon={ShoppingCart}
                   iconVariant="woo"
                   title="WooCommerce"
                   description="Customer billing phone"
                   code="billing_phone"
-                  badge={{ variant: 'default', label: 'Auto-sync' }}
+                  badge={{ variant: 'default', label: plugins?.woocommerce ? 'Auto-sync' : 'Not installed' }}
                 />
                 <IntegrationIconCard
                   icon={GraduationCap}
@@ -288,7 +301,7 @@ export function AuthPage() {
                   title="Tutor LMS"
                   description="My Profile dashboard field"
                   code="phone_number"
-                  badge={{ variant: 'default', label: 'Auto-sync' }}
+                  badge={{ variant: 'default', label: plugins?.tutor ? 'Auto-sync' : 'Not installed' }}
                 />
               </div>
             </div>

@@ -206,7 +206,7 @@ class AuthService {
 		}
 
 		if ( ! empty( $phone ) ) {
-			update_user_meta( $user_id, 'slr_phone', $phone );
+			Phone_Profile::save_registration_phone( $user_id, $phone );
 		}
 
 		$profile_data = array(
@@ -460,7 +460,7 @@ class AuthService {
 			return 0;
 		}
 
-		foreach ( array( 'slr_phone', 'billing_phone', 'phone_number' ) as $meta_key ) {
+		foreach ( Phone_Profile::get_lookup_meta_keys() as $meta_key ) {
 			// phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_key, WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Phone lookup across known meta keys.
 			$users = get_users(
 				array(

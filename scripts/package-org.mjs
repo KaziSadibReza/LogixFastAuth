@@ -17,6 +17,7 @@ const OUTPUT = path.join(ROOT, 'build', 'smart-login-registration');
 
 const PRODUCTION_PATHS = [
 	'smart-login-registration.php',
+	'uninstall.php',
 	'readme.txt',
 	'includes',
 	'templates',
