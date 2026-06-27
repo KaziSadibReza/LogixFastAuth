@@ -1,6 +1,6 @@
-import { ensureSlrBridge, preloadPopup } from './slr-bridge';
+import { ensureLogixFastAuthBridge, preloadPopup } from './logixfast-auth-bridge';
 
-ensureSlrBridge();
+ensureLogixFastAuthBridge();
 preloadPopup();
 
 // Dedicated pages use main-page.tsx directly — not bootstrap + lazy popup.

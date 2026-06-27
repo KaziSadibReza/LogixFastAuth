@@ -2,13 +2,13 @@
 /**
  * Frontend asset registration and conditional loading.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Frontend; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Frontend; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Assets;
-use SLR\Settings;
+use LogixFastAuth\Assets;
+use LogixFastAuth\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -45,13 +45,6 @@ class Frontend_Assets {
 			return;
 		}
 
-		wp_register_style(
-			'slr-font-urbanist',
-			'https://fonts.googleapis.com/css2?family=Urbanist:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap',
-			array(),
-			SLR_VERSION
-		);
-
 		if ( Assets::is_dev_mode() ) {
 			$this->register_dev_assets();
 			return;
@@ -65,7 +58,7 @@ class Frontend_Assets {
 		}
 
 		foreach ( $frontend_css as $index => $css_url ) {
-			$handle = $index ? 'slr-frontend-' . $index : 'slr-frontend';
+			$handle = $index ? 'logixfast-auth-frontend-' . $index : 'logixfast-auth-frontend';
 			wp_register_style(
 				$handle,
 				$css_url,
@@ -75,33 +68,33 @@ class Frontend_Assets {
 		}
 
 		wp_register_script(
-			'slr-bootstrap',
+			'logixfast-auth-bootstrap',
 			Assets::get_entry_file_url( Assets::ENTRY_BOOTSTRAP, 'frontend/bootstrap.js' ),
 			array(),
 			$version,
 			true
 		);
-		Assets::register_module_handle( 'slr-bootstrap' );
+		Assets::register_module_handle( 'logixfast-auth-bootstrap' );
 
 		wp_register_script(
-			'slr-popup',
+			'logixfast-auth-popup',
 			Assets::get_entry_file_url( Assets::ENTRY_POPUP, 'frontend/popup.js' ),
 			array(),
 			Assets::get_entry_version( Assets::ENTRY_POPUP, 'frontend/popup.js' ),
 			true
 		);
-		Assets::register_module_handle( 'slr-popup' );
+		Assets::register_module_handle( 'logixfast-auth-popup' );
 
 		wp_register_script(
-			'slr-page',
+			'logixfast-auth-page',
 			Assets::get_entry_file_url( Assets::ENTRY_PAGE, 'frontend/page.js' ),
 			array(),
 			Assets::get_entry_version( Assets::ENTRY_PAGE, 'frontend/page.js' ),
 			true
 		);
-		Assets::register_module_handle( 'slr-page' );
+		Assets::register_module_handle( 'logixfast-auth-page' );
 
-		wp_localize_script( 'slr-bootstrap', 'SLR_CONFIG', Settings::get_public_config() );
+		wp_localize_script( 'logixfast-auth-bootstrap', 'LOGIXFAST_AUTH_CONFIG', Settings::get_public_config() );
 	}
 
 	/**
@@ -110,8 +103,8 @@ class Frontend_Assets {
 	 * @return void
 	 */
 	private function register_dev_assets() {
-		wp_register_style( 'slr-frontend', false, array(), SLR_VERSION );
-		Assets::enqueue_frontend_config( 'slr-config' );
+		wp_register_style( 'logixfast-auth-frontend', false, array(), LOGIXFAST_AUTH_VERSION );
+		Assets::enqueue_frontend_config( 'logixfast-auth-config' );
 	}
 
 	/**
@@ -139,7 +132,6 @@ class Frontend_Assets {
 		}
 
 		self::$enqueued = true;
-		self::enqueue_font();
 
 		if ( Assets::is_dev_mode() ) {
 			self::enqueue_dev_bundle( $mode );
@@ -148,10 +140,10 @@ class Frontend_Assets {
 
 		$frontend_css = Assets::get_entry_css_files( Assets::ENTRY_POPUP );
 		if ( empty( $frontend_css ) ) {
-			wp_enqueue_style( 'slr-frontend' );
+			wp_enqueue_style( 'logixfast-auth-frontend' );
 		} else {
 			foreach ( $frontend_css as $index => $css_url ) {
-				$handle = $index ? 'slr-frontend-' . $index : 'slr-frontend';
+				$handle = $index ? 'logixfast-auth-frontend-' . $index : 'logixfast-auth-frontend';
 				if ( ! wp_style_is( $handle, 'registered' ) ) {
 					wp_register_style( $handle, $css_url, array(), Assets::get_entry_version( Assets::ENTRY_POPUP, 'frontend/main2.css' ) );
 				}
@@ -159,12 +151,13 @@ class Frontend_Assets {
 			}
 		}
 
-		wp_enqueue_script( 'slr-bootstrap' );
+		wp_enqueue_script( 'logixfast-auth-bootstrap' );
 
 		if ( 'page' === $mode ) {
-			wp_enqueue_script( 'slr-page' );
+			wp_enqueue_script( 'logixfast-auth-page' );
+			self::add_dedicated_page_styles();
 		} else {
-			wp_enqueue_script( 'slr-popup' );
+			wp_enqueue_script( 'logixfast-auth-popup' );
 		}
 
 		self::print_style_vars();
@@ -177,28 +170,19 @@ class Frontend_Assets {
 	 * @return void
 	 */
 	private static function enqueue_dev_bundle( $mode ) {
-		wp_enqueue_style( 'slr-frontend' );
+		wp_enqueue_style( 'logixfast-auth-frontend' );
 		self::print_style_vars();
 
-		if ( ! wp_script_is( 'slr-config', 'enqueued' ) ) {
-			Assets::enqueue_frontend_config( 'slr-config' );
+		if ( ! wp_script_is( 'logixfast-auth-config', 'enqueued' ) ) {
+			Assets::enqueue_frontend_config( 'logixfast-auth-config' );
 		}
 
 		if ( 'page' === $mode ) {
-			Assets::enqueue_vite_dev_entry( 'slr-page', 'src/frontend/main-page.tsx' );
+			Assets::enqueue_vite_dev_entry( 'logixfast-auth-page', 'src/frontend/main-page.tsx' );
 			return;
 		}
 
-		Assets::enqueue_vite_dev_entry( 'slr-popup', 'src/frontend/main-popup.tsx' );
-	}
-
-	/**
-	 * Enqueue Urbanist font for frontend forms.
-	 *
-	 * @return void
-	 */
-	public static function enqueue_font() {
-		wp_enqueue_style( 'slr-font-urbanist' );
+		Assets::enqueue_vite_dev_entry( 'logixfast-auth-popup', 'src/frontend/main-popup.tsx' );
 	}
 
 	/**
@@ -218,17 +202,17 @@ class Frontend_Assets {
 		$shadow_prim  = sprintf( '0 8px 20px rgba(%d, %d, %d, 0.32)', $rgb[0], $rgb[1], $rgb[2] );
 
 		$vars = array(
-			'--slr-primary'         => $primary,
-			'--slr-primary-dark'    => $primary_dark,
-			'--slr-primary-50'      => $primary_50,
-			'--slr-primary-100'     => $primary_100,
-			'--slr-background'      => $appearance['background'] ?? '#ffffff',
-			'--slr-text'            => $appearance['text'] ?? '#111827',
-			'--slr-blur'            => $appearance['blur'] ?? '24px',
-			'--slr-radius'          => $appearance['radius'] ?? '12px',
-			'--slr-spacing'         => $appearance['spacing'] ?? '1rem',
-			'--slr-shadow-focus'    => $shadow_focus,
-			'--slr-shadow-primary'  => $shadow_prim,
+			'--logixfast-auth-primary'         => $primary,
+			'--logixfast-auth-primary-dark'    => $primary_dark,
+			'--logixfast-auth-primary-50'      => $primary_50,
+			'--logixfast-auth-primary-100'     => $primary_100,
+			'--logixfast-auth-background'      => $appearance['background'] ?? '#ffffff',
+			'--logixfast-auth-text'            => $appearance['text'] ?? '#111827',
+			'--logixfast-auth-blur'            => $appearance['blur'] ?? '24px',
+			'--logixfast-auth-radius'          => $appearance['radius'] ?? '12px',
+			'--logixfast-auth-spacing'         => $appearance['spacing'] ?? '1rem',
+			'--logixfast-auth-shadow-focus'    => $shadow_focus,
+			'--logixfast-auth-shadow-primary'  => $shadow_prim,
 		);
 
 		$css = ':root{';
@@ -237,7 +221,21 @@ class Frontend_Assets {
 		}
 		$css .= '}';
 
-		wp_add_inline_style( 'slr-frontend', $css );
+		wp_add_inline_style( 'logixfast-auth-frontend', $css );
+	}
+
+	/**
+	 * Add dedicated login page layout styles.
+	 *
+	 * @return void
+	 */
+	private static function add_dedicated_page_styles() {
+		wp_add_inline_style(
+			'logixfast-auth-frontend',
+			'html,body.logixfast-auth-dedicated-page{margin:0;padding:0;width:100%;min-height:100dvh;overflow:hidden;-webkit-text-size-adjust:100%}'
+			. 'body.logixfast-auth-dedicated-page{background:radial-gradient(circle at 20% 20%,rgba(214,51,108,.06) 0%,transparent 45%),radial-gradient(circle at 80% 80%,rgba(15,23,42,.04) 0%,transparent 40%),linear-gradient(160deg,#f8f9fb 0%,#eef1f5 50%,#e8ecf1 100%)}'
+			. '#logixfast-auth-root{min-height:100dvh;width:100%}'
+		);
 	}
 
 	/**

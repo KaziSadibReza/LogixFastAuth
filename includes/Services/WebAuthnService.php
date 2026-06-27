@@ -2,12 +2,12 @@
 /**
  * WebAuthn / passkey authentication.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Settings;
+use LogixFastAuth\Settings;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -39,7 +39,7 @@ class WebAuthnService {
 	 */
 	public function get_register_options( $user_id ) {
 		if ( ! $this->is_enabled() ) {
-			return new WP_Error( 'slr_webauthn_disabled', __( 'Passkey authentication is disabled.', 'smart-login-registration' ), array( 'status' => 403 ) );
+			return new WP_Error( 'logixfast_auth_webauthn_disabled', __( 'Passkey authentication is disabled.', 'logixfast-auth' ), array( 'status' => 403 ) );
 		}
 
 		return $this->crypto->build_register_options( $user_id, $this->get_rp_id() );
@@ -54,7 +54,7 @@ class WebAuthnService {
 	 */
 	public function verify_register( $user_id, $response ) {
 		if ( ! $this->is_enabled() ) {
-			return new WP_Error( 'slr_webauthn_disabled', __( 'Passkey authentication is disabled.', 'smart-login-registration' ), array( 'status' => 403 ) );
+			return new WP_Error( 'logixfast_auth_webauthn_disabled', __( 'Passkey authentication is disabled.', 'logixfast-auth' ), array( 'status' => 403 ) );
 		}
 
 		$source = $this->crypto->verify_register( $user_id, $response, $this->get_rp_id() );
@@ -73,7 +73,7 @@ class WebAuthnService {
 	 */
 	public function get_login_options( $email = '' ) {
 		if ( ! $this->is_enabled() ) {
-			return new WP_Error( 'slr_webauthn_disabled', __( 'Passkey authentication is disabled.', 'smart-login-registration' ), array( 'status' => 403 ) );
+			return new WP_Error( 'logixfast_auth_webauthn_disabled', __( 'Passkey authentication is disabled.', 'logixfast-auth' ), array( 'status' => 403 ) );
 		}
 
 		return $this->crypto->build_login_options( $email, $this->get_rp_id() );
@@ -88,7 +88,7 @@ class WebAuthnService {
 	 */
 	public function verify_login( $session_key, $response ) {
 		if ( ! $this->is_enabled() ) {
-			return new WP_Error( 'slr_webauthn_disabled', __( 'Passkey authentication is disabled.', 'smart-login-registration' ), array( 'status' => 403 ) );
+			return new WP_Error( 'logixfast_auth_webauthn_disabled', __( 'Passkey authentication is disabled.', 'logixfast-auth' ), array( 'status' => 403 ) );
 		}
 
 		return $this->crypto->verify_login( $session_key, $response, $this->get_rp_id() );

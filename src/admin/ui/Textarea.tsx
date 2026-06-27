@@ -12,7 +12,7 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(function 
     <textarea
       ref={ref}
       rows={rows}
-      className={`slr-textarea ${hasError ? 'slr-input--error' : ''} ${className}`}
+      className={`logixfast-auth-textarea ${hasError ? 'logixfast-auth-input--error' : ''} ${className}`}
       {...rest}
     />
   );

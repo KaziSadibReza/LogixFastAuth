@@ -9,10 +9,10 @@ interface BadgeProps {
 }
 
 export function Badge({ variant = 'default', dot, children }: BadgeProps) {
-  const cls = variant === 'default' ? 'slr-badge' : `slr-badge slr-badge--${variant}`;
+  const cls = variant === 'default' ? 'logixfast-auth-badge' : `logixfast-auth-badge logixfast-auth-badge--${variant}`;
   return (
     <span className={cls}>
-      {dot && <span className="slr-badge-dot" aria-hidden="true" />}
+      {dot && <span className="logixfast-auth-badge-dot" aria-hidden="true" />}
       {children}
     </span>
   );

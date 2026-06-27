@@ -2,14 +2,14 @@
 /**
  * Stage registration data until OTP is verified.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Activator;
-use SLR\Database\PendingRegistrationRepository;
-use SLR\Settings;
+use LogixFastAuth\Activator;
+use LogixFastAuth\Database\PendingRegistrationRepository;
+use LogixFastAuth\Settings;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -54,8 +54,8 @@ class PendingRegistrationService {
 	public function stage( $data ) {
 		if ( class_exists( Activator::class ) && ! Activator::ensure_tables() ) {
 			return new WP_Error(
-				'slr_pending_storage_failed',
-				__( 'Registration storage is unavailable. Please contact the site administrator.', 'smart-login-registration' ),
+				'logixfast_auth_pending_storage_failed',
+				__( 'Registration storage is unavailable. Please contact the site administrator.', 'logixfast-auth' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -68,7 +68,7 @@ class PendingRegistrationService {
 		$identifier = 'phone' === $channel ? $phone : $email;
 
 		if ( empty( $identifier ) ) {
-			return new WP_Error( 'slr_missing_identifier', __( 'Email or phone is required.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_missing_identifier', __( 'Email or phone is required.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$identifier_hash = $this->hash_identifier( $identifier, $channel );
@@ -85,8 +85,8 @@ class PendingRegistrationService {
 		$json = wp_json_encode( $payload );
 		if ( false === $json ) {
 			return new WP_Error(
-				'slr_pending_encode_failed',
-				__( 'Could not encode registration data.', 'smart-login-registration' ),
+				'logixfast_auth_pending_encode_failed',
+				__( 'Could not encode registration data.', 'logixfast-auth' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -94,8 +94,8 @@ class PendingRegistrationService {
 		$encrypted = MailService::encrypt_secret( $json );
 		if ( empty( $encrypted ) ) {
 			return new WP_Error(
-				'slr_pending_storage_failed',
-				__( 'Could not secure registration data. Please contact the site administrator.', 'smart-login-registration' ),
+				'logixfast_auth_pending_storage_failed',
+				__( 'Could not secure registration data. Please contact the site administrator.', 'logixfast-auth' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -104,8 +104,8 @@ class PendingRegistrationService {
 		$round_trip_json = $mail->decrypt_secret( $encrypted );
 		if ( $round_trip_json !== $json ) {
 			return new WP_Error(
-				'slr_pending_storage_failed',
-				__( 'Encryption check failed. Please contact the site administrator.', 'smart-login-registration' ),
+				'logixfast_auth_pending_storage_failed',
+				__( 'Encryption check failed. Please contact the site administrator.', 'logixfast-auth' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -128,8 +128,8 @@ class PendingRegistrationService {
 				? ' (' . $db_error . ')'
 				: '';
 			return new WP_Error(
-				'slr_pending_storage_failed',
-				__( 'Could not save registration session. Please try again.', 'smart-login-registration' ) . $detail,
+				'logixfast_auth_pending_storage_failed',
+				__( 'Could not save registration session. Please try again.', 'logixfast-auth' ) . $detail,
 				array( 'status' => 500 )
 			);
 		}
@@ -159,7 +159,7 @@ class PendingRegistrationService {
 		$expires_at = self::expires_at_gmt( $ttl );
 
 		if ( ! $this->repository->update_expires_at( $record->token, $expires_at ) ) {
-			return new WP_Error( 'slr_pending_extend_failed', __( 'Could not extend registration session.', 'smart-login-registration' ), array( 'status' => 500 ) );
+			return new WP_Error( 'logixfast_auth_pending_extend_failed', __( 'Could not extend registration session.', 'logixfast-auth' ), array( 'status' => 500 ) );
 		}
 
 		return array(
@@ -200,7 +200,7 @@ class PendingRegistrationService {
 		$decoded = json_decode( $mail->decrypt_secret( $record->data_encrypted ), true );
 		if ( ! is_array( $decoded ) || empty( $decoded['email'] ) || ! array_key_exists( 'password', $decoded ) || '' === $decoded['password'] ) {
 			$this->repository->delete_by_token( $record->token );
-			return new WP_Error( 'slr_pending_invalid', __( 'Registration data is invalid. Please sign up again.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_pending_invalid', __( 'Registration data is invalid. Please sign up again.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$this->repository->delete_by_token( $record->token );
@@ -231,18 +231,18 @@ class PendingRegistrationService {
 		}
 
 		if ( ! $record ) {
-			return new WP_Error( 'slr_pending_expired', __( 'Registration session expired. Please sign up again.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_pending_expired', __( 'Registration session expired. Please sign up again.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( self::is_expired( $record->expires_at ) ) {
 			$this->repository->delete_by_token( $record->token );
-			return new WP_Error( 'slr_pending_expired', __( 'Registration session expired. Please sign up again.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_pending_expired', __( 'Registration session expired. Please sign up again.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( ! empty( $identifier ) ) {
 			$expected_hash = $this->hash_identifier( $identifier, $channel );
 			if ( $record->identifier_hash !== $expected_hash || $record->channel !== $channel ) {
-				return new WP_Error( 'slr_pending_mismatch', __( 'Verification does not match this registration.', 'smart-login-registration' ), array( 'status' => 400 ) );
+				return new WP_Error( 'logixfast_auth_pending_mismatch', __( 'Verification does not match this registration.', 'logixfast-auth' ), array( 'status' => 400 ) );
 			}
 		}
 

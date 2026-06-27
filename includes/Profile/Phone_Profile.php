@@ -1,13 +1,13 @@
 <?php
 /**
- * SLR phone fields on the WordPress user profile screen.
+ * LogixFastAuth phone fields on the WordPress user profile screen.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Profile; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Profile; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Services\Phone_Profile as Phone_Profile_Service;
+use LogixFastAuth\Services\Phone_Profile as Phone_Profile_Service;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -29,7 +29,7 @@ class Phone_Profile {
 	}
 
 	/**
-	 * Output SLR-related phone fields on the profile screen.
+	 * Output LogixFastAuth-related phone fields on the profile screen.
 	 *
 	 * @param \WP_User $user Profile user.
 	 * @return void
@@ -44,20 +44,20 @@ class Phone_Profile {
 			return;
 		}
 		?>
-		<h2><?php esc_html_e( 'Smart Login Registration', 'smart-login-registration' ); ?></h2>
+		<h2><?php esc_html_e( 'LogixFast Auth', 'logixfast-auth' ); ?></h2>
 		<table class="form-table" role="presentation">
 			<?php foreach ( $fields as $meta_key => $field ) : ?>
 				<tr>
 					<th>
-						<label for="slr_profile_<?php echo esc_attr( $meta_key ); ?>">
+						<label for="logixfast_auth_profile_<?php echo esc_attr( $meta_key ); ?>">
 							<?php echo esc_html( $field['label'] ); ?>
 						</label>
 					</th>
 					<td>
 						<input
 							type="tel"
-							name="slr_profile_<?php echo esc_attr( $meta_key ); ?>"
-							id="slr_profile_<?php echo esc_attr( $meta_key ); ?>"
+							name="logixfast_auth_profile_<?php echo esc_attr( $meta_key ); ?>"
+							id="logixfast_auth_profile_<?php echo esc_attr( $meta_key ); ?>"
 							value="<?php echo esc_attr( (string) get_user_meta( $user->ID, $meta_key, true ) ); ?>"
 							class="regular-text"
 							autocomplete="tel"
@@ -71,7 +71,7 @@ class Phone_Profile {
 	}
 
 	/**
-	 * Save SLR profile phone fields.
+	 * Save LogixFastAuth profile phone fields.
 	 *
 	 * @param int $user_id User ID.
 	 * @return void
@@ -90,7 +90,7 @@ class Phone_Profile {
 		}
 
 		foreach ( Phone_Profile_Service::get_profile_fields() as $meta_key => $field ) {
-			$input_name = 'slr_profile_' . $meta_key;
+			$input_name = 'logixfast_auth_profile_' . $meta_key;
 
 			if ( ! isset( $_POST[ $input_name ] ) ) {
 				continue;

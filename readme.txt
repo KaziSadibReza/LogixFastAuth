@@ -1,4 +1,4 @@
-=== Smart Login Registration ===
+=== LogixFast Auth ===
 Contributors: kazisadibreza
 Tags: login, registration, otp, webauthn, woocommerce
 Requires at least: 6.8
@@ -12,7 +12,7 @@ Modern WordPress login and registration with OTP, passkeys, Gmail SMTP, and deep
 
 == Description ==
 
-Smart Login Registration (SLR) replaces default WordPress, WooCommerce, Tutor LMS, and Elementor login forms with a fast, mobile-friendly React interface.
+LogixFast Auth (LogixFastAuth) replaces default WordPress, WooCommerce, Tutor LMS, and Elementor login forms with a fast, mobile-friendly React interface.
 
 **Features**
 
@@ -35,17 +35,16 @@ PHP handles WordPress integration, REST API, and security. The frontend UI is bu
 
 This plugin contacts external services only when a site administrator enables and configures them:
 
-* **Google (Gmail SMTP)** — If you choose Google mail transport and connect a Google account in SLR settings, the plugin sends OAuth requests to Google and may send email through Gmail. Data sent includes OAuth tokens and message content you choose to send. See [Google's Privacy Policy](https://policies.google.com/privacy).
-* **SMS providers** — If you register an SMS provider with the `slr_sms_providers` filter, OTP codes are sent to that provider using API credentials you supply. What data is sent depends on the provider you configure.
-* **Google Fonts** — The login UI and admin settings may load the Urbanist font from `fonts.googleapis.com` for typography.
+* **Google (Gmail SMTP)** — If you choose Google mail transport and connect a Google account in LogixFastAuth settings, the plugin sends OAuth requests to Google and may send email through Gmail. Data sent includes OAuth tokens and message content you choose to send. See [Google's Privacy Policy](https://policies.google.com/privacy).
+* **SMS providers** — If you register an SMS provider with the `logixfast_auth_sms_providers` filter, OTP codes are sent to that provider using API credentials you supply. What data is sent depends on the provider you configure.
 
-SLR does not send site usage data to the plugin author. Login and registration counters are stored locally in your WordPress database.
+LogixFastAuth does not send site usage data to the plugin author. Login and registration counters are stored locally in your WordPress database.
 
 == Installation ==
 
-1. Upload the plugin folder to `/wp-content/plugins/smart-login-registration/`
+1. Upload the plugin folder to `/wp-content/plugins/logixfast-auth/`
 2. Activate the plugin through the **Plugins** menu in WordPress
-3. Open **SLR** in the admin sidebar
+3. Open **LogixFastAuth** in the admin sidebar
 4. Configure general settings and choose a dedicated login page (optional)
 5. Enable integrations (WooCommerce, Tutor LMS, Elementor) as needed
 
@@ -59,7 +58,7 @@ SLR does not send site usage data to the plugin author. Login and registration c
 
 = Does this work without WooCommerce or Tutor LMS? =
 
-Yes. Core login, registration, OTP, and passkeys work on any WordPress site. WooCommerce and Tutor features activate only when those plugins are installed and enabled in SLR settings.
+Yes. Core login, registration, OTP, and passkeys work on any WordPress site. WooCommerce and Tutor features activate only when those plugins are installed and enabled in LogixFastAuth settings.
 
 = Do I need Node.js on my server? =
 
@@ -69,7 +68,7 @@ No. The plugin ships with pre-built assets in `assets/dist/`. Node.js is only ne
 
 The public development repository (React/TypeScript source in `src/`, build config, and full history):
 
-https://github.com/KaziSadibReza/Smart-Login-Registration/tree/development
+https://github.com/KaziSadibReza/LogixFastAuth/tree/development
 
 = How do I rebuild the frontend? =
 

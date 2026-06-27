@@ -2,12 +2,12 @@
 /**
  * Public config REST endpoint.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Settings;
+use LogixFastAuth\Settings;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -26,12 +26,12 @@ class ConfigController {
 	 */
 	public function register_routes() {
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/config',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'get_config' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => '__return_true', // Public frontend config only; Settings::get_public_config() excludes credentials and secrets.
 			)
 		);
 	}

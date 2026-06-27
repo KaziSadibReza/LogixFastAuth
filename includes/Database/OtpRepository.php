@@ -2,12 +2,12 @@
 /**
  * OTP codes database repository.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Database; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Database; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Activator;
+use LogixFastAuth\Activator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,7 +26,7 @@ class OtpRepository {
 	 */
 	private function table() {
 		global $wpdb;
-		return $wpdb->prefix . 'slr_otp_codes';
+		return $wpdb->prefix . 'logixfast_auth_otp_codes';
 	}
 
 	/**

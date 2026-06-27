@@ -1,6 +1,6 @@
 export function GoogleOAuthSetupGuide() {
   return (
-    <ol className="slr-help-steps">
+    <ol className="logixfast-auth-help-steps">
       <li>
         Open{' '}
         <a href="https://console.cloud.google.com/" target="_blank" rel="noreferrer">
@@ -23,7 +23,7 @@ export function GoogleOAuthSetupGuide() {
         Paste the <strong>Authorized redirect URI</strong> from this page into Google (exact match, including trailing
         slash).
       </li>
-      <li>Copy the generated <strong>Client ID</strong> and <strong>Client Secret</strong> into SLR, save, then click
+      <li>Copy the generated <strong>Client ID</strong> and <strong>Client Secret</strong> into LogixFastAuth, save, then click
         Sign in with Google.</li>
     </ol>
   );

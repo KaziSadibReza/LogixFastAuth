@@ -1,14 +1,14 @@
 <?php
 /**
- * SLR usage statistics tracker.
+ * LogixFastAuth usage statistics tracker.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Integrations\Integration_Availability;
-use SLR\Settings;
+use LogixFastAuth\Integrations\Integration_Availability;
+use LogixFastAuth\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -19,12 +19,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class StatsService {
 
-	const OPTION_KEY        = 'slr_stats';
-	const STATS_CACHE_KEY   = 'slr_dashboard_stats';
+	const OPTION_KEY        = 'logixfast_auth_stats';
+	const STATS_CACHE_KEY   = 'logixfast_auth_dashboard_stats';
 	const STATS_CACHE_TTL   = 60;
 
 	/**
-	 * Record a successful login via SLR.
+	 * Record a successful login via LogixFastAuth.
 	 *
 	 * @return void
 	 */
@@ -45,7 +45,7 @@ class StatsService {
 	}
 
 	/**
-	 * Record a registration via SLR.
+	 * Record a registration via LogixFastAuth.
 	 *
 	 * @return void
 	 */
@@ -109,14 +109,14 @@ class StatsService {
 		$stats = array(
 			'total_users'          => (int) ( $counts['total_users'] ?? 0 ),
 			'new_users_today'      => $new_users_today,
-			'slr_logins_total'     => (int) ( $raw['logins_total'] ?? 0 ),
-			'slr_logins_today'     => ( $raw['logins_today_date'] ?? '' ) === $today ? (int) ( $raw['logins_today'] ?? 0 ) : 0,
-			'slr_registrations_total' => (int) ( $raw['registrations_total'] ?? 0 ),
-			'slr_registrations_today' => ( $raw['registrations_today_date'] ?? '' ) === $today ? (int) ( $raw['registrations_today'] ?? 0 ) : 0,
+			'logixfast_auth_logins_total'     => (int) ( $raw['logins_total'] ?? 0 ),
+			'logixfast_auth_logins_today'     => ( $raw['logins_today_date'] ?? '' ) === $today ? (int) ( $raw['logins_today'] ?? 0 ) : 0,
+			'logixfast_auth_registrations_total' => (int) ( $raw['registrations_total'] ?? 0 ),
+			'logixfast_auth_registrations_today' => ( $raw['registrations_today_date'] ?? '' ) === $today ? (int) ( $raw['registrations_today'] ?? 0 ) : 0,
 			'active_integrations'  => $active_integrations,
 			'dedicated_page_set'   => $page_id > 0 && $page instanceof \WP_Post,
 			'dedicated_page_title' => $page instanceof \WP_Post ? $page->post_title : '',
-			'plugin_version'       => defined( 'SLR_VERSION' ) ? SLR_VERSION : '1.0.0',
+			'plugin_version'       => defined( 'LOGIXFAST_AUTH_VERSION' ) ? LOGIXFAST_AUTH_VERSION : '1.0.0',
 		);
 
 		set_transient( self::STATS_CACHE_KEY, $stats, self::STATS_CACHE_TTL );

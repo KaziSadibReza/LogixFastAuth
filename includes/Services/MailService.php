@@ -2,13 +2,13 @@
 /**
  * Email transport for OTP, notifications, and site-wide wp_mail when configured.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 use PHPMailer\PHPMailer\PHPMailer;
-use SLR\Settings;
+use LogixFastAuth\Settings;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -28,7 +28,7 @@ class MailService {
 	private static $instance = null;
 
 	/**
-	 * Optional HTML alt body for the current SLR send() call.
+	 * Optional HTML alt body for the current LogixFastAuth send() call.
 	 *
 	 * @var array<string, mixed>|null
 	 */
@@ -72,7 +72,7 @@ class MailService {
 	}
 
 	/**
-	 * Whether SLR should route wp_mail through custom SMTP / Google.
+	 * Whether LogixFastAuth should route wp_mail through custom SMTP / Google.
 	 *
 	 * @param array|null $settings Optional mail settings.
 	 * @return bool
@@ -93,7 +93,7 @@ class MailService {
 	}
 
 	/**
-	 * Active third-party SMTP plugins that may conflict with SLR mail routing.
+	 * Active third-party SMTP plugins that may conflict with LogixFastAuth mail routing.
 	 *
 	 * @return array<int, array<string, string>>
 	 */
@@ -144,7 +144,7 @@ class MailService {
 
 		$subject = sprintf(
 			/* translators: %s: site name */
-			__( '%s - Verification Code', 'smart-login-registration' ),
+			__( '%s - Verification Code', 'logixfast-auth' ),
 			get_bloginfo( 'name' )
 		);
 
@@ -182,7 +182,7 @@ class MailService {
 		);
 
 		if ( 'google' === ( $settings['transport'] ?? 'wp_mail' ) && empty( $settings['google_connected'] ) ) {
-			return new WP_Error( 'slr_google_not_connected', __( 'Google SMTP is not connected.', 'smart-login-registration' ), array( 'status' => 503 ) );
+			return new WP_Error( 'logixfast_auth_google_not_connected', __( 'Google SMTP is not connected.', 'logixfast-auth' ), array( 'status' => 503 ) );
 		}
 
 		$headers = array( 'Content-Type: ' . $args['content_type'] . '; charset=UTF-8' );
@@ -200,12 +200,12 @@ class MailService {
 		self::$mail_context = null;
 
 		if ( ! $sent ) {
-			$message = __( 'Failed to send email.', 'smart-login-registration' );
+			$message = __( 'Failed to send email.', 'logixfast-auth' );
 			if ( $this->last_mail_error instanceof \WP_Error ) {
 				$message = $this->last_mail_error->get_error_message();
 			}
 
-			return new WP_Error( 'slr_mail_failed', $message, array( 'status' => 500 ) );
+			return new WP_Error( 'logixfast_auth_mail_failed', $message, array( 'status' => 500 ) );
 		}
 
 		return true;
@@ -220,13 +220,13 @@ class MailService {
 	public function send_test( $to ) {
 		return $this->send(
 			$to,
-			__( 'SLR SMTP Test', 'smart-login-registration' ),
-			__( 'This is a test email from Smart Login Registration.', 'smart-login-registration' )
+			__( 'LogixFastAuth SMTP Test', 'logixfast-auth' ),
+			__( 'This is a test email from LogixFast Auth.', 'logixfast-auth' )
 		);
 	}
 
 	/**
-	 * Configure PHPMailer for all wp_mail() calls when SLR transport is active.
+	 * Configure PHPMailer for all wp_mail() calls when LogixFastAuth transport is active.
 	 *
 	 * @param PHPMailer $phpmailer Mailer instance.
 	 * @return void
@@ -260,7 +260,7 @@ class MailService {
 	}
 
 	/**
-	 * Store wp_mail failure details for SLR send() callers.
+	 * Store wp_mail failure details for LogixFastAuth send() callers.
 	 *
 	 * @param \WP_Error $error Mail error.
 	 * @return void
@@ -354,7 +354,7 @@ class MailService {
 		$client_secret = $oauth->get_client_secret();
 
 		if ( empty( $client_id ) || empty( $client_secret ) ) {
-			return new WP_Error( 'slr_google_not_configured', __( 'Google OAuth credentials not configured.', 'smart-login-registration' ), array( 'status' => 503 ) );
+			return new WP_Error( 'logixfast_auth_google_not_configured', __( 'Google OAuth credentials not configured.', 'logixfast-auth' ), array( 'status' => 503 ) );
 		}
 
 		$response = wp_remote_post(
@@ -376,7 +376,7 @@ class MailService {
 		$data = json_decode( wp_remote_retrieve_body( $response ), true );
 
 		if ( empty( $data['access_token'] ) ) {
-			return new WP_Error( 'slr_google_token_failed', __( 'Failed to refresh Google token.', 'smart-login-registration' ), array( 'status' => 500 ) );
+			return new WP_Error( 'logixfast_auth_google_token_failed', __( 'Failed to refresh Google token.', 'logixfast-auth' ), array( 'status' => 500 ) );
 		}
 
 		return $data['access_token'];

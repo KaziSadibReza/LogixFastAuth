@@ -2,13 +2,13 @@
 /**
  * Passkey management UI surfaces and URLs.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Integrations\Integration_Availability;
-use SLR\Settings;
+use LogixFastAuth\Integrations\Integration_Availability;
+use LogixFastAuth\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -36,7 +36,7 @@ class Passkey_Surfaces {
 	 */
 	public static function get_manage_urls() {
 		$urls = array(
-			'profile' => admin_url( 'profile.php#slr-passkey-manager' ),
+			'profile' => admin_url( 'profile.php#logixfast-auth-passkey-manager' ),
 		);
 
 		if ( Integration_Availability::is_tutor_available() && function_exists( 'tutor_utils' ) ) {
@@ -61,7 +61,7 @@ class Passkey_Surfaces {
 			return;
 		}
 
-		$slr_pk_button_class = $args['button_class'] ?? 'button button-primary';
-		require SLR_PLUGIN_DIR . 'templates/partials/passkey-manager.php';
+		$logixfast_auth_pk_button_class = $args['button_class'] ?? 'button button-primary';
+		require LOGIXFAST_AUTH_PLUGIN_DIR . 'templates/partials/passkey-manager.php';
 	}
 }

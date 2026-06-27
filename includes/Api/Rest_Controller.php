@@ -2,10 +2,10 @@
 /**
  * REST API route registration.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

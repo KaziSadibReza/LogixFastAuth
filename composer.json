@@ -1,13 +1,13 @@
 {
-  "name": "kazi-sadib-reza/smart-login-registration",
-  "description": "Smart Login Registration WordPress plugin",
+  "name": "kazi-sadib-reza/logixfast-auth",
+  "description": "LogixFast Auth WordPress plugin",
   "version": "1.0.0",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
   "require": {
     "php": ">=8.1",
-    "giggsey/libphonenumber-for-php": "^8.13",
-    "web-auth/webauthn-lib": "4.9"
+    "giggsey/libphonenumber-for-php": "^9.0",
+    "web-auth/webauthn-lib": "^4.9"
   },
   "config": {
     "sort-packages": true,
@@ -22,7 +22,7 @@
   "scripts": {
     "install:win": "composer install --prefer-source",
     "post-install-cmd": [
-      "@php -r \"echo 'SLR: Composer dependencies installed.\\n';\""
+      "@php -r \"echo 'LogixFast Auth: Composer dependencies installed.' . PHP_EOL;\""
     ]
   }
 }

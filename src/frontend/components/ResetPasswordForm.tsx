@@ -1,22 +1,22 @@
 import { FormEvent, useState } from 'react';
 import { ArrowRight, Eye, EyeOff, Lock } from 'lucide-react';
 import { resetPassword } from '../api/auth';
-import { SlrField } from './SlrField';
-import { SlrInput } from './SlrInput';
-import { useSlrToast } from './SlrToaster';
+import { LogixFastAuthField } from './LogixFastAuthField';
+import { LogixFastAuthInput } from './LogixFastAuthInput';
+import { useLogixFastAuthToast } from './LogixFastAuthToaster';
 import { clearOtpSession, clearResetToken } from '../utils/formStorage';
-import type { SlrConfig } from '@shared/types';
+import type { LogixFastAuthConfig } from '@shared/types';
 
 import type { AuthRedirectResult } from '../utils/redirect';
 
 interface ResetPasswordFormProps {
-  config: SlrConfig;
+  config: LogixFastAuthConfig;
   resetToken: string;
   onSuccess: (result: AuthRedirectResult) => void;
 }
 
 export function ResetPasswordForm({ config, resetToken, onSuccess }: ResetPasswordFormProps) {
-  const toast = useSlrToast();
+  const toast = useLogixFastAuthToast();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -52,14 +52,14 @@ export function ResetPasswordForm({ config, resetToken, onSuccess }: ResetPasswo
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <h2 id="slr-title" className="slr-title">{config.i18n.newPassword || 'Set new password'}</h2>
-      <p className="slr-subtitle slr-subtitle--compact">
+      <h2 id="logixfast-auth-title" className="logixfast-auth-title">{config.i18n.newPassword || 'Set new password'}</h2>
+      <p className="logixfast-auth-subtitle logixfast-auth-subtitle--compact">
         {config.i18n.newPasswordHint || 'Choose a strong password for your account.'}
       </p>
 
-      <SlrField label={config.i18n.password} htmlFor="slr-reset-password" required>
-        <SlrInput
-          id="slr-reset-password"
+      <LogixFastAuthField label={config.i18n.password} htmlFor="logixfast-auth-reset-password" required>
+        <LogixFastAuthInput
+          id="logixfast-auth-reset-password"
           icon={Lock}
           type={showPassword ? 'text' : 'password'}
           value={password}
@@ -68,16 +68,16 @@ export function ResetPasswordForm({ config, resetToken, onSuccess }: ResetPasswo
           minLength={8}
           placeholder="Min 8 characters"
           suffix={
-            <button type="button" className="slr-input-action" onClick={() => setShowPassword((v) => !v)}>
+            <button type="button" className="logixfast-auth-input-action" onClick={() => setShowPassword((v) => !v)}>
               {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           }
         />
-      </SlrField>
+      </LogixFastAuthField>
 
-      <SlrField label={config.i18n.confirmPassword} htmlFor="slr-reset-confirm" required>
-        <SlrInput
-          id="slr-reset-confirm"
+      <LogixFastAuthField label={config.i18n.confirmPassword} htmlFor="logixfast-auth-reset-confirm" required>
+        <LogixFastAuthInput
+          id="logixfast-auth-reset-confirm"
           icon={Lock}
           type={showConfirm ? 'text' : 'password'}
           value={confirmPassword}
@@ -85,23 +85,23 @@ export function ResetPasswordForm({ config, resetToken, onSuccess }: ResetPasswo
           autoComplete="new-password"
           placeholder="Repeat password"
           suffix={
-            <button type="button" className="slr-input-action" onClick={() => setShowConfirm((v) => !v)}>
+            <button type="button" className="logixfast-auth-input-action" onClick={() => setShowConfirm((v) => !v)}>
               {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
             </button>
           }
         />
-      </SlrField>
+      </LogixFastAuthField>
 
-      <button type="submit" className="slr-btn slr-btn--primary" disabled={loading}>
+      <button type="submit" className="logixfast-auth-btn logixfast-auth-btn--primary" disabled={loading}>
         {loading ? (
           <>
-            <span className="slr-loading-spinner" aria-hidden="true" />
+            <span className="logixfast-auth-loading-spinner" aria-hidden="true" />
             {config.i18n.loading}
           </>
         ) : (
           <>
             {config.i18n.updatePassword || 'Update password'}
-            <ArrowRight size={18} className="slr-btn-arrow" aria-hidden="true" />
+            <ArrowRight size={18} className="logixfast-auth-btn-arrow" aria-hidden="true" />
           </>
         )}
       </button>

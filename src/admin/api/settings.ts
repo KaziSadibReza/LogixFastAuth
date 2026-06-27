@@ -1,16 +1,16 @@
 import { apiRequest } from '@shared/api';
-import type { SlrSettings } from '@shared/types';
+import type { LogixFastAuthSettings } from '@shared/types';
 
 function getAdmin() {
-  return window.SLR_ADMIN!;
+  return window.LOGIXFAST_AUTH_ADMIN!;
 }
 
-export function fetchSettings(): Promise<SlrSettings> {
+export function fetchSettings(): Promise<LogixFastAuthSettings> {
   const admin = getAdmin();
   return apiRequest(admin.apiUrl, admin.nonce, '/settings');
 }
 
-export function saveSettings(settings: Partial<SlrSettings>): Promise<SlrSettings> {
+export function saveSettings(settings: Partial<LogixFastAuthSettings>): Promise<LogixFastAuthSettings> {
   const admin = getAdmin();
   return apiRequest(admin.apiUrl, admin.nonce, '/settings', {
     method: 'PUT',
@@ -42,7 +42,7 @@ export interface PageOption {
   id: number;
   title: string;
   url: string;
-  is_slr?: boolean;
+  is_logixfastauth?: boolean;
 }
 
 export interface LoginPageResult {
@@ -70,10 +70,10 @@ export function fetchSmsProviders(): Promise<{ name: string }[]> {
 export interface DashboardStats {
   total_users: number;
   new_users_today: number;
-  slr_logins_total: number;
-  slr_logins_today: number;
-  slr_registrations_total: number;
-  slr_registrations_today: number;
+  logixfast_auth_logins_total: number;
+  logixfast_auth_logins_today: number;
+  logixfast_auth_registrations_total: number;
+  logixfast_auth_registrations_today: number;
   active_integrations: number;
   dedicated_page_set: boolean;
   dedicated_page_title: string;

@@ -2,12 +2,12 @@
 /**
  * Passkeys tab on WooCommerce My Account.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Services\Passkey_Surfaces;
+use LogixFastAuth\Services\Passkey_Surfaces;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -61,12 +61,12 @@ class WooCommerce_Passkeys {
 		foreach ( $items as $key => $label ) {
 			$new_items[ $key ] = $label;
 			if ( 'edit-account' === $key ) {
-				$new_items[ self::ENDPOINT ] = __( 'Passkeys', 'smart-login-registration' );
+				$new_items[ self::ENDPOINT ] = __( 'Passkeys', 'logixfast-auth' );
 			}
 		}
 
 		if ( ! isset( $new_items[ self::ENDPOINT ] ) ) {
-			$new_items[ self::ENDPOINT ] = __( 'Passkeys', 'smart-login-registration' );
+			$new_items[ self::ENDPOINT ] = __( 'Passkeys', 'logixfast-auth' );
 		}
 
 		return $new_items;
@@ -82,7 +82,7 @@ class WooCommerce_Passkeys {
 			return;
 		}
 
-		echo '<div class="woocommerce-MyAccount-content-slr-passkeys">';
+		echo '<div class="woocommerce-MyAccount-content-logixfast-auth-passkeys">';
 		Passkey_Surfaces::render_manager(
 			array(
 				'button_class' => 'woocommerce-button button alt',

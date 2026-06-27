@@ -2,12 +2,12 @@
 /**
  * Honeypot and spam protection.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Settings;
+use LogixFastAuth\Settings;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,17 +29,17 @@ class SpamProtection {
 		$settings = Settings::get( 'general' );
 
 		if ( ! empty( $settings['honeypot_enabled'] ) ) {
-			if ( ! empty( $data['slr_hp'] ) ) {
-				return new WP_Error( 'slr_spam', __( 'Request blocked.', 'smart-login-registration' ), array( 'status' => 403 ) );
+			if ( ! empty( $data['logixfast_auth_hp'] ) ) {
+				return new WP_Error( 'logixfast_auth_spam', __( 'Request blocked.', 'logixfast-auth' ), array( 'status' => 403 ) );
 			}
 		}
 
-		$verified = apply_filters( 'slr_spam_verify', true, $data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
+		$verified = apply_filters( 'logixfast_auth_spam_verify', true, $data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 		if ( is_wp_error( $verified ) ) {
 			return $verified;
 		}
 		if ( false === $verified ) {
-			return new WP_Error( 'slr_spam', __( 'Request blocked.', 'smart-login-registration' ), array( 'status' => 403 ) );
+			return new WP_Error( 'logixfast_auth_spam', __( 'Request blocked.', 'logixfast-auth' ), array( 'status' => 403 ) );
 		}
 
 		return true;

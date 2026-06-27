@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1544 500" width="1544" height="500" role="img" aria-label="Smart Login Registration banner">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1544 500" width="1544" height="500" role="img" aria-label="LogixFast Auth banner">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1544" y2="500" gradientUnits="userSpaceOnUse">
       <stop offset="0" stop-color="#1f0c2e"/>
@@ -8,7 +8,7 @@
       <stop offset="0" stop-color="#d6336c" stop-opacity="0.40"/>
       <stop offset="1" stop-color="#d6336c" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="slrGrad" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
+    <linearGradient id="logixfastauthGrad" x1="0" y1="0" x2="1" y2="1" gradientUnits="objectBoundingBox">
       <stop offset="0" stop-color="#d6336c"/>
       <stop offset="0.55" stop-color="#c2349a"/>
       <stop offset="1" stop-color="#ae3ec9"/>
@@ -21,7 +21,7 @@
   <rect width="1544" height="500" fill="url(#bg)"/>
   <rect width="1544" height="500" fill="url(#glow)"/>
   <g transform="translate(150,100) scale(4.6875)">
-    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#slrGrad)"/>
+    <rect x="4" y="4" width="56" height="56" rx="14" fill="url(#logixfastauthGrad)"/>
     <circle cx="32" cy="22" r="7.5" fill="none" stroke="#ffffff" stroke-width="5.5"/>
     <path d="M32 30 V49" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round"/>
     <path d="M32 42 H40" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round"/>

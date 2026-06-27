@@ -54,7 +54,7 @@ export function Select({
     if (!triggerRef.current) return;
 
     const rect = triggerRef.current.getBoundingClientRect();
-    const menu = document.getElementById('slr-select-menu-portal');
+    const menu = document.getElementById('logixfast-auth-select-menu-portal');
     const measuredHeight = menu?.getBoundingClientRect().height ?? MENU_MAX_HEIGHT;
     const menuHeight = Math.min(MENU_MAX_HEIGHT, measuredHeight);
 
@@ -98,7 +98,7 @@ export function Select({
     const handler = (e: MouseEvent) => {
       const target = e.target as Node;
       if (wrapperRef.current?.contains(target)) return;
-      const menu = document.getElementById('slr-select-menu-portal');
+      const menu = document.getElementById('logixfast-auth-select-menu-portal');
       if (menu?.contains(target)) return;
       setOpen(false);
     };
@@ -151,8 +151,8 @@ export function Select({
 
   const menu = open ? (
     <div
-      id="slr-select-menu-portal"
-      className={['slr-select-menu', 'slr-select-menu--portal', dropUp ? 'slr-select-menu--drop-up' : '']
+      id="logixfast-auth-select-menu-portal"
+      className={['logixfast-auth-select-menu', 'logixfast-auth-select-menu--portal', dropUp ? 'logixfast-auth-select-menu--drop-up' : '']
         .filter(Boolean)
         .join(' ')}
       role="listbox"
@@ -166,7 +166,7 @@ export function Select({
       }}
     >
       {searchable && (
-        <div className="slr-select-search">
+        <div className="logixfast-auth-select-search">
           <input
             ref={searchRef}
             type="text"
@@ -178,7 +178,7 @@ export function Select({
         </div>
       )}
       {filtered.length === 0 ? (
-        <div className="slr-select-empty">No options found.</div>
+        <div className="logixfast-auth-select-empty">No options found.</div>
       ) : (
         filtered.map((opt, i) => (
           <div
@@ -186,7 +186,7 @@ export function Select({
             role="option"
             aria-selected={String(opt.value) === String(value)}
             className={[
-              'slr-select-option',
+              'logixfast-auth-select-option',
               String(opt.value) === String(value) ? 'selected' : '',
               i === highlight ? 'highlighted' : '',
             ]
@@ -199,11 +199,11 @@ export function Select({
             <span>
               {opt.label}
               {opt.description && (
-                <small className="slr-select-option-desc">{opt.description}</small>
+                <small className="logixfast-auth-select-option-desc">{opt.description}</small>
               )}
             </span>
             {String(opt.value) === String(value) && (
-              <Icon icon={Check} size={16} className="slr-select-option-check" />
+              <Icon icon={Check} size={16} className="logixfast-auth-select-option-check" />
             )}
           </div>
         ))
@@ -212,25 +212,25 @@ export function Select({
   ) : null;
 
   return (
-    <div className="slr-select" ref={wrapperRef}>
+    <div className="logixfast-auth-select" ref={wrapperRef}>
       <button
         ref={triggerRef}
         type="button"
         id={id}
-        className="slr-select-trigger"
+        className="logixfast-auth-select-trigger"
         onClick={() => !disabled && setOpen((o) => !o)}
         onKeyDown={onKey}
         aria-haspopup="listbox"
         aria-expanded={open}
         disabled={disabled}
-        style={hasError ? { borderColor: 'var(--slr-danger)' } : undefined}
+        style={hasError ? { borderColor: 'var(--logixfast-auth-danger)' } : undefined}
       >
         {current ? (
-          <span className="slr-select-value">{current.label}</span>
+          <span className="logixfast-auth-select-value">{current.label}</span>
         ) : (
-          <span className="slr-select-placeholder">{placeholder}</span>
+          <span className="logixfast-auth-select-placeholder">{placeholder}</span>
         )}
-        <span className="slr-select-caret" aria-hidden="true">
+        <span className="logixfast-auth-select-caret" aria-hidden="true">
           <Icon icon={ChevronDown} size={16} />
         </span>
       </button>

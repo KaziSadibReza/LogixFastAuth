@@ -2,10 +2,10 @@
 /**
  * WebAuthn credentials database repository.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Database; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Database; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,7 +24,7 @@ class WebAuthnRepository {
 	 */
 	private function table() {
 		global $wpdb;
-		return $wpdb->prefix . 'slr_webauthn_credentials';
+		return $wpdb->prefix . 'logixfast_auth_webauthn_credentials';
 	}
 
 	/**

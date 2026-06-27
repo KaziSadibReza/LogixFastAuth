@@ -1,33 +1,33 @@
 import { FormEvent, useState } from 'react';
 import { ArrowRight, Eye, EyeOff, Lock, Mail, User } from 'lucide-react';
 import { register } from '../api/auth';
-import { SlrCountryPhone } from './SlrCountryPhone';
-import { SlrField } from './SlrField';
-import { SlrInput } from './SlrInput';
-import { SlrOtpChannelToggle, type OtpChannel } from './SlrOtpChannelToggle';
-import { useSlrToast } from './SlrToaster';
+import { LogixFastAuthCountryPhone } from './LogixFastAuthCountryPhone';
+import { LogixFastAuthField } from './LogixFastAuthField';
+import { LogixFastAuthInput } from './LogixFastAuthInput';
+import { LogixFastAuthOtpChannelToggle, type OtpChannel } from './LogixFastAuthOtpChannelToggle';
+import { useLogixFastAuthToast } from './LogixFastAuthToaster';
 import {
   mapApiErrorToRegisterFields,
   validateRegisterFields,
   type FieldErrors,
   type RegisterField,
 } from '../utils/formErrors';
-import type { SlrConfig } from '@shared/types';
+import type { LogixFastAuthConfig } from '@shared/types';
 import { loadFormSession, saveFormSession } from '../utils/formStorage';
 import type { AuthRedirectResult } from '../utils/redirect';
 
 interface RegisterFormProps {
-  config: SlrConfig;
+  config: LogixFastAuthConfig;
   onOtpRequired: (identifier: string, channel: string, pendingToken?: string, sessionExpiresAt?: number) => void;
   onSuccess: (result: AuthRedirectResult) => void;
 }
 
-function hasBothOtpChannels(config: SlrConfig): boolean {
+function hasBothOtpChannels(config: LogixFastAuthConfig): boolean {
   return config.auth.emailOtp && config.auth.phoneOtp && config.auth.requirePhone;
 }
 
 export function RegisterForm({ config, onOtpRequired, onSuccess }: RegisterFormProps) {
-  const toast = useSlrToast();
+  const toast = useLogixFastAuthToast();
   const saved = loadFormSession().register;
   const bothChannels = hasBothOtpChannels(config);
 
@@ -99,7 +99,7 @@ export function RegisterForm({ config, onOtpRequired, onSuccess }: RegisterFormP
         phone,
         password,
         preferred_channel: bothChannels ? otpChannel : undefined,
-        slr_hp: '',
+        logixfast_auth_hp: '',
       });
       if (result.requiresOtp) {
         const identifier = result.otpChannel === 'phone' ? phone : email;
@@ -117,9 +117,9 @@ export function RegisterForm({ config, onOtpRequired, onSuccess }: RegisterFormP
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <SlrField label={config.i18n.fullName} htmlFor="slr-reg-name" required hasError={fieldErrors.fullName}>
-        <SlrInput
-          id="slr-reg-name"
+      <LogixFastAuthField label={config.i18n.fullName} htmlFor="logixfast-auth-reg-name" required hasError={fieldErrors.fullName}>
+        <LogixFastAuthInput
+          id="logixfast-auth-reg-name"
           icon={User}
           type="text"
           value={fullName}
@@ -133,11 +133,11 @@ export function RegisterForm({ config, onOtpRequired, onSuccess }: RegisterFormP
           placeholder="Jane Doe"
           hasError={fieldErrors.fullName}
         />
-      </SlrField>
+      </LogixFastAuthField>
 
-      <SlrField label={config.i18n.email} htmlFor="slr-reg-email" required hasError={fieldErrors.email}>
-        <SlrInput
-          id="slr-reg-email"
+      <LogixFastAuthField label={config.i18n.email} htmlFor="logixfast-auth-reg-email" required hasError={fieldErrors.email}>
+        <LogixFastAuthInput
+          id="logixfast-auth-reg-email"
           icon={Mail}
           type="email"
           value={email}
@@ -151,10 +151,10 @@ export function RegisterForm({ config, onOtpRequired, onSuccess }: RegisterFormP
           placeholder="you@example.com"
           hasError={fieldErrors.email}
         />
-      </SlrField>
+      </LogixFastAuthField>
 
       {config.auth.requirePhone && (
-        <SlrCountryPhone
+        <LogixFastAuthCountryPhone
           label={config.i18n.phone}
           value={phone}
           onChange={(value) => {
@@ -167,9 +167,9 @@ export function RegisterForm({ config, onOtpRequired, onSuccess }: RegisterFormP
         />
       )}
 
-      <SlrField label={config.i18n.password} htmlFor="slr-reg-password" required hasError={fieldErrors.password}>
-        <SlrInput
-          id="slr-reg-password"
+      <LogixFastAuthField label={config.i18n.password} htmlFor="logixfast-auth-reg-password" required hasError={fieldErrors.password}>
+        <LogixFastAuthInput
+          id="logixfast-auth-reg-password"
           icon={Lock}
           type={showPassword ? 'text' : 'password'}
           value={password}
@@ -184,7 +184,7 @@ export function RegisterForm({ config, onOtpRequired, onSuccess }: RegisterFormP
           suffix={
             <button
               type="button"
-              className="slr-input-action"
+              className="logixfast-auth-input-action"
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
@@ -192,16 +192,16 @@ export function RegisterForm({ config, onOtpRequired, onSuccess }: RegisterFormP
             </button>
           }
         />
-      </SlrField>
+      </LogixFastAuthField>
 
-      <SlrField
+      <LogixFastAuthField
         label={config.i18n.confirmPassword}
-        htmlFor="slr-reg-confirm"
+        htmlFor="logixfast-auth-reg-confirm"
         required
         hasError={fieldErrors.confirmPassword}
       >
-        <SlrInput
-          id="slr-reg-confirm"
+        <LogixFastAuthInput
+          id="logixfast-auth-reg-confirm"
           icon={Lock}
           type={showConfirm ? 'text' : 'password'}
           value={confirmPassword}
@@ -215,7 +215,7 @@ export function RegisterForm({ config, onOtpRequired, onSuccess }: RegisterFormP
           suffix={
             <button
               type="button"
-              className="slr-input-action"
+              className="logixfast-auth-input-action"
               onClick={() => setShowConfirm((v) => !v)}
               aria-label={showConfirm ? 'Hide password' : 'Show password'}
             >
@@ -223,14 +223,14 @@ export function RegisterForm({ config, onOtpRequired, onSuccess }: RegisterFormP
             </button>
           }
         />
-      </SlrField>
+      </LogixFastAuthField>
 
       {bothChannels && (
-        <div className="slr-otp-channel-section">
-          <p className="slr-otp-channel-label">
+        <div className="logixfast-auth-otp-channel-section">
+          <p className="logixfast-auth-otp-channel-label">
             {config.i18n.verifyVia || 'Verify your account via'}
           </p>
-          <SlrOtpChannelToggle
+          <LogixFastAuthOtpChannelToggle
             channel={otpChannel}
             emailLabel={config.i18n.otpChannelEmail || 'Email'}
             phoneLabel={config.i18n.otpChannelPhone || 'Phone'}
@@ -239,18 +239,18 @@ export function RegisterForm({ config, onOtpRequired, onSuccess }: RegisterFormP
         </div>
       )}
 
-      <input type="text" name="slr_hp" className="slr-hp" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+      <input type="text" name="logixfast_auth_hp" className="logixfast-auth-hp" tabIndex={-1} autoComplete="off" aria-hidden="true" />
 
-      <button type="submit" className="slr-btn slr-btn--primary" disabled={loading}>
+      <button type="submit" className="logixfast-auth-btn logixfast-auth-btn--primary" disabled={loading}>
         {loading ? (
           <>
-            <span className="slr-loading-spinner" aria-hidden="true" />
+            <span className="logixfast-auth-loading-spinner" aria-hidden="true" />
             {config.i18n.loading}
           </>
         ) : (
           <>
             {config.i18n.submitRegister}
-            <ArrowRight size={18} className="slr-btn-arrow" aria-hidden="true" />
+            <ArrowRight size={18} className="logixfast-auth-btn-arrow" aria-hidden="true" />
           </>
         )}
       </button>

@@ -15,26 +15,26 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(function Input(
   const inputEl = (
     <input
       ref={ref}
-      className={`slr-input ${hasError ? 'slr-input--error' : ''} ${className}`}
+      className={`logixfast-auth-input ${hasError ? 'logixfast-auth-input--error' : ''} ${className}`}
       {...rest}
     />
   );
 
   if (!icon && !suffix) return inputEl;
 
-  const wrapperClass = ['slr-input-wrapper', icon ? 'has-icon' : '', suffix ? 'has-suffix' : '']
+  const wrapperClass = ['logixfast-auth-input-wrapper', icon ? 'has-icon' : '', suffix ? 'has-suffix' : '']
     .filter(Boolean)
     .join(' ');
 
   return (
     <div className={wrapperClass}>
       {icon && (
-        <span className="slr-input-icon" aria-hidden="true">
+        <span className="logixfast-auth-input-icon" aria-hidden="true">
           <Icon icon={icon} size={16} />
         </span>
       )}
       {inputEl}
-      {suffix && <span className="slr-input-suffix">{suffix}</span>}
+      {suffix && <span className="logixfast-auth-input-suffix">{suffix}</span>}
     </div>
   );
 });

@@ -2,16 +2,16 @@
 /**
  * WebAuthn REST endpoints.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Database\WebAuthnRepository;
-use SLR\Services\AuthService;
-use SLR\Services\RateLimiter;
-use SLR\Services\SpamProtection;
-use SLR\Services\WebAuthnService;
+use LogixFastAuth\Database\WebAuthnRepository;
+use LogixFastAuth\Services\AuthService;
+use LogixFastAuth\Services\RateLimiter;
+use LogixFastAuth\Services\SpamProtection;
+use LogixFastAuth\Services\WebAuthnService;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -30,7 +30,7 @@ class WebAuthnController {
 	 */
 	public function register_routes() {
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/webauthn/register/options',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -40,7 +40,7 @@ class WebAuthnController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/webauthn/register/verify',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -50,7 +50,7 @@ class WebAuthnController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/webauthn/credentials',
 			array(
 				array(
@@ -62,7 +62,7 @@ class WebAuthnController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/webauthn/credentials/(?P<id>\d+)',
 			array(
 				array(
@@ -74,22 +74,22 @@ class WebAuthnController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/webauthn/login/options',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'login_options' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => '__return_true', // Public passkey challenge endpoint; creates a short-lived server-side session.
 			)
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/webauthn/login/verify',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'login_verify' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => '__return_true', // Public passkey verification endpoint; requires a valid challenge session and credential assertion.
 			)
 		);
 	}
@@ -135,7 +135,7 @@ class WebAuthnController {
 		$repo = new WebAuthnRepository();
 
 		if ( ! $repo->delete( $id, get_current_user_id() ) ) {
-			return new \WP_Error( 'slr_passkey_not_found', __( 'Passkey not found.', 'smart-login-registration' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'logixfast_auth_passkey_not_found', __( 'Passkey not found.', 'logixfast-auth' ), array( 'status' => 404 ) );
 		}
 
 		return rest_ensure_response( array( 'success' => true ) );
@@ -220,7 +220,7 @@ class WebAuthnController {
 		$response    = is_array( $data['response'] ?? null ) ? $data['response'] : array();
 
 		if ( '' === $session_key ) {
-			return new \WP_Error( 'slr_webauthn_expired', __( 'Login session expired. Please try passkey sign-in again.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'logixfast_auth_webauthn_expired', __( 'Login session expired. Please try passkey sign-in again.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$user_id = ( new WebAuthnService() )->verify_login( $session_key, $response );

@@ -6,10 +6,10 @@ interface ToggleProps extends Omit<InputHTMLAttributes<HTMLInputElement>, 'type'
 
 export function Toggle({ ariaLabel, className = '', ...rest }: ToggleProps) {
   return (
-    <label className={`slr-toggle ${className}`}>
+    <label className={`logixfast-auth-toggle ${className}`}>
       <input type="checkbox" aria-label={ariaLabel} {...rest} />
-      <span className="slr-toggle-track" aria-hidden="true">
-        <span className="slr-toggle-thumb" />
+      <span className="logixfast-auth-toggle-track" aria-hidden="true">
+        <span className="logixfast-auth-toggle-thumb" />
       </span>
     </label>
   );

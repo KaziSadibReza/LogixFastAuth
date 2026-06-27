@@ -1,11 +1,11 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { SlrApp } from './components/SlrApp';
+import { LogixFastAuthApp } from './components/LogixFastAuthApp';
 import { applyStyleVars } from './utils/applyStyleVars';
 import './styles/main.scss';
 
-const config = window.SLR_CONFIG;
-const rootEl = document.getElementById('slr-root');
+const config = window.LOGIXFAST_AUTH_CONFIG;
+const rootEl = document.getElementById('logixfast-auth-root');
 
 if (config && rootEl) {
   applyStyleVars(config.style);
@@ -15,7 +15,7 @@ if (config && rootEl) {
 
   createRoot(rootEl).render(
     <StrictMode>
-      <SlrApp config={config} initialOpen={true} initialMode={mode} />
+      <LogixFastAuthApp config={config} initialOpen={true} initialMode={mode} />
     </StrictMode>
   );
 }

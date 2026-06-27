@@ -36,7 +36,7 @@ const loginIntegrations: IntegrationItem[] = [
     label: 'WordPress',
     icon: Globe,
     iconVariant: 'wp',
-    description: 'Redirect wp-login.php to SLR (logout and password reset still work).',
+    description: 'Redirect wp-login.php to LogixFastAuth (logout and password reset still work).',
     requiresDedicatedPage: true,
   },
   {
@@ -52,7 +52,7 @@ const loginIntegrations: IntegrationItem[] = [
     label: 'Tutor LMS',
     icon: GraduationCap,
     iconVariant: 'tutor',
-    description: 'Replace the Tutor dashboard login and login modal with SLR.',
+    description: 'Replace the Tutor dashboard login and login modal with LogixFastAuth.',
     requiresDedicatedPage: true,
   },
   {
@@ -60,7 +60,7 @@ const loginIntegrations: IntegrationItem[] = [
     label: 'Elementor',
     icon: PenLine,
     iconVariant: 'elementor',
-    description: 'Replace the Elementor Pro login widget and enable SLR dynamic tags.',
+    description: 'Replace the Elementor Pro login widget and enable LogixFastAuth dynamic tags.',
   },
 ];
 
@@ -150,25 +150,25 @@ export function IntegrationsPage() {
   return (
     <>
       <Card
-        className="slr-card--flush-body"
+        className="logixfast-auth-card--flush-body"
         title={
-          <span className="slr-card-title-row">
-            <span className="slr-card-title-icon slr-card-title-icon--primary">
+          <span className="logixfast-auth-card-title-row">
+            <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--primary">
               <Icon icon={Plug} size={18} />
             </span>
             Login replacement
           </span>
         }
-        description="Choose which native login flows SLR takes over."
-        bodyClassName="slr-card-body--flush"
+        description="Choose which native login flows LogixFastAuth takes over."
+        bodyClassName="logixfast-auth-card-body--flush"
       >
-        <div className="slr-integrations-panel">
+        <div className="logixfast-auth-integrations-panel">
           {!hasDedicatedPage && (
-            <p className="slr-integrations-notice">
-              Set a dedicated SLR login page under <strong>General</strong> so dashboard and wp-login redirects work.
+            <p className="logixfast-auth-integrations-notice">
+              Set a dedicated LogixFastAuth login page under <strong>General</strong> so dashboard and wp-login redirects work.
             </p>
           )}
-          <div className="slr-integration-toggle-grid">
+          <div className="logixfast-auth-integration-toggle-grid">
             {loginIntegrations.map((item) => {
               const pluginKey = pluginKeyByIntegration[item.key];
               const isAvailable = plugins[pluginKey];
@@ -216,22 +216,22 @@ export function IntegrationsPage() {
       </Card>
 
       {showProfileSync && (
-        <div className="slr-page-columns slr-page-columns--split">
+        <div className="logixfast-auth-page-columns logixfast-auth-page-columns--split">
           <Card
-            className="slr-card--flush-body"
+            className="logixfast-auth-card--flush-body"
             title={
-              <span className="slr-card-title-row">
-                <span className="slr-card-title-icon">
+              <span className="logixfast-auth-card-title-row">
+                <span className="logixfast-auth-card-title-icon">
                   <Icon icon={Link2} size={18} />
                 </span>
                 Profile field sync
               </span>
             }
-            description="Registration data syncs to existing WooCommerce and Tutor profile fields. Use sync when you install WooCommerce or Tutor after SLR has already collected phones."
-            bodyClassName="slr-card-body--flush"
+            description="Registration data syncs to existing WooCommerce and Tutor profile fields. Use sync when you install WooCommerce or Tutor after LogixFastAuth has already collected phones."
+            bodyClassName="logixfast-auth-card-body--flush"
           >
-            <div className="slr-integrations-panel">
-              <div className="slr-icon-card-grid">
+            <div className="logixfast-auth-integrations-panel">
+              <div className="logixfast-auth-icon-card-grid">
                 {plugins.woocommerce && (
                   <IntegrationIconCard
                     icon={ShoppingCart}
@@ -239,7 +239,7 @@ export function IntegrationsPage() {
                     title="WooCommerce"
                     description={
                       phonePreview?.woocommerce.pending
-                        ? `${phonePreview.woocommerce.pending} user${phonePreview.woocommerce.pending === 1 ? '' : 's'} need billing_phone synced from SLR.`
+                        ? `${phonePreview.woocommerce.pending} user${phonePreview.woocommerce.pending === 1 ? '' : 's'} need billing_phone synced from LogixFastAuth.`
                         : 'Customer billing phone is in sync.'
                     }
                     code="billing_phone"
@@ -261,7 +261,7 @@ export function IntegrationsPage() {
                     title="Tutor LMS"
                     description={
                       phonePreview?.tutor.pending
-                        ? `${phonePreview.tutor.pending} user${phonePreview.tutor.pending === 1 ? '' : 's'} need phone_number synced from SLR.`
+                        ? `${phonePreview.tutor.pending} user${phonePreview.tutor.pending === 1 ? '' : 's'} need phone_number synced from LogixFastAuth.`
                         : 'Tutor profile phone is in sync.'
                     }
                     code="phone_number"
@@ -281,26 +281,26 @@ export function IntegrationsPage() {
           </Card>
 
           <Card
-            className="slr-card--flush-body"
+            className="logixfast-auth-card--flush-body"
             title={
-              <span className="slr-card-title-row">
-                <span className="slr-card-title-icon slr-card-title-icon--success">
+              <span className="logixfast-auth-card-title-row">
+                <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--success">
                   <Icon icon={Link2} size={18} />
                 </span>
                 Field mappings
               </span>
             }
-            description="How SLR registration fields map to each platform."
-            bodyClassName="slr-card-body--flush"
+            description="How LogixFastAuth registration fields map to each platform."
+            bodyClassName="logixfast-auth-card-body--flush"
           >
-            <div className="slr-integrations-panel">
-              <div className="slr-field-mapping-list">
+            <div className="logixfast-auth-integrations-panel">
+              <div className="logixfast-auth-field-mapping-list">
                 {fieldSyncMappings.map((row) => (
-                  <div key={row.label} className="slr-field-mapping-row">
-                    <div className="slr-field-mapping-label">{row.label}</div>
-                    <div className="slr-field-mapping-targets">
+                  <div key={row.label} className="logixfast-auth-field-mapping-row">
+                    <div className="logixfast-auth-field-mapping-label">{row.label}</div>
+                    <div className="logixfast-auth-field-mapping-targets">
                       {row.targets.map((code) => (
-                        <code key={code} className="slr-icon-card__code">
+                        <code key={code} className="logixfast-auth-icon-card__code">
                           {code}
                         </code>
                       ))}

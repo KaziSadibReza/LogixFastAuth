@@ -28,10 +28,10 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   ref
 ) {
   const classes = [
-    'slr-btn',
-    `slr-btn--${variant}`,
-    size !== 'md' ? `slr-btn--${size}` : '',
-    block ? 'slr-btn--block' : '',
+    'logixfast-auth-btn',
+    `logixfast-auth-btn--${variant}`,
+    size !== 'md' ? `logixfast-auth-btn--${size}` : '',
+    block ? 'logixfast-auth-btn--block' : '',
     loading ? 'loading' : '',
     className,
   ]
@@ -43,7 +43,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   return (
     <button ref={ref} type={type} className={classes} disabled={disabled || loading} {...rest}>
       {customIcon ?? (icon ? <Icon icon={icon} size={sz} /> : null)}
-      {size !== 'icon' && children && <span className="slr-btn-label">{children}</span>}
+      {size !== 'icon' && children && <span className="logixfast-auth-btn-label">{children}</span>}
       {iconRight && <Icon icon={iconRight} size={sz} />}
     </button>
   );

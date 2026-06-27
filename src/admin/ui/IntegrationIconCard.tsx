@@ -35,31 +35,31 @@ export function IntegrationIconCard({
   action,
 }: IntegrationIconCardProps) {
   return (
-    <article className="slr-icon-card">
-      <div className="slr-icon-card__header">
-        <div className={`slr-icon-card__icon slr-icon-card__icon--${iconVariant}`}>
+    <article className="logixfast-auth-icon-card">
+      <div className="logixfast-auth-icon-card__header">
+        <div className={`logixfast-auth-icon-card__icon logixfast-auth-icon-card__icon--${iconVariant}`}>
           {customIcon ?? (icon ? <Icon icon={icon} size={22} /> : null)}
         </div>
         {action && (
           <button
             type="button"
-            className="slr-icon-card__action"
+            className="logixfast-auth-icon-card__action"
             onClick={action.onClick}
             disabled={action.disabled || action.loading}
             aria-label={action.label}
             title={action.label}
           >
-            <Icon icon={action.icon} size={16} className={action.loading ? 'slr-spin' : ''} />
+            <Icon icon={action.icon} size={16} className={action.loading ? 'logixfast-auth-spin' : ''} />
           </button>
         )}
       </div>
-      <div className="slr-icon-card__body">
-        <div className="slr-icon-card__title">
+      <div className="logixfast-auth-icon-card__body">
+        <div className="logixfast-auth-icon-card__title">
           <span>{title}</span>
           {badge && <Badge variant={badge.variant}>{badge.label}</Badge>}
         </div>
-        <p className="slr-icon-card__desc">{description}</p>
-        {code && <code className="slr-icon-card__code">{code}</code>}
+        <p className="logixfast-auth-icon-card__desc">{description}</p>
+        {code && <code className="logixfast-auth-icon-card__code">{code}</code>}
       </div>
     </article>
   );

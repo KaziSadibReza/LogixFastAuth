@@ -2,12 +2,12 @@
 /**
  * Elementor login widget replacement.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Settings;
+use LogixFastAuth\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -66,12 +66,12 @@ class Elementor_Login {
 
 		ob_start();
 		?>
-		<div class="slr-elementor-login-replace">
-			<button type="button" class="elementor-button elementor-size-sm" data-slr-open="login">
-				<?php esc_html_e( 'Log In', 'smart-login-registration' ); ?>
+		<div class="logixfast-auth-elementor-login-replace">
+			<button type="button" class="elementor-button elementor-size-sm" data-logixfast-auth-open="login">
+				<?php esc_html_e( 'Log In', 'logixfast-auth' ); ?>
 			</button>
-			<button type="button" class="elementor-button elementor-button-link elementor-size-sm" data-slr-open="register">
-				<?php esc_html_e( 'Register', 'smart-login-registration' ); ?>
+			<button type="button" class="elementor-button elementor-button-link elementor-size-sm" data-logixfast-auth-open="register">
+				<?php esc_html_e( 'Register', 'logixfast-auth' ); ?>
 			</button>
 		</div>
 		<?php
@@ -91,21 +91,21 @@ class Elementor_Login {
 
 		if ( method_exists( $manager, 'register_group' ) ) {
 			$manager->register_group(
-				'slr',
+				'logixfastauth',
 				array(
-					'title' => __( 'SLR', 'smart-login-registration' ),
+					'title' => __( 'LogixFastAuth', 'logixfast-auth' ),
 				)
 			);
 		} elseif ( method_exists( $manager, 'register_tag_group' ) ) {
 			$manager->register_tag_group(
-				'slr',
+				'logixfastauth',
 				array(
-					'title' => __( 'SLR', 'smart-login-registration' ),
+					'title' => __( 'LogixFastAuth', 'logixfast-auth' ),
 				)
 			);
 		}
 
-		require_once SLR_PLUGIN_DIR . 'includes/Elementor/DynamicTags/SlrOpenPopupTag.php';
-		$manager->register( new \SLR\Elementor\DynamicTags\SlrOpenPopupTag() );
+		require_once LOGIXFAST_AUTH_PLUGIN_DIR . 'includes/Elementor/DynamicTags/LogixFastAuthOpenPopupTag.php';
+		$manager->register( new \LogixFastAuth\Elementor\DynamicTags\LogixFastAuthOpenPopupTag() );
 	}
 }

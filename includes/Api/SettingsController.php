@@ -2,19 +2,19 @@
 /**
  * Admin settings REST endpoints.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Integrations\Integration_Availability;
-use SLR\Services\GoogleOAuthService;
-use SLR\Services\Passkey_Surfaces;
-use SLR\Services\LoginPageService;
-use SLR\Services\MailService;
-use SLR\Services\Phone_Sync_Service;
-use SLR\Services\StatsService;
-use SLR\Settings;
+use LogixFastAuth\Integrations\Integration_Availability;
+use LogixFastAuth\Services\GoogleOAuthService;
+use LogixFastAuth\Services\Passkey_Surfaces;
+use LogixFastAuth\Services\LoginPageService;
+use LogixFastAuth\Services\MailService;
+use LogixFastAuth\Services\Phone_Sync_Service;
+use LogixFastAuth\Services\StatsService;
+use LogixFastAuth\Settings;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,7 +33,7 @@ class SettingsController {
 	 */
 	public function register_routes() {
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/settings',
 			array(
 				array(
@@ -50,7 +50,7 @@ class SettingsController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/settings/test-smtp',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -60,7 +60,7 @@ class SettingsController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/settings/pages',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -70,7 +70,7 @@ class SettingsController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/settings/login-page',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -80,7 +80,7 @@ class SettingsController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/settings/sms-providers',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -90,7 +90,7 @@ class SettingsController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/settings/stats',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -100,7 +100,7 @@ class SettingsController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/settings/google/oauth-url',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
@@ -110,17 +110,17 @@ class SettingsController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/settings/google/callback',
 			array(
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => array( $this, 'google_oauth_callback' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => '__return_true', // OAuth redirect target; state transient and admin-user validation happen in the callback handler.
 			)
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/settings/google/disconnect',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -130,7 +130,7 @@ class SettingsController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/settings/phone-sync',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -223,7 +223,7 @@ class SettingsController {
 		$settings['mail']['google_configured']   = $google_oauth->is_configured();
 		$settings['mail']['google_redirect_uri'] = $google_oauth->get_redirect_uri();
 
-		$settings['auth']['has_sms_provider'] = ! empty( apply_filters( 'slr_sms_providers', array() ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
+		$settings['auth']['has_sms_provider'] = ! empty( apply_filters( 'logixfast_auth_sms_providers', array() ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 		$settings['auth']['has_tutor_lms']    = Integration_Availability::is_tutor_available();
 		$settings['integration_plugins']      = Integration_Availability::get_plugin_map();
 		$settings['passkey_manage_urls']      = Passkey_Surfaces::get_manage_urls();
@@ -322,7 +322,7 @@ class SettingsController {
 				'id'     => $page->ID,
 				'title'  => $page->post_title,
 				'url'    => get_permalink( $page->ID ),
-				'is_slr' => LoginPageService::is_login_page( $page->ID ),
+				'is_logixfastauth' => LoginPageService::is_login_page( $page->ID ),
 			);
 		}
 
@@ -330,7 +330,7 @@ class SettingsController {
 	}
 
 	/**
-	 * Create or resolve the dedicated SLR login page.
+	 * Create or resolve the dedicated LogixFastAuth login page.
 	 *
 	 * @return \WP_REST_Response|\WP_Error
 	 */
@@ -338,7 +338,7 @@ class SettingsController {
 		$result = LoginPageService::ensure_dedicated_page();
 
 		if ( ! empty( $result['error'] ) ) {
-			return new \WP_Error( 'slr_login_page', $result['error'], array( 'status' => 500 ) );
+			return new \WP_Error( 'logixfast_auth_login_page', $result['error'], array( 'status' => 500 ) );
 		}
 
 		return rest_ensure_response( $result );
@@ -350,7 +350,7 @@ class SettingsController {
 	 * @return \WP_REST_Response
 	 */
 	public function get_sms_providers() {
-		$providers = apply_filters( 'slr_sms_providers', array() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
+		$providers = apply_filters( 'logixfast_auth_sms_providers', array() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 		$list      = array();
 
 		foreach ( $providers as $provider ) {
@@ -423,7 +423,7 @@ class SettingsController {
 	}
 
 	/**
-	 * Sync SLR / WooCommerce / Tutor phone profile fields.
+	 * Sync LogixFastAuth / WooCommerce / Tutor phone profile fields.
 	 *
 	 * @param \WP_REST_Request $request Request.
 	 * @return \WP_REST_Response|\WP_Error

@@ -1,11 +1,11 @@
 <?php
 /**
- * HTML email templates for SLR.
+ * HTML email templates for LogixFastAuth.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -36,17 +36,17 @@ class EmailTemplate {
 		$code      = preg_replace( '/\D/', '', (string) $code );
 
 		$headings = array(
-			'register' => __( 'Verify your email', 'smart-login-registration' ),
-			'login'    => __( 'Sign-in verification', 'smart-login-registration' ),
-			'reset'    => __( 'Reset your password', 'smart-login-registration' ),
-			'verify'   => __( 'Verification code', 'smart-login-registration' ),
+			'register' => __( 'Verify your email', 'logixfast-auth' ),
+			'login'    => __( 'Sign-in verification', 'logixfast-auth' ),
+			'reset'    => __( 'Reset your password', 'logixfast-auth' ),
+			'verify'   => __( 'Verification code', 'logixfast-auth' ),
 		);
 
 		$messages = array(
-			'register' => __( 'Enter this code to finish creating your account. Your welcome email will arrive after verification.', 'smart-login-registration' ),
-			'login'    => __( 'Enter this code to sign in to your account.', 'smart-login-registration' ),
-			'reset'    => __( 'Enter this code to reset your password.', 'smart-login-registration' ),
-			'verify'   => __( 'Enter this code to verify your identity.', 'smart-login-registration' ),
+			'register' => __( 'Enter this code to finish creating your account. Your welcome email will arrive after verification.', 'logixfast-auth' ),
+			'login'    => __( 'Enter this code to sign in to your account.', 'logixfast-auth' ),
+			'reset'    => __( 'Enter this code to reset your password.', 'logixfast-auth' ),
+			'verify'   => __( 'Enter this code to verify your identity.', 'logixfast-auth' ),
 		);
 
 		$heading = $headings[ $purpose ] ?? $headings['verify'];
@@ -54,11 +54,11 @@ class EmailTemplate {
 
 		$expiry_text = sprintf(
 			/* translators: %d: number of minutes */
-			_n( 'This code expires in %d minute.', 'This code expires in %d minutes.', $ttl_minutes, 'smart-login-registration' ),
+			_n( 'This code expires in %d minute.', 'This code expires in %d minutes.', $ttl_minutes, 'logixfast-auth' ),
 			$ttl_minutes
 		);
 
-		$security_note = __( 'If you did not request this code, you can safely ignore this email.', 'smart-login-registration' );
+		$security_note = __( 'If you did not request this code, you can safely ignore this email.', 'logixfast-auth' );
 		$digit_row     = self::build_digit_boxes_row( $code );
 		$accent        = esc_attr( self::ACCENT );
 
@@ -169,14 +169,14 @@ class EmailTemplate {
 
 		$expiry_text = sprintf(
 			/* translators: %d: number of minutes */
-			_n( 'This code expires in %d minute.', 'This code expires in %d minutes.', $ttl_minutes, 'smart-login-registration' ),
+			_n( 'This code expires in %d minute.', 'This code expires in %d minutes.', $ttl_minutes, 'logixfast-auth' ),
 			$ttl_minutes
 		);
 
 		return sprintf(
 			"%s\n\n%s: %s\n\n%s\n\n— %s",
-			__( 'Your verification code', 'smart-login-registration' ),
-			__( 'Code', 'smart-login-registration' ),
+			__( 'Your verification code', 'logixfast-auth' ),
+			__( 'Code', 'logixfast-auth' ),
 			$code,
 			$expiry_text,
 			$site_name

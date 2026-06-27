@@ -1,4 +1,4 @@
-import type { SlrConfig } from '@shared/types';
+import type { LogixFastAuthConfig } from '@shared/types';
 
 export type RedirectAction = 'stay' | 'navigate';
 
@@ -25,7 +25,7 @@ function isSamePageUrl(url: string): boolean {
 }
 
 export function applyAuthRedirect(
-  config: SlrConfig,
+  config: LogixFastAuthConfig,
   result: AuthRedirectResult,
   kind: 'login' | 'register',
   onClosePopup?: () => void

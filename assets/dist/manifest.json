@@ -1,9 +1,13 @@
 {
-  "_main-BL6qk_kF.js": {
-    "file": "chunks/main-BL6qk_kF.js",
+  "_logixfast-auth-bridge-B-OPgLgY.js": {
+    "file": "chunks/logixfast-auth-bridge-B-OPgLgY.js",
+    "name": "logixfast-auth-bridge"
+  },
+  "_main-BZHzO_ID.js": {
+    "file": "chunks/main-BZHzO_ID.js",
     "name": "main",
     "imports": [
-      "_slr-bridge-BcnOibz4.js"
+      "_logixfast-auth-bridge-B-OPgLgY.js"
     ],
     "dynamicImports": [
       "node_modules/@simplewebauthn/browser/dist/bundle/index.js",
@@ -17,10 +21,6 @@
     "file": "frontend/main.css",
     "src": "_main.css"
   },
-  "_slr-bridge-BcnOibz4.js": {
-    "file": "chunks/slr-bridge-BcnOibz4.js",
-    "name": "slr-bridge"
-  },
   "node_modules/@simplewebauthn/browser/dist/bundle/index.js": {
     "file": "chunks/index-BQAGQHkb.js",
     "name": "index",
@@ -33,7 +33,7 @@
     "src": "src/frontend/bootstrap.ts",
     "isEntry": true,
     "imports": [
-      "_slr-bridge-BcnOibz4.js"
+      "_logixfast-auth-bridge-B-OPgLgY.js"
     ]
   },
   "src/frontend/main-page.tsx": {
@@ -42,8 +42,8 @@
     "src": "src/frontend/main-page.tsx",
     "isEntry": true,
     "imports": [
-      "_main-BL6qk_kF.js",
-      "_slr-bridge-BcnOibz4.js"
+      "_main-BZHzO_ID.js",
+      "_logixfast-auth-bridge-B-OPgLgY.js"
     ]
   },
   "src/frontend/main-popup.tsx": {
@@ -52,8 +52,8 @@
     "src": "src/frontend/main-popup.tsx",
     "isEntry": true,
     "imports": [
-      "_main-BL6qk_kF.js",
-      "_slr-bridge-BcnOibz4.js"
+      "_main-BZHzO_ID.js",
+      "_logixfast-auth-bridge-B-OPgLgY.js"
     ]
   }
 }

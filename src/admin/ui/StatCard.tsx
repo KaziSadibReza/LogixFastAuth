@@ -12,21 +12,21 @@ interface StatCardProps {
 
 export function StatCard({ label, value, hint, icon, tone = 'default' }: StatCardProps) {
   return (
-    <div className={`slr-stat-card slr-stat-card--${tone}`}>
+    <div className={`logixfast-auth-stat-card logixfast-auth-stat-card--${tone}`}>
       {icon && (
-        <div className="slr-stat-card-icon" aria-hidden="true">
+        <div className="logixfast-auth-stat-card-icon" aria-hidden="true">
           <Icon icon={icon} size={22} />
         </div>
       )}
-      <div className="slr-stat-card-body">
-        <span className="slr-stat-card-label">{label}</span>
-        <span className="slr-stat-card-value">{value}</span>
-        {hint && <span className="slr-stat-card-hint">{hint}</span>}
+      <div className="logixfast-auth-stat-card-body">
+        <span className="logixfast-auth-stat-card-label">{label}</span>
+        <span className="logixfast-auth-stat-card-value">{value}</span>
+        {hint && <span className="logixfast-auth-stat-card-hint">{hint}</span>}
       </div>
     </div>
   );
 }
 
 export function StatsGrid({ children }: { children: ReactNode }) {
-  return <div className="slr-stats-grid">{children}</div>;
+  return <div className="logixfast-auth-stats-grid">{children}</div>;
 }

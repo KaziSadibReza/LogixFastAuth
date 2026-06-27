@@ -2,12 +2,12 @@
 /**
  * Admin security REST endpoints.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Services\RateLimiter;
+use LogixFastAuth\Services\RateLimiter;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -26,7 +26,7 @@ class SecurityController {
 	 */
 	public function register_routes() {
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/security/blocks',
 			array(
 				array(
@@ -38,7 +38,7 @@ class SecurityController {
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/security/blocks/(?P<id>[a-f0-9]{32})/unblock',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
@@ -78,7 +78,7 @@ class SecurityController {
 		$id = sanitize_text_field( $request['id'] ?? '' );
 
 		if ( ! RateLimiter::unblock( $id ) ) {
-			return new \WP_Error( 'slr_block_not_found', __( 'Block not found.', 'smart-login-registration' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'logixfast_auth_block_not_found', __( 'Block not found.', 'logixfast-auth' ), array( 'status' => 404 ) );
 		}
 
 		return rest_ensure_response( array( 'unblocked' => true ) );

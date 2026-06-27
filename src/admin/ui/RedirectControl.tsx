@@ -1,5 +1,5 @@
 import { Link2 } from 'lucide-react';
-import type { SlrLoggedInRedirectType, SlrRedirectType } from '@shared/types';
+import type { LogixFastAuthLoggedInRedirectType, LogixFastAuthRedirectType } from '@shared/types';
 import type { PageOption } from '../api/settings';
 import { Select } from './Select';
 import { Input } from './Input';
@@ -11,7 +11,7 @@ const TYPE_OPTIONS = [
   { value: 'url', label: 'Custom URL', description: 'Any full URL' },
 ] as const;
 
-type RedirectControlType = SlrRedirectType | SlrLoggedInRedirectType;
+type RedirectControlType = LogixFastAuthRedirectType | LogixFastAuthLoggedInRedirectType;
 
 interface RedirectControlProps {
   type: RedirectControlType;
@@ -46,15 +46,15 @@ export function RedirectControl({
   ];
 
   return (
-    <div className="slr-redirect-control">
+    <div className="logixfast-auth-redirect-control">
       <Select
         value={type}
-        onChange={(v) => onTypeChange(String(v) as SlrRedirectType)}
+        onChange={(v) => onTypeChange(String(v) as LogixFastAuthRedirectType)}
         options={typeOptions.map((o) => ({ value: o.value, label: o.label, description: o.description }))}
       />
       {type === 'page' && (
         pagesLoading ? (
-          <div className="slr-redirect-control-placeholder" />
+          <div className="logixfast-auth-redirect-control-placeholder" />
         ) : (
           <Select
             value={pageId}
@@ -69,7 +69,7 @@ export function RedirectControl({
         <Input type="url" value={url} onChange={(e) => onUrlChange(e.target.value)} placeholder={urlPlaceholder} icon={Link2} />
       )}
       {type === 'stay' && (
-        <p className="slr-redirect-hint">Ideal for popups — e.g. user signs in from About and stays on About.</p>
+        <p className="logixfast-auth-redirect-hint">Ideal for popups — e.g. user signs in from About and stays on About.</p>
       )}
     </div>
   );

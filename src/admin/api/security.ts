@@ -1,7 +1,7 @@
 import { apiRequest } from '@shared/api';
 
 function getAdmin() {
-  return window.SLR_ADMIN!;
+  return window.LOGIXFAST_AUTH_ADMIN!;
 }
 
 export interface RateBlock {

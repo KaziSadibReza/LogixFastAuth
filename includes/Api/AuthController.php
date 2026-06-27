@@ -2,17 +2,17 @@
 /**
  * Authentication REST endpoints.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Services\AuthService;
-use SLR\Services\StatsService;
-use SLR\Services\OtpService;
-use SLR\Services\RateLimiter;
-use SLR\Services\SpamProtection;
-use SLR\Settings;
+use LogixFastAuth\Services\AuthService;
+use LogixFastAuth\Services\StatsService;
+use LogixFastAuth\Services\OtpService;
+use LogixFastAuth\Services\RateLimiter;
+use LogixFastAuth\Services\SpamProtection;
+use LogixFastAuth\Settings;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,54 +31,67 @@ class AuthController {
 	 */
 	public function register_routes() {
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/auth/register',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'register' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => '__return_true', // Public registration endpoint; guarded by spam protection, validation, and rate limiting.
 			)
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/auth/login',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'login' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => '__return_true', // Public login endpoint; guarded by validation and rate limiting.
 			)
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/auth/logout',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'logout' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => array( $this, 'logged_in_permission' ),
 			)
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/auth/forgot-password',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'forgot_password' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => '__return_true', // Public password-reset request; guarded by spam protection and rate limiting.
 			)
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/auth/reset-password',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'reset_password' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => '__return_true', // Public reset completion; requires valid reset token and OTP.
 			)
 		);
+	}
+
+	/**
+	 * Allow only logged-in users to call user-specific endpoints.
+	 *
+	 * @return true|\WP_Error
+	 */
+	public function logged_in_permission() {
+		if ( is_user_logged_in() ) {
+			return true;
+		}
+
+		return new \WP_Error( 'logixfast_auth_rest_forbidden', __( 'You must be logged in to perform this action.', 'logixfast-auth' ), array( 'status' => 401 ) );
 	}
 
 	/**
@@ -103,7 +116,7 @@ class AuthController {
 		$auth           = Settings::get( 'auth' );
 		$email_otp_on   = ! empty( $auth['email_otp_enabled'] );
 		$phone_otp_on   = ! empty( $auth['phone_otp_enabled'] );
-		$has_sms        = $phone_otp_on && ! empty( apply_filters( 'slr_sms_providers', array() ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
+		$has_sms        = $phone_otp_on && ! empty( apply_filters( 'logixfast_auth_sms_providers', array() ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 		$has_phone_data = ! empty( $data['phone'] );
 		$preferred      = sanitize_text_field( $data['preferred_channel'] ?? '' );
 
@@ -193,13 +206,13 @@ class AuthController {
 				$channel = ! empty( $data['phone'] ) && empty( $data['email'] ) ? 'phone' : 'email';
 			}
 
-			$has_sms = ! empty( apply_filters( 'slr_sms_providers', array() ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
+			$has_sms = ! empty( apply_filters( 'logixfast_auth_sms_providers', array() ) ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 
 			if ( 'phone' === $channel ) {
 				if ( empty( $auth['phone_otp_enabled'] ) || ! $has_sms ) {
 					return new \WP_Error(
-						'slr_phone_otp_disabled',
-						__( 'Phone verification is not available.', 'smart-login-registration' ),
+						'logixfast_auth_phone_otp_disabled',
+						__( 'Phone verification is not available.', 'logixfast-auth' ),
 						array( 'status' => 400 )
 					);
 				}
@@ -208,8 +221,8 @@ class AuthController {
 				$identifier = sanitize_email( $data['email'] ?? '' );
 				if ( ! is_email( $identifier ) ) {
 					return new \WP_Error(
-						'slr_invalid_email',
-						__( 'Please enter a valid email address.', 'smart-login-registration' ),
+						'logixfast_auth_invalid_email',
+						__( 'Please enter a valid email address.', 'logixfast-auth' ),
 						array( 'status' => 400 )
 					);
 				}
@@ -217,8 +230,8 @@ class AuthController {
 
 			if ( empty( $identifier ) ) {
 				return new \WP_Error(
-					'slr_missing_identifier',
-					__( 'Email or phone is required.', 'smart-login-registration' ),
+					'logixfast_auth_missing_identifier',
+					__( 'Email or phone is required.', 'logixfast-auth' ),
 					array( 'status' => 400 )
 				);
 			}
@@ -250,7 +263,7 @@ class AuthController {
 		$result = ( new AuthService() )->login( $data );
 
 		if ( is_wp_error( $result ) ) {
-			if ( in_array( $result->get_error_code(), array( 'slr_invalid_credentials', 'slr_login_failed' ), true ) ) {
+			if ( in_array( $result->get_error_code(), array( 'logixfast_auth_invalid_credentials', 'logixfast_auth_login_failed' ), true ) ) {
 				( new RateLimiter() )->record_failure( 'login', RateLimiter::get_client_ip() );
 			}
 			return $result;
@@ -297,12 +310,12 @@ class AuthController {
 		$identifier = 'phone' === $channel ? $phone : $email;
 
 		if ( empty( $identifier ) ) {
-			return new \WP_Error( 'slr_missing_identifier', __( 'Email or phone is required.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'logixfast_auth_missing_identifier', __( 'Email or phone is required.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$auth = Settings::get( 'auth' );
 		if ( 'phone' === $channel && empty( $auth['phone_otp_enabled'] ) ) {
-			return new \WP_Error( 'slr_phone_reset_disabled', __( 'Phone reset is not available.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'logixfast_auth_phone_reset_disabled', __( 'Phone reset is not available.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$auth_service = new AuthService();

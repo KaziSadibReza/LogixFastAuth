@@ -2,10 +2,10 @@
 /**
  * Login redirect handler (delegates to WordPress_Login integration).
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Frontend; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Frontend; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

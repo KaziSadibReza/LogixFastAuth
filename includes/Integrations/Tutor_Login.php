@@ -2,12 +2,12 @@
 /**
  * Tutor LMS login replacement.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Settings;
+use LogixFastAuth\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -24,8 +24,8 @@ class Tutor_Login {
 	public function __construct() {
 		add_filter( 'tutor_login_url', array( $this, 'filter_login_url' ), 99 );
 		add_filter( 'enable_tutor_native_login', array( $this, 'disable_tutor_native_login' ), 99 );
-		add_filter( 'slr_should_load_tutor_login_modal', array( $this, 'should_load_tutor_login_modal' ) );
-		add_action( 'wp_head', array( $this, 'hide_native_login_modal' ), 99 );
+		add_filter( 'logixfast_auth_should_load_tutor_login_modal', array( $this, 'should_load_tutor_login_modal' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'hide_native_login_modal' ), 20 );
 		add_action( 'template_redirect', array( $this, 'maybe_redirect_dashboard' ), 1 );
 		add_filter( 'woocommerce_add_to_cart_validation', array( $this, 'validate_tutor_course_cart_login' ), 10, 3 );
 		add_filter( 'template_include', array( $this, 'replace_login_template' ), 999 );
@@ -48,7 +48,7 @@ class Tutor_Login {
 	}
 
 	/**
-	 * Force Tutor login triggers to use SLR popup (never a redirect URL).
+	 * Force Tutor login triggers to use LogixFastAuth popup (never a redirect URL).
 	 *
 	 * @param string $url Login URL.
 	 * @return string
@@ -62,7 +62,7 @@ class Tutor_Login {
 	}
 
 	/**
-	 * Disable Tutor's native login modal when SLR replaces Tutor login.
+	 * Disable Tutor's native login modal when LogixFastAuth replaces Tutor login.
 	 *
 	 * @param mixed $value Tutor option value.
 	 * @return bool
@@ -76,7 +76,7 @@ class Tutor_Login {
 	}
 
 	/**
-	 * Skip loading Tutor's native login modal markup when SLR handles login.
+	 * Skip loading Tutor's native login modal markup when LogixFastAuth handles login.
 	 *
 	 * @param bool $load Whether to load the modal.
 	 * @return bool
@@ -99,13 +99,15 @@ class Tutor_Login {
 			return;
 		}
 
-		echo '<style id="slr-hide-tutor-login-modal">.tutor-login-modal{display:none!important;visibility:hidden!important}</style>';
+		wp_register_style( 'logixfast-auth-tutor-login', false, array(), LOGIXFAST_AUTH_VERSION );
+		wp_enqueue_style( 'logixfast-auth-tutor-login' );
+		wp_add_inline_style( 'logixfast-auth-tutor-login', '.tutor-login-modal{display:none!important;visibility:hidden!important}' );
 	}
 
 	/**
-	 * Redirect logged-out Tutor dashboard visitors to the SLR login page.
+	 * Redirect logged-out Tutor dashboard visitors to the LogixFastAuth login page.
 	 *
-	 * Falls back to auto-opening the SLR popup when no dedicated page is set.
+	 * Falls back to auto-opening the LogixFastAuth popup when no dedicated page is set.
 	 *
 	 * @return void
 	 */
@@ -151,12 +153,12 @@ class Tutor_Login {
 			return $template;
 		}
 
-		$slr_template = SLR_PLUGIN_DIR . 'templates/tutor-login-replace.php';
-		return file_exists( $slr_template ) ? $slr_template : $template;
+		$logixfast_auth_template = LOGIXFAST_AUTH_PLUGIN_DIR . 'templates/tutor-login-replace.php';
+		return file_exists( $logixfast_auth_template ) ? $logixfast_auth_template : $template;
 	}
 
 	/**
-	 * Stop Tutor native login markup and open SLR popup instead.
+	 * Stop Tutor native login markup and open LogixFastAuth popup instead.
 	 *
 	 * @return void
 	 */
@@ -171,7 +173,7 @@ class Tutor_Login {
 	}
 
 	/**
-	 * Output a minimal Tutor shell that opens the SLR popup.
+	 * Output a minimal Tutor shell that opens the LogixFastAuth popup.
 	 *
 	 * @param bool $skip_header Header already rendered by Tutor login template.
 	 * @return void
@@ -182,15 +184,15 @@ class Tutor_Login {
 		}
 		?>
 		<div <?php tutor_post_class( 'tutor-page-wrap' ); ?>>
-			<div class="tutor-template-segment tutor-login-wrap slr-tutor-login-replace-wrap slr-tutor-login-popup-only">
-				<p class="slr-tutor-login-popup-only__hint">
-					<?php esc_html_e( 'Sign in to access your dashboard.', 'smart-login-registration' ); ?>
+			<div class="tutor-template-segment tutor-login-wrap logixfast-auth-tutor-login-replace-wrap logixfast-auth-tutor-login-popup-only">
+				<p class="logixfast-auth-tutor-login-popup-only__hint">
+					<?php esc_html_e( 'Sign in to access your dashboard.', 'logixfast-auth' ); ?>
 				</p>
-				<button type="button" class="tutor-btn tutor-btn-primary" data-slr-open="login">
-					<?php esc_html_e( 'Log In', 'smart-login-registration' ); ?>
+				<button type="button" class="tutor-btn tutor-btn-primary" data-logixfast-auth-open="login">
+					<?php esc_html_e( 'Log In', 'logixfast-auth' ); ?>
 				</button>
-				<button type="button" class="tutor-btn tutor-btn-ghost" data-slr-open="register">
-					<?php esc_html_e( 'Register', 'smart-login-registration' ); ?>
+				<button type="button" class="tutor-btn tutor-btn-ghost" data-logixfast-auth-open="register">
+					<?php esc_html_e( 'Register', 'logixfast-auth' ); ?>
 				</button>
 			</div>
 		</div>
@@ -213,12 +215,12 @@ class Tutor_Login {
 
 		ob_start();
 		?>
-		<div class="slr-tutor-login-replace">
-			<button type="button" class="tutor-btn tutor-btn-primary" data-slr-open="login">
-				<?php esc_html_e( 'Log In', 'smart-login-registration' ); ?>
+		<div class="logixfast-auth-tutor-login-replace">
+			<button type="button" class="tutor-btn tutor-btn-primary" data-logixfast-auth-open="login">
+				<?php esc_html_e( 'Log In', 'logixfast-auth' ); ?>
 			</button>
-			<button type="button" class="tutor-btn tutor-btn-ghost" data-slr-open="register">
-				<?php esc_html_e( 'Register', 'smart-login-registration' ); ?>
+			<button type="button" class="tutor-btn tutor-btn-ghost" data-logixfast-auth-open="register">
+				<?php esc_html_e( 'Register', 'logixfast-auth' ); ?>
 			</button>
 		</div>
 		<?php
@@ -226,45 +228,47 @@ class Tutor_Login {
 	}
 
 	/**
-	 * Queue SLR popup auto-open on the current page.
+	 * Queue LogixFastAuth popup auto-open on the current page.
 	 *
 	 * @return void
 	 */
 	private function queue_login_popup() {
-		add_action( 'wp_footer', array( $this, 'print_auto_open_popup_script' ), 99 );
+		$this->enqueue_auto_open_popup_script();
 	}
 
 	/**
-	 * Print inline script that opens the SLR login popup.
+	 * Enqueue inline script that opens the LogixFastAuth login popup.
 	 *
 	 * @return void
 	 */
-	public function print_auto_open_popup_script() {
+	public function enqueue_auto_open_popup_script() {
 		if ( is_user_logged_in() || ! $this->is_enabled() ) {
 			return;
 		}
-		?>
-		<script id="slr-tutor-auto-open-login">
-		(function () {
-			function openSlrLogin() {
-				if (window.SLR && typeof window.SLR.open === 'function') {
-					window.SLR.open('login');
+
+		wp_register_script( 'logixfast-auth-tutor-auto-open-login', false, array(), LOGIXFAST_AUTH_VERSION, true );
+		wp_enqueue_script( 'logixfast-auth-tutor-auto-open-login' );
+		wp_add_inline_script(
+			'logixfast-auth-tutor-auto-open-login',
+			"(function () {
+			function openLogixFastAuthLogin() {
+				if (window.LogixFastAuth && typeof window.LogixFastAuth.open === 'function') {
+					window.LogixFastAuth.open('login');
 					return;
 				}
-				window.addEventListener('slr:ready', function () {
-					if (window.SLR && typeof window.SLR.open === 'function') {
-						window.SLR.open('login');
+				window.addEventListener('logixfastauth:ready', function () {
+					if (window.LogixFastAuth && typeof window.LogixFastAuth.open === 'function') {
+						window.LogixFastAuth.open('login');
 					}
 				}, { once: true });
 			}
 			if (document.readyState === 'loading') {
-				document.addEventListener('DOMContentLoaded', openSlrLogin);
+				document.addEventListener('DOMContentLoaded', openLogixFastAuthLogin);
 			} else {
-				openSlrLogin();
+				openLogixFastAuthLogin();
 			}
-		})();
-		</script>
-		<?php
+		})();"
+		);
 	}
 
 	/**
@@ -325,7 +329,7 @@ class Tutor_Login {
 	}
 
 	/**
-	 * Get dedicated SLR login page URL.
+	 * Get dedicated LogixFastAuth login page URL.
 	 *
 	 * @return string
 	 */
@@ -392,7 +396,7 @@ class Tutor_Login {
 		}
 
 		if ( function_exists( 'wc_add_notice' ) ) {
-			wc_add_notice( __( 'Please log in to enroll in this course.', 'smart-login-registration' ), 'error' );
+			wc_add_notice( __( 'Please log in to enroll in this course.', 'logixfast-auth' ), 'error' );
 		}
 
 		return false;

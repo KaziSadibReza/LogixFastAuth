@@ -10,35 +10,35 @@ function SkeletonCardFrame({
   children?: ReactNode;
 }) {
   return (
-    <div className={`slr-card slr-skeleton-frame-card ${className}`.trim()}>
-      <div className={`slr-card-header${flush ? '' : ' with-border'}`}>
-        <div className="slr-skeleton-frame-card__title-row">
-          <span className="slr-skeleton slr-skeleton--icon" />
-          <div className="slr-skeleton-frame-card__title-text">
-            <span className="slr-skeleton slr-skeleton--title" style={{ width: 160 }} />
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: '92%', marginTop: 8 }} />
+    <div className={`logixfast-auth-card logixfast-auth-skeleton-frame-card ${className}`.trim()}>
+      <div className={`logixfast-auth-card-header${flush ? '' : ' with-border'}`}>
+        <div className="logixfast-auth-skeleton-frame-card__title-row">
+          <span className="logixfast-auth-skeleton logixfast-auth-skeleton--icon" />
+          <div className="logixfast-auth-skeleton-frame-card__title-text">
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--title" style={{ width: 160 }} />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '92%', marginTop: 8 }} />
           </div>
         </div>
       </div>
-      <div className={flush ? 'slr-card-body slr-card-body--flush' : 'slr-card-body'}>{children}</div>
+      <div className={flush ? 'logixfast-auth-card-body logixfast-auth-card-body--flush' : 'logixfast-auth-card-body'}>{children}</div>
     </div>
   );
 }
 
 function SkeletonColumns({ children }: { children: ReactNode }) {
-  return <div className="slr-page-columns slr-page-columns--split">{children}</div>;
+  return <div className="logixfast-auth-page-columns logixfast-auth-page-columns--split">{children}</div>;
 }
 
 function SkeletonStatsGrid({ count = 4 }: { count?: number }) {
   return (
-    <div className="slr-stats-grid">
+    <div className="logixfast-auth-stats-grid">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="slr-stat-card slr-skeleton-frame-stat">
-          <span className="slr-skeleton slr-skeleton--icon" />
-          <div className="slr-skeleton-frame-stat__body">
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: '55%', height: 11 }} />
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: '40%', height: 22, marginTop: 6 }} />
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: '70%', height: 11, marginTop: 6 }} />
+        <div key={i} className="logixfast-auth-stat-card logixfast-auth-skeleton-frame-stat">
+          <span className="logixfast-auth-skeleton logixfast-auth-skeleton--icon" />
+          <div className="logixfast-auth-skeleton-frame-stat__body">
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '55%', height: 11 }} />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '40%', height: 22, marginTop: 6 }} />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '70%', height: 11, marginTop: 6 }} />
           </div>
         </div>
       ))}
@@ -48,12 +48,12 @@ function SkeletonStatsGrid({ count = 4 }: { count?: number }) {
 
 function SkeletonIconCard() {
   return (
-    <div className="slr-icon-card slr-skeleton-frame-icon-card" aria-hidden="true">
-      <span className="slr-skeleton slr-skeleton--icon-lg" />
-      <div className="slr-skeleton-frame-icon-card__body">
-        <span className="slr-skeleton slr-skeleton--text" style={{ width: '58%', height: 14 }} />
-        <span className="slr-skeleton slr-skeleton--text" style={{ width: '92%' }} />
-        <span className="slr-skeleton slr-skeleton--pill" style={{ width: 76, marginTop: 4 }} />
+    <div className="logixfast-auth-icon-card logixfast-auth-skeleton-frame-icon-card" aria-hidden="true">
+      <span className="logixfast-auth-skeleton logixfast-auth-skeleton--icon-lg" />
+      <div className="logixfast-auth-skeleton-frame-icon-card__body">
+        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '58%', height: 14 }} />
+        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '92%' }} />
+        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--pill" style={{ width: 76, marginTop: 4 }} />
       </div>
     </div>
   );
@@ -67,7 +67,7 @@ function SkeletonIconCardGrid({
   className?: string;
 }) {
   return (
-    <div className={`slr-icon-card-grid ${className}`.trim()}>
+    <div className={`logixfast-auth-icon-card-grid ${className}`.trim()}>
       {Array.from({ length: count }).map((_, i) => (
         <SkeletonIconCard key={i} />
       ))}
@@ -77,15 +77,15 @@ function SkeletonIconCardGrid({
 
 function SkeletonToggleCard() {
   return (
-    <div className="slr-integration-toggle-card slr-skeleton-frame-toggle-card" aria-hidden="true">
-      <span className="slr-skeleton slr-skeleton--icon-lg" />
-      <div className="slr-skeleton-frame-icon-card__body">
-        <span className="slr-skeleton slr-skeleton--text" style={{ width: '50%', height: 14 }} />
-        <span className="slr-skeleton slr-skeleton--text" style={{ width: '100%' }} />
-        <span className="slr-skeleton slr-skeleton--text" style={{ width: '88%' }} />
+    <div className="logixfast-auth-integration-toggle-card logixfast-auth-skeleton-frame-toggle-card" aria-hidden="true">
+      <span className="logixfast-auth-skeleton logixfast-auth-skeleton--icon-lg" />
+      <div className="logixfast-auth-skeleton-frame-icon-card__body">
+        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '50%', height: 14 }} />
+        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '100%' }} />
+        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '88%' }} />
       </div>
-      <div className="slr-integration-toggle-card__action">
-        <span className="slr-skeleton slr-skeleton--toggle" />
+      <div className="logixfast-auth-integration-toggle-card__action">
+        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--toggle" />
       </div>
     </div>
   );
@@ -93,7 +93,7 @@ function SkeletonToggleCard() {
 
 function SkeletonToggleCardGrid({ count = 4 }: { count?: number }) {
   return (
-    <div className="slr-integration-toggle-grid">
+    <div className="logixfast-auth-integration-toggle-grid">
       {Array.from({ length: count }).map((_, i) => (
         <SkeletonToggleCard key={i} />
       ))}
@@ -103,15 +103,15 @@ function SkeletonToggleCardGrid({ count = 4 }: { count?: number }) {
 
 function SkeletonSettingsGroup({ rows = 2 }: { rows?: number }) {
   return (
-    <div className="slr-settings-group">
+    <div className="logixfast-auth-settings-group">
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="slr-settings-row slr-skeleton-frame-settings-row">
-          <div className="slr-settings-row-meta">
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: '42%', height: 14 }} />
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: '78%' }} />
+        <div key={i} className="logixfast-auth-settings-row logixfast-auth-skeleton-frame-settings-row">
+          <div className="logixfast-auth-settings-row-meta">
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '42%', height: 14 }} />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '78%' }} />
           </div>
-          <div className="slr-settings-row-control">
-            <span className="slr-skeleton slr-skeleton--control" />
+          <div className="logixfast-auth-settings-row-control">
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--control" />
           </div>
         </div>
       ))}
@@ -121,14 +121,14 @@ function SkeletonSettingsGroup({ rows = 2 }: { rows?: number }) {
 
 function SkeletonSettingList({ rows = 3 }: { rows?: number }) {
   return (
-    <div className="slr-setting-list slr-setting-list--padded">
+    <div className="logixfast-auth-setting-list logixfast-auth-setting-list--padded">
       {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="slr-setting-row slr-skeleton-frame-setting-row">
-          <div className="slr-setting-row-text">
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: '46%', height: 14 }} />
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: '88%' }} />
+        <div key={i} className="logixfast-auth-setting-row logixfast-auth-skeleton-frame-setting-row">
+          <div className="logixfast-auth-setting-row-text">
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '46%', height: 14 }} />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '88%' }} />
           </div>
-          <span className="slr-skeleton slr-skeleton--toggle" />
+          <span className="logixfast-auth-skeleton logixfast-auth-skeleton--toggle" />
         </div>
       ))}
     </div>
@@ -137,28 +137,28 @@ function SkeletonSettingList({ rows = 3 }: { rows?: number }) {
 
 function SkeletonBanner() {
   return (
-    <div className="slr-page-banner slr-skeleton-frame-banner">
-      <div className="slr-page-banner-main">
-        <span className="slr-skeleton slr-skeleton--icon" />
-        <div className="slr-skeleton-frame-banner__text">
-          <span className="slr-skeleton slr-skeleton--text" style={{ width: 180, height: 14 }} />
-          <span className="slr-skeleton slr-skeleton--text" style={{ width: 260, height: 12, marginTop: 6 }} />
+    <div className="logixfast-auth-page-banner logixfast-auth-skeleton-frame-banner">
+      <div className="logixfast-auth-page-banner-main">
+        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--icon" />
+        <div className="logixfast-auth-skeleton-frame-banner__text">
+          <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 180, height: 14 }} />
+          <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 260, height: 12, marginTop: 6 }} />
         </div>
       </div>
-      <span className="slr-skeleton slr-skeleton--btn" />
+      <span className="logixfast-auth-skeleton logixfast-auth-skeleton--btn" />
     </div>
   );
 }
 
 function SkeletonTransportCards() {
   return (
-    <div className="slr-mail-transport-panel">
-      <div className="slr-transport-cards">
+    <div className="logixfast-auth-mail-transport-panel">
+      <div className="logixfast-auth-transport-cards">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="slr-transport-card slr-skeleton-frame-transport-card">
-            <span className="slr-skeleton slr-skeleton--icon-lg" />
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: '62%', height: 14 }} />
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: '90%' }} />
+          <div key={i} className="logixfast-auth-transport-card logixfast-auth-skeleton-frame-transport-card">
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--icon-lg" />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '62%', height: 14 }} />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '90%' }} />
           </div>
         ))}
       </div>
@@ -168,16 +168,16 @@ function SkeletonTransportCards() {
 
 function SkeletonPresetGrid({ count = 5 }: { count?: number }) {
   return (
-    <div className="slr-appearance-presets-panel">
-      <div className="slr-preset-icon-grid">
+    <div className="logixfast-auth-appearance-presets-panel">
+      <div className="logixfast-auth-preset-icon-grid">
         {Array.from({ length: count }).map((_, i) => (
-          <div key={i} className="slr-preset-icon-card slr-skeleton-frame-preset-card">
-            <div className="slr-skeleton-frame-preset-card__swatches">
-              <span className="slr-skeleton slr-skeleton--swatch" />
-              <span className="slr-skeleton slr-skeleton--swatch" />
-              <span className="slr-skeleton slr-skeleton--swatch" />
+          <div key={i} className="logixfast-auth-preset-icon-card logixfast-auth-skeleton-frame-preset-card">
+            <div className="logixfast-auth-skeleton-frame-preset-card__swatches">
+              <span className="logixfast-auth-skeleton logixfast-auth-skeleton--swatch" />
+              <span className="logixfast-auth-skeleton logixfast-auth-skeleton--swatch" />
+              <span className="logixfast-auth-skeleton logixfast-auth-skeleton--swatch" />
             </div>
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: 56, height: 12 }} />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 56, height: 12 }} />
           </div>
         ))}
       </div>
@@ -187,11 +187,11 @@ function SkeletonPresetGrid({ count = 5 }: { count?: number }) {
 
 function SkeletonAppearanceFields({ count = 3 }: { count?: number }) {
   return (
-    <div className="slr-appearance-settings-panel">
+    <div className="logixfast-auth-appearance-settings-panel">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="slr-skeleton-frame-field">
-          <span className="slr-skeleton slr-skeleton--text" style={{ width: 88, height: 12 }} />
-          <span className="slr-skeleton slr-skeleton--control" />
+        <div key={i} className="logixfast-auth-skeleton-frame-field">
+          <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 88, height: 12 }} />
+          <span className="logixfast-auth-skeleton logixfast-auth-skeleton--control" />
         </div>
       ))}
     </div>
@@ -200,18 +200,18 @@ function SkeletonAppearanceFields({ count = 3 }: { count?: number }) {
 
 function SkeletonPreviewFrame() {
   return (
-    <div className="slr-appearance-preview-wrap slr-skeleton-frame-preview">
-      <div className="slr-appearance-preview-toolbar slr-skeleton-frame-preview__toolbar">
+    <div className="logixfast-auth-appearance-preview-wrap logixfast-auth-skeleton-frame-preview">
+      <div className="logixfast-auth-appearance-preview-toolbar logixfast-auth-skeleton-frame-preview__toolbar">
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="slr-skeleton-frame-preview__toolbar-group">
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: 36, height: 10 }} />
-            <span className="slr-skeleton slr-skeleton--pill" style={{ width: 120, height: 28 }} />
+          <div key={i} className="logixfast-auth-skeleton-frame-preview__toolbar-group">
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 36, height: 10 }} />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--pill" style={{ width: 120, height: 28 }} />
           </div>
         ))}
-        <span className="slr-skeleton slr-skeleton--btn" style={{ width: 100 }} />
+        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--btn" style={{ width: 100 }} />
       </div>
-      <div className="slr-appearance-preview__stage">
-        <span className="slr-skeleton slr-skeleton--preview" />
+      <div className="logixfast-auth-appearance-preview__stage">
+        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--preview" />
       </div>
     </div>
   );
@@ -219,14 +219,14 @@ function SkeletonPreviewFrame() {
 
 function SkeletonFieldMappings({ count = 3 }: { count?: number }) {
   return (
-    <div className="slr-integrations-panel">
-      <div className="slr-field-mapping-list">
+    <div className="logixfast-auth-integrations-panel">
+      <div className="logixfast-auth-field-mapping-list">
         {Array.from({ length: count }).map((_, i) => (
-          <div key={i} className="slr-field-mapping-row slr-skeleton-frame-mapping-row">
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: 72, height: 14 }} />
-            <div className="slr-field-mapping-targets">
-              <span className="slr-skeleton slr-skeleton--pill" style={{ width: 108, height: 24 }} />
-              <span className="slr-skeleton slr-skeleton--pill" style={{ width: 92, height: 24 }} />
+          <div key={i} className="logixfast-auth-field-mapping-row logixfast-auth-skeleton-frame-mapping-row">
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 72, height: 14 }} />
+            <div className="logixfast-auth-field-mapping-targets">
+              <span className="logixfast-auth-skeleton logixfast-auth-skeleton--pill" style={{ width: 108, height: 24 }} />
+              <span className="logixfast-auth-skeleton logixfast-auth-skeleton--pill" style={{ width: 92, height: 24 }} />
             </div>
           </div>
         ))}
@@ -237,12 +237,12 @@ function SkeletonFieldMappings({ count = 3 }: { count?: number }) {
 
 function SkeletonPasskeyPanel() {
   return (
-    <div className="slr-auth-passkey-columns">
-      <div className="slr-auth-passkey-main">
+    <div className="logixfast-auth-auth-passkey-columns">
+      <div className="logixfast-auth-auth-passkey-main">
         <SkeletonSettingList rows={1} />
-        <div className="slr-passkey-features slr-skeleton-frame-passkey-features">
+        <div className="logixfast-auth-passkey-features logixfast-auth-skeleton-frame-passkey-features">
           {Array.from({ length: 3 }).map((_, i) => (
-            <span key={i} className="slr-skeleton slr-skeleton--pill" style={{ width: 128, height: 30 }} />
+            <span key={i} className="logixfast-auth-skeleton logixfast-auth-skeleton--pill" style={{ width: 128, height: 30 }} />
           ))}
         </div>
       </div>
@@ -252,15 +252,15 @@ function SkeletonPasskeyPanel() {
 
 function SkeletonRegFieldsColumns() {
   return (
-    <div className="slr-reg-fields-columns">
-      <div className="slr-reg-fields-col">
+    <div className="logixfast-auth-reg-fields-columns">
+      <div className="logixfast-auth-reg-fields-col">
         <SkeletonSettingsGroup rows={1} />
       </div>
-      <div className="slr-reg-fields-col slr-reg-fields-col--sync">
-        <div className="slr-reg-sync-panel">
-          <div className="slr-integration-panel-head">
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: 140, height: 14 }} />
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: '95%' }} />
+      <div className="logixfast-auth-reg-fields-col logixfast-auth-reg-fields-col--sync">
+        <div className="logixfast-auth-reg-sync-panel">
+          <div className="logixfast-auth-integration-panel-head">
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 140, height: 14 }} />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '95%' }} />
           </div>
           <SkeletonIconCardGrid count={2} />
         </div>
@@ -270,23 +270,23 @@ function SkeletonRegFieldsColumns() {
 }
 
 function SkeletonPanel({ children, className = '' }: { children: ReactNode; className?: string }) {
-  return <div className={`slr-integrations-panel ${className}`.trim()}>{children}</div>;
+  return <div className={`logixfast-auth-integrations-panel ${className}`.trim()}>{children}</div>;
 }
 
 function SkeletonBlockList({ count = 2 }: { count?: number }) {
   return (
-    <div className="slr-security-panel slr-security-panel--blocks">
-      <div className="slr-block-list">
+    <div className="logixfast-auth-security-panel logixfast-auth-security-panel--blocks">
+      <div className="logixfast-auth-block-list">
         {Array.from({ length: count }).map((_, i) => (
-          <div key={i} className="slr-block-item slr-skeleton-frame-block-item">
-            <div className="slr-block-item__main">
-              <span className="slr-skeleton slr-skeleton--icon" />
+          <div key={i} className="logixfast-auth-block-item logixfast-auth-skeleton-frame-block-item">
+            <div className="logixfast-auth-block-item__main">
+              <span className="logixfast-auth-skeleton logixfast-auth-skeleton--icon" />
               <div>
-                <span className="slr-skeleton slr-skeleton--text" style={{ width: 120, height: 14 }} />
-                <span className="slr-skeleton slr-skeleton--text" style={{ width: 200, height: 11, marginTop: 6 }} />
+                <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 120, height: 14 }} />
+                <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 200, height: 11, marginTop: 6 }} />
               </div>
             </div>
-            <span className="slr-skeleton slr-skeleton--btn" style={{ width: 88, height: 32 }} />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--btn" style={{ width: 88, height: 32 }} />
           </div>
         ))}
       </div>
@@ -296,14 +296,14 @@ function SkeletonBlockList({ count = 2 }: { count?: number }) {
 
 function SkeletonProviderList({ count = 2 }: { count?: number }) {
   return (
-    <div className="slr-provider-list">
+    <div className="logixfast-auth-provider-list">
       {Array.from({ length: count }).map((_, i) => (
-        <div key={i} className="slr-provider-item slr-skeleton-frame-provider-item">
-          <div className="slr-provider-item-info">
-            <span className="slr-skeleton slr-skeleton--icon" style={{ width: 18, height: 18, borderRadius: 4 }} />
-            <span className="slr-skeleton slr-skeleton--text" style={{ width: 120, height: 14 }} />
+        <div key={i} className="logixfast-auth-provider-item logixfast-auth-skeleton-frame-provider-item">
+          <div className="logixfast-auth-provider-item-info">
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--icon" style={{ width: 18, height: 18, borderRadius: 4 }} />
+            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 120, height: 14 }} />
           </div>
-          <span className="slr-skeleton slr-skeleton--pill" style={{ width: 64, height: 22 }} />
+          <span className="logixfast-auth-skeleton logixfast-auth-skeleton--pill" style={{ width: 64, height: 22 }} />
         </div>
       ))}
     </div>
@@ -311,26 +311,26 @@ function SkeletonProviderList({ count = 2 }: { count?: number }) {
 }
 
 function SkeletonCodeBlock() {
-  return <span className="slr-skeleton slr-skeleton--code" />;
+  return <span className="logixfast-auth-skeleton logixfast-auth-skeleton--code" />;
 }
 
 function SkeletonMailTestPanel() {
   return (
-    <div className="slr-mail-test-panel">
-      <span className="slr-skeleton slr-skeleton--text" style={{ width: '95%' }} />
-      <span className="slr-skeleton slr-skeleton--text" style={{ width: '72%' }} />
-      <span className="slr-skeleton slr-skeleton--btn" style={{ width: 148, marginTop: 8 }} />
+    <div className="logixfast-auth-mail-test-panel">
+      <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '95%' }} />
+      <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: '72%' }} />
+      <span className="logixfast-auth-skeleton logixfast-auth-skeleton--btn" style={{ width: 148, marginTop: 8 }} />
     </div>
   );
 }
 
 function SkeletonFormGrid({ fields = 2 }: { fields?: number }) {
   return (
-    <div className="slr-form-grid">
+    <div className="logixfast-auth-form-grid">
       {Array.from({ length: fields }).map((_, i) => (
-        <div key={i} className="slr-skeleton-frame-field">
-          <span className="slr-skeleton slr-skeleton--text" style={{ width: 80, height: 12 }} />
-          <span className="slr-skeleton slr-skeleton--control" />
+        <div key={i} className="logixfast-auth-skeleton-frame-field">
+          <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 80, height: 12 }} />
+          <span className="logixfast-auth-skeleton logixfast-auth-skeleton--control" />
         </div>
       ))}
     </div>
@@ -339,14 +339,14 @@ function SkeletonFormGrid({ fields = 2 }: { fields?: number }) {
 
 export function GeneralPageSkeleton() {
   return (
-    <div className="slr-page slr-page--general">
+    <div className="logixfast-auth-page logixfast-auth-page--general">
       <SkeletonStatsGrid />
       <SkeletonCardFrame flush>
         <SkeletonBanner />
         <SkeletonSettingsGroup rows={2} />
       </SkeletonCardFrame>
       <SkeletonColumns>
-        <SkeletonCardFrame flush className="slr-card--redirects">
+        <SkeletonCardFrame flush className="logixfast-auth-card--redirects">
           <SkeletonSettingsGroup rows={3} />
         </SkeletonCardFrame>
         <SkeletonCardFrame flush>
@@ -391,7 +391,7 @@ export function MailPageSkeleton() {
       </SkeletonColumns>
       <SkeletonCardFrame flush>
         <SkeletonPanel>
-          <SkeletonIconCardGrid count={4} className="slr-icon-card-grid--mail" />
+          <SkeletonIconCardGrid count={4} className="logixfast-auth-icon-card-grid--mail" />
         </SkeletonPanel>
       </SkeletonCardFrame>
     </>
@@ -412,7 +412,7 @@ export function AppearancePageSkeleton() {
           <SkeletonAppearanceFields count={3} />
         </SkeletonCardFrame>
       </SkeletonColumns>
-      <SkeletonCardFrame flush className="slr-card--preview">
+      <SkeletonCardFrame flush className="logixfast-auth-card--preview">
         <SkeletonPreviewFrame />
       </SkeletonCardFrame>
     </>
@@ -445,8 +445,8 @@ export function SecurityPageSkeleton() {
   return (
     <>
       <SkeletonCardFrame flush>
-        <SkeletonPanel className="slr-security-panel">
-          <SkeletonIconCardGrid count={4} className="slr-icon-card-grid--security" />
+        <SkeletonPanel className="logixfast-auth-security-panel">
+          <SkeletonIconCardGrid count={4} className="logixfast-auth-icon-card-grid--security" />
         </SkeletonPanel>
       </SkeletonCardFrame>
       <SkeletonColumns>
@@ -454,11 +454,11 @@ export function SecurityPageSkeleton() {
           <SkeletonSettingsGroup rows={2} />
         </SkeletonCardFrame>
         <SkeletonCardFrame flush>
-          <div className="slr-security-panel slr-security-panel--blocks">
-            <div className="slr-empty slr-skeleton-frame-empty">
-              <span className="slr-skeleton slr-skeleton--icon-lg slr-skeleton-frame-empty__icon" />
-              <span className="slr-skeleton slr-skeleton--text slr-skeleton-frame-empty__title" />
-              <span className="slr-skeleton slr-skeleton--text slr-skeleton-frame-empty__desc" />
+          <div className="logixfast-auth-security-panel logixfast-auth-security-panel--blocks">
+            <div className="logixfast-auth-empty logixfast-auth-skeleton-frame-empty">
+              <span className="logixfast-auth-skeleton logixfast-auth-skeleton--icon-lg logixfast-auth-skeleton-frame-empty__icon" />
+              <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text logixfast-auth-skeleton-frame-empty__title" />
+              <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text logixfast-auth-skeleton-frame-empty__desc" />
             </div>
           </div>
         </SkeletonCardFrame>
@@ -468,7 +468,7 @@ export function SecurityPageSkeleton() {
           <SkeletonSettingsGroup rows={3} />
         </SkeletonCardFrame>
         <SkeletonCardFrame flush>
-          <SkeletonPanel className="slr-security-panel">
+          <SkeletonPanel className="logixfast-auth-security-panel">
             <SkeletonIconCardGrid count={4} />
             <SkeletonSettingsGroup rows={1} />
           </SkeletonPanel>

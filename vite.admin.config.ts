@@ -21,7 +21,7 @@ export default defineConfig({
       input: resolve(__dirname, 'src/admin/main.tsx'),
       output: {
         format: 'iife',
-        name: 'SLRAdmin',
+        name: 'LogixFastAuthAdmin',
         entryFileNames: 'admin.js',
         inlineDynamicImports: true,
         assetFileNames: 'admin/[name][extname]',

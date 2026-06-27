@@ -14,9 +14,9 @@ export function Card({ title, description, actions, footer, children, className 
   const hasHeader = title || description || actions;
 
   return (
-    <div className={`slr-card ${className}`}>
+    <div className={`logixfast-auth-card ${className}`}>
       {hasHeader && (
-        <div className={`slr-card-header ${actions ? 'with-border' : ''}`} style={actions ? { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 } : undefined}>
+        <div className={`logixfast-auth-card-header ${actions ? 'with-border' : ''}`} style={actions ? { display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 } : undefined}>
           <div>
             {title && <h3>{title}</h3>}
             {description && <p>{description}</p>}
@@ -24,8 +24,8 @@ export function Card({ title, description, actions, footer, children, className 
           {actions && <div style={{ display: 'flex', gap: 8 }}>{actions}</div>}
         </div>
       )}
-      <div className={`slr-card-body ${bodyClassName}`}>{children}</div>
-      {footer && <div className="slr-card-footer">{footer}</div>}
+      <div className={`logixfast-auth-card-body ${bodyClassName}`}>{children}</div>
+      {footer && <div className="logixfast-auth-card-footer">{footer}</div>}
     </div>
   );
 }

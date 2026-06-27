@@ -24,15 +24,15 @@ export function TransportIconCard({
   return (
     <button
       type="button"
-      className={`slr-transport-card slr-transport-card--${variant}${selected ? ' slr-transport-card--selected' : ''}`}
+      className={`logixfast-auth-transport-card logixfast-auth-transport-card--${variant}${selected ? ' logixfast-auth-transport-card--selected' : ''}`}
       onClick={onClick}
       aria-pressed={selected}
     >
-      <span className={`slr-transport-card__icon slr-transport-card__icon--${variant}`}>
+      <span className={`logixfast-auth-transport-card__icon logixfast-auth-transport-card__icon--${variant}`}>
         {customIcon ?? (icon ? <Icon icon={icon} size={22} /> : null)}
       </span>
-      <span className="slr-transport-card__title">{title}</span>
-      <span className="slr-transport-card__desc">{description}</span>
+      <span className="logixfast-auth-transport-card__title">{title}</span>
+      <span className="logixfast-auth-transport-card__desc">{description}</span>
     </button>
   );
 }

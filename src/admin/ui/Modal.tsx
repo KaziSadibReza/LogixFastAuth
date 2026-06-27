@@ -36,27 +36,27 @@ export function Modal({ open, onClose, title, description, icon, iconTone = 'def
 
   return createPortal(
     <div
-      className="slr-modal-backdrop"
+      className="logixfast-auth-modal-backdrop"
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
       role="dialog"
       aria-modal="true"
     >
-      <div className="slr-modal" style={{ maxWidth }}>
-        <div className="slr-modal-header">
+      <div className="logixfast-auth-modal" style={{ maxWidth }}>
+        <div className="logixfast-auth-modal-header">
           {icon && (
-            <div className={`slr-modal-icon ${iconTone === 'default' ? '' : iconTone}`} aria-hidden="true">
+            <div className={`logixfast-auth-modal-icon ${iconTone === 'default' ? '' : iconTone}`} aria-hidden="true">
               <Icon icon={icon} size={20} />
             </div>
           )}
-          <div className="slr-modal-title">
+          <div className="logixfast-auth-modal-title">
             <h3>{title}</h3>
             {description && <p>{description}</p>}
           </div>
         </div>
-        {children && <div className="slr-modal-body">{children}</div>}
-        {footer && <div className="slr-modal-footer">{footer}</div>}
+        {children && <div className="logixfast-auth-modal-body">{children}</div>}
+        {footer && <div className="logixfast-auth-modal-footer">{footer}</div>}
       </div>
     </div>,
     document.body

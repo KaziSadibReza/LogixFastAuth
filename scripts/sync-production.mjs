@@ -14,12 +14,12 @@ import { fileURLToPath } from 'url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OLD_WORKTREE = path.join(ROOT, '.worktree-production');
-const WORKTREE = path.resolve(ROOT, '..', '.slr-production-worktree');
+const WORKTREE = path.resolve(ROOT, '..', '.logixfast-auth-production-worktree');
 const PRODUCTION_BRANCH = 'production';
 const REMOTE = 'origin';
 
 const PRODUCTION_PATHS = [
-	'smart-login-registration.php',
+	'logixfast-auth.php',
 	'uninstall.php',
 	'readme.txt',
 	'includes',

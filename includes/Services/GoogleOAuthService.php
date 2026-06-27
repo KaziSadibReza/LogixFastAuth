@@ -2,12 +2,12 @@
 /**
  * Google OAuth for Gmail SMTP.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Settings;
+use LogixFastAuth\Settings;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,7 +31,7 @@ class GoogleOAuthService {
 		if ( ! empty( $mail['google_client_id'] ) ) {
 			return (string) $mail['google_client_id'];
 		}
-		return (string) apply_filters( 'slr_google_client_id', '' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
+		return (string) apply_filters( 'logixfast_auth_google_client_id', '' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 	}
 
 	/**
@@ -44,7 +44,7 @@ class GoogleOAuthService {
 		if ( ! empty( $mail['google_client_secret'] ) ) {
 			return ( MailService::instance() )->decrypt_secret( $mail['google_client_secret'] );
 		}
-		return (string) apply_filters( 'slr_google_client_secret', '' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
+		return (string) apply_filters( 'logixfast_auth_google_client_secret', '' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 	}
 
 	/**
@@ -53,7 +53,7 @@ class GoogleOAuthService {
 	 * @return string
 	 */
 	public function get_redirect_uri() {
-		return trailingslashit( rest_url( 'slr/v1/settings/google/callback' ) );
+		return trailingslashit( rest_url( 'logixfast-auth/v1/settings/google/callback' ) );
 	}
 
 	/**
@@ -73,15 +73,15 @@ class GoogleOAuthService {
 	public function get_authorization_url() {
 		if ( ! $this->is_configured() ) {
 			return new WP_Error(
-				'slr_google_not_configured',
-				__( 'Add your Google OAuth Client ID and Client Secret first.', 'smart-login-registration' ),
+				'logixfast_auth_google_not_configured',
+				__( 'Add your Google OAuth Client ID and Client Secret first.', 'logixfast-auth' ),
 				array( 'status' => 400 )
 			);
 		}
 
 		$state = wp_generate_password( 32, false );
 		set_transient(
-			'slr_google_oauth_' . $state,
+			'logixfast_auth_google_oauth_' . $state,
 			array(
 				'user_id' => get_current_user_id(),
 				'time'    => time(),
@@ -110,11 +110,11 @@ class GoogleOAuthService {
 	 * @return true|WP_Error
 	 */
 	public function handle_callback( $code, $state ) {
-		$session = get_transient( 'slr_google_oauth_' . sanitize_text_field( $state ) );
-		delete_transient( 'slr_google_oauth_' . sanitize_text_field( $state ) );
+		$session = get_transient( 'logixfast_auth_google_oauth_' . sanitize_text_field( $state ) );
+		delete_transient( 'logixfast_auth_google_oauth_' . sanitize_text_field( $state ) );
 
 		if ( empty( $session ) || empty( $session['user_id'] ) ) {
-			return new WP_Error( 'slr_google_state_invalid', __( 'OAuth session expired. Please try again.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_google_state_invalid', __( 'OAuth session expired. Please try again.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$owner_id = (int) $session['user_id'];
@@ -122,8 +122,8 @@ class GoogleOAuthService {
 
 		if ( ! $owner || ! user_can( $owner, 'manage_options' ) ) {
 			return new WP_Error(
-				'slr_google_unauthorized',
-				__( 'OAuth session is not valid for an administrator.', 'smart-login-registration' ),
+				'logixfast_auth_google_unauthorized',
+				__( 'OAuth session is not valid for an administrator.', 'logixfast-auth' ),
 				array( 'status' => 403 )
 			);
 		}
@@ -133,14 +133,14 @@ class GoogleOAuthService {
 		// REST callbacks often arrive without auth cookies; trust the signed state owner instead.
 		if ( $current_id > 0 && $current_id !== $owner_id ) {
 			return new WP_Error(
-				'slr_google_unauthorized',
-				__( 'You must finish Google authorization from the same administrator session that started it.', 'smart-login-registration' ),
+				'logixfast_auth_google_unauthorized',
+				__( 'You must finish Google authorization from the same administrator session that started it.', 'logixfast-auth' ),
 				array( 'status' => 403 )
 			);
 		}
 
 		if ( empty( $code ) ) {
-			return new WP_Error( 'slr_google_code_missing', __( 'Google did not return an authorization code.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_google_code_missing', __( 'Google did not return an authorization code.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$response = wp_remote_post(
@@ -164,8 +164,8 @@ class GoogleOAuthService {
 
 		if ( empty( $data['refresh_token'] ) ) {
 			return new WP_Error(
-				'slr_google_no_refresh_token',
-				__( 'Google did not return a refresh token. Revoke app access in your Google account and try again.', 'smart-login-registration' ),
+				'logixfast_auth_google_no_refresh_token',
+				__( 'Google did not return a refresh token. Revoke app access in your Google account and try again.', 'logixfast-auth' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -217,7 +217,7 @@ class GoogleOAuthService {
 	 * @return string
 	 */
 	public function admin_redirect_url( $status, $message = '' ) {
-		$base = add_query_arg( 'page', 'slr', admin_url( 'admin.php' ) );
+		$base = add_query_arg( 'page', 'logixfastauth', admin_url( 'admin.php' ) );
 		$hash = array( 'google' => $status );
 
 		if ( $message ) {

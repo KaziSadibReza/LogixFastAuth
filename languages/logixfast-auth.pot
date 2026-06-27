@@ -1,0 +1,23 @@
+# Copyright (C) 2026 Kazi Sadib Reza
+# This file is distributed under the GPL.
+msgid ""
+msgstr ""
+"Project-Id-Version: LogixFast Auth 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/KaziSadibReza\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-06-07T00:00:00+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: LogixFastAuth\n"
+
+msgid "Log In"
+msgstr ""
+
+msgid "Register"
+msgstr ""
+
+msgid "LogixFast Auth"
+msgstr ""

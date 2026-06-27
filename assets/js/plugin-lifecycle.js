@@ -4,7 +4,7 @@
 (function () {
 	'use strict';
 
-	var cfg = window.SLR_LIFECYCLE;
+	var cfg = window.LOGIXFAST_AUTH_LIFECYCLE;
 	if (!cfg) return;
 
 	var overlay = null;
@@ -22,17 +22,17 @@
 	function openModal(html, onMount) {
 		closeModal();
 		overlay = document.createElement('div');
-		overlay.className = 'slr-lifecycle-overlay';
+		overlay.className = 'logixfast-auth-lifecycle-overlay';
 		overlay.setAttribute('role', 'dialog');
 		overlay.setAttribute('aria-modal', 'true');
 		var style = cfg.style || {};
-		overlay.style.setProperty('--slr-primary', style.primary || '#d6336c');
-		overlay.style.setProperty('--slr-text', style.text || '#1e293b');
-		overlay.style.setProperty('--slr-blur', style.blur || '24px');
-		overlay.style.setProperty('--slr-radius', style.radius || '12px');
+		overlay.style.setProperty('--logixfast-auth-primary', style.primary || '#d6336c');
+		overlay.style.setProperty('--logixfast-auth-text', style.text || '#1e293b');
+		overlay.style.setProperty('--logixfast-auth-blur', style.blur || '24px');
+		overlay.style.setProperty('--logixfast-auth-radius', style.radius || '12px');
 
 		var card = document.createElement('div');
-		card.className = 'slr-lifecycle-card';
+		card.className = 'logixfast-auth-lifecycle-card';
 		card.innerHTML = html;
 		overlay.appendChild(card);
 		overlay.addEventListener('click', function (e) {
@@ -49,7 +49,7 @@
 
 	function flagPurge() {
 		var body = new FormData();
-		body.append('action', 'slr_flag_purge_data');
+		body.append('action', 'logixfast_auth_flag_purge_data');
 		body.append('nonce', cfg.nonce);
 		return fetch(cfg.ajaxUrl, { method: 'POST', credentials: 'same-origin', body: body }).then(function (r) {
 			return r.json();
@@ -67,8 +67,8 @@
 	function bindLifecycleModal(card, targetUrl, purgeLabel) {
 		var i18n = cfg.i18n;
 		var toggle = card.querySelector('[data-purge-toggle]');
-		var warn = card.querySelector('.slr-lifecycle-warn');
-		var ackWrap = card.querySelector('.slr-lifecycle-ack');
+		var warn = card.querySelector('.logixfast-auth-lifecycle-warn');
+		var ackWrap = card.querySelector('.logixfast-auth-lifecycle-ack');
 		var ack = card.querySelector('[data-purge-ack]');
 		var purgeBtn = card.querySelector('[data-action="purge"]');
 
@@ -110,22 +110,22 @@
 
 		openModal(
 			'<h2>' + title + '</h2>' +
-				'<label class="slr-lifecycle-toggle">' +
+				'<label class="logixfast-auth-lifecycle-toggle">' +
 				'<input type="checkbox" data-purge-toggle />' +
-				'<span class="slr-lifecycle-toggle__text">' +
+				'<span class="logixfast-auth-lifecycle-toggle__text">' +
 				'<strong>' + i18n.purgeToggle + '</strong>' +
 				'<em>' + i18n.purgeHint + '</em>' +
 				'</span>' +
 				'</label>' +
-				'<p class="slr-lifecycle-warn">' + warnText(i18n) + '</p>' +
-				'<label class="slr-lifecycle-ack">' +
+				'<p class="logixfast-auth-lifecycle-warn">' + warnText(i18n) + '</p>' +
+				'<label class="logixfast-auth-lifecycle-ack">' +
 				'<input type="checkbox" data-purge-ack />' +
 				'<span>' + i18n.purgeAck + '</span>' +
 				'</label>' +
-				'<div class="slr-lifecycle-actions">' +
-				'<button type="button" class="slr-lifecycle-btn slr-lifecycle-btn--ghost" data-action="cancel">' + i18n.cancel + '</button>' +
-				'<button type="button" class="slr-lifecycle-btn slr-lifecycle-btn--primary" data-action="keep">' + keepLabel + '</button>' +
-				'<button type="button" class="slr-lifecycle-btn slr-lifecycle-btn--danger is-hidden" data-action="purge" disabled>' + purgeLabel + '</button>' +
+				'<div class="logixfast-auth-lifecycle-actions">' +
+				'<button type="button" class="logixfast-auth-lifecycle-btn logixfast-auth-lifecycle-btn--ghost" data-action="cancel">' + i18n.cancel + '</button>' +
+				'<button type="button" class="logixfast-auth-lifecycle-btn logixfast-auth-lifecycle-btn--primary" data-action="keep">' + keepLabel + '</button>' +
+				'<button type="button" class="logixfast-auth-lifecycle-btn logixfast-auth-lifecycle-btn--danger is-hidden" data-action="purge" disabled>' + purgeLabel + '</button>' +
 				'</div>',
 			function (card) {
 				bindLifecycleModal(card, targetUrl, purgeLabel);

@@ -2,10 +2,10 @@
 /**
  * Enqueue passkey manager CSS/JS on supported screens.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -16,8 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class Passkey_Assets {
 
-	const STYLE_HANDLE  = 'slr-passkey-manager';
-	const SCRIPT_HANDLE = 'slr-passkey-manager';
+	const STYLE_HANDLE  = 'logixfast-auth-passkey-manager';
+	const SCRIPT_HANDLE = 'logixfast-auth-passkey-manager';
 
 	/**
 	 * Whether assets were already enqueued this request.
@@ -104,7 +104,7 @@ class Passkey_Assets {
 	}
 
 	/**
-	 * Inline passkey icon SVG (uses currentColor — matches SLR accent via CSS).
+	 * Inline passkey icon SVG (uses currentColor — matches LogixFastAuth accent via CSS).
 	 *
 	 * @return string
 	 */
@@ -115,7 +115,7 @@ class Passkey_Assets {
 			return $svg;
 		}
 
-		$path = SLR_PLUGIN_DIR . 'assets/images/passkey-icon.svg';
+		$path = LOGIXFAST_AUTH_PLUGIN_DIR . 'assets/images/passkey-icon.svg';
 		if ( ! file_exists( $path ) ) {
 			$svg = '';
 			return $svg;
@@ -125,6 +125,54 @@ class Passkey_Assets {
 		$svg = (string) file_get_contents( $path );
 
 		return $svg;
+	}
+
+	/**
+	 * Get sanitized inline passkey icon SVG.
+	 *
+	 * @return string
+	 */
+	public static function get_sanitized_icon_svg() {
+		return wp_kses(
+			self::get_icon_svg(),
+			array(
+				'svg'   => array(
+					'aria-hidden' => true,
+					'class'       => true,
+					'fill'        => true,
+					'focusable'   => true,
+					'height'      => true,
+					'role'        => true,
+					'viewbox'     => true,
+					'viewBox'     => true,
+					'width'       => true,
+					'xmlns'       => true,
+				),
+				'path'  => array(
+					'd'               => true,
+					'fill'            => true,
+					'fill-rule'       => true,
+					'clip-rule'       => true,
+					'opacity'         => true,
+					'stroke'          => true,
+					'stroke-linecap'  => true,
+					'stroke-linejoin' => true,
+					'stroke-width'    => true,
+				),
+				'circle' => array(
+					'cx'      => true,
+					'cy'      => true,
+					'fill'    => true,
+					'opacity' => true,
+					'r'       => true,
+				),
+				'g'     => array(
+					'fill'      => true,
+					'opacity'   => true,
+					'transform' => true,
+				),
+			)
+		);
 	}
 
 	/**
@@ -139,47 +187,47 @@ class Passkey_Assets {
 
 		self::$enqueued = true;
 
-		$css_path = SLR_PLUGIN_DIR . 'assets/css/passkey-manager.css';
-		$js_path  = SLR_PLUGIN_DIR . 'assets/js/passkey-manager.js';
+		$css_path = LOGIXFAST_AUTH_PLUGIN_DIR . 'assets/css/passkey-manager.css';
+		$js_path  = LOGIXFAST_AUTH_PLUGIN_DIR . 'assets/js/passkey-manager.js';
 
 		wp_register_style(
 			self::STYLE_HANDLE,
-			SLR_PLUGIN_URL . 'assets/css/passkey-manager.css',
+			LOGIXFAST_AUTH_PLUGIN_URL . 'assets/css/passkey-manager.css',
 			array(),
-			file_exists( $css_path ) ? (string) filemtime( $css_path ) : SLR_VERSION
+			file_exists( $css_path ) ? (string) filemtime( $css_path ) : LOGIXFAST_AUTH_VERSION
 		);
 
 		wp_register_script(
 			self::SCRIPT_HANDLE,
-			SLR_PLUGIN_URL . 'assets/js/passkey-manager.js',
+			LOGIXFAST_AUTH_PLUGIN_URL . 'assets/js/passkey-manager.js',
 			array(),
-			file_exists( $js_path ) ? (string) filemtime( $js_path ) : SLR_VERSION,
+			file_exists( $js_path ) ? (string) filemtime( $js_path ) : LOGIXFAST_AUTH_VERSION,
 			true
 		);
 
 		wp_localize_script(
 			self::SCRIPT_HANDLE,
-			'SLR_PASSKEY_MANAGER',
+			'LOGIXFAST_AUTH_PASSKEY_MANAGER',
 			array(
-				'apiUrl'  => esc_url_raw( trailingslashit( rest_url( 'slr/v1' ) ) ),
+				'apiUrl'  => esc_url_raw( trailingslashit( rest_url( 'logixfast-auth/v1' ) ) ),
 				'nonce'   => wp_create_nonce( 'wp_rest' ),
 				'iconSvg' => self::get_icon_svg(),
 				'i18n'    => array(
-					'passkeyLabel'   => __( 'Passkey', 'smart-login-registration' ),
-					'added'          => __( 'Added', 'smart-login-registration' ),
-					'lastUsed'       => __( 'Last used', 'smart-login-registration' ),
-					'remove'         => __( 'Remove', 'smart-login-registration' ),
-					'loading'        => __( 'Loading…', 'smart-login-registration' ),
-					'loadFailed'     => __( 'Failed to load passkeys:', 'smart-login-registration' ),
-					'confirmRemove'  => __( 'Remove this passkey? You won\'t be able to sign in with it anymore.', 'smart-login-registration' ),
-					'removed'        => __( 'Passkey removed.', 'smart-login-registration' ),
-					'removeFailed'   => __( 'Could not remove passkey.', 'smart-login-registration' ),
-					'networkError'   => __( 'Network error.', 'smart-login-registration' ),
-					'unsupported'    => __( 'Your browser does not support passkeys.', 'smart-login-registration' ),
-					'registering'    => __( 'Registering…', 'smart-login-registration' ),
-					'invalidOptions' => __( 'Invalid registration options received.', 'smart-login-registration' ),
-					'passkeyAdded'   => __( 'Passkey added!', 'smart-login-registration' ),
-					'addFailed'      => __( 'Could not add passkey.', 'smart-login-registration' ),
+					'passkeyLabel'   => __( 'Passkey', 'logixfast-auth' ),
+					'added'          => __( 'Added', 'logixfast-auth' ),
+					'lastUsed'       => __( 'Last used', 'logixfast-auth' ),
+					'remove'         => __( 'Remove', 'logixfast-auth' ),
+					'loading'        => __( 'Loading…', 'logixfast-auth' ),
+					'loadFailed'     => __( 'Failed to load passkeys:', 'logixfast-auth' ),
+					'confirmRemove'  => __( 'Remove this passkey? You won\'t be able to sign in with it anymore.', 'logixfast-auth' ),
+					'removed'        => __( 'Passkey removed.', 'logixfast-auth' ),
+					'removeFailed'   => __( 'Could not remove passkey.', 'logixfast-auth' ),
+					'networkError'   => __( 'Network error.', 'logixfast-auth' ),
+					'unsupported'    => __( 'Your browser does not support passkeys.', 'logixfast-auth' ),
+					'registering'    => __( 'Registering…', 'logixfast-auth' ),
+					'invalidOptions' => __( 'Invalid registration options received.', 'logixfast-auth' ),
+					'passkeyAdded'   => __( 'Passkey added!', 'logixfast-auth' ),
+					'addFailed'      => __( 'Could not add passkey.', 'logixfast-auth' ),
 				),
 			)
 		);
@@ -188,7 +236,7 @@ class Passkey_Assets {
 		wp_enqueue_script( self::SCRIPT_HANDLE );
 
 		if ( function_exists( 'wp_set_script_translations' ) ) {
-			wp_set_script_translations( self::SCRIPT_HANDLE, 'smart-login-registration', SLR_PLUGIN_DIR . 'languages' );
+			wp_set_script_translations( self::SCRIPT_HANDLE, 'logixfast-auth', LOGIXFAST_AUTH_PLUGIN_DIR . 'languages' );
 		}
 	}
 }

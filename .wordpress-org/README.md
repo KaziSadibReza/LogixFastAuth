@@ -1,7 +1,7 @@
 # WordPress.org plugin assets
 
 These files are **not** shipped in the plugin ZIP. They go in the **SVN `assets/` directory**
-of your wordpress.org plugin repo (`https://plugins.svn.wordpress.org/smart-login-registration/assets/`),
+of your wordpress.org plugin repo (`https://plugins.svn.wordpress.org/logixfast-auth/assets/`),
 which controls how the plugin looks on the directory page.
 
 ## Files
@@ -51,5 +51,5 @@ inkscape banner-1544x500.svg -o banner-1544x500.png
 - Mark: rounded security shield + "S" monogram.
 
 The same shield+S mark is wired into the WordPress admin menu (see
-`includes/Admin/class-slr-admin-menu.php` → `menu_icon()`), rendered in the
+`includes/Admin/class-logixfast-auth-admin-menu.php` → `menu_icon()`), rendered in the
 sidebar grey `#a7aaad` so it matches WordPress's native icons.

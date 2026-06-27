@@ -14,8 +14,8 @@ import { AppearancePage } from './pages/AppearancePage';
 import { SecurityPage } from './pages/SecurityPage';
 import './styles/admin.scss';
 
-const admin = window.SLR_ADMIN;
-const rootEl = document.getElementById('slr-admin-root');
+const admin = window.LOGIXFAST_AUTH_ADMIN;
+const rootEl = document.getElementById('logixfast-auth-admin-root');
 
 if (admin && rootEl) {
   createRoot(rootEl).render(

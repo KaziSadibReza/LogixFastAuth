@@ -2,13 +2,13 @@
 /**
  * OTP generation and verification.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Database\OtpRepository;
-use SLR\Settings;
+use LogixFastAuth\Database\OtpRepository;
+use LogixFastAuth\Settings;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -64,8 +64,8 @@ class OtpService {
 
 		if ( '' === $identifier ) {
 			return new WP_Error(
-				'slr_missing_identifier',
-				__( 'Email or phone is required.', 'smart-login-registration' ),
+				'logixfast_auth_missing_identifier',
+				__( 'Email or phone is required.', 'logixfast-auth' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -75,8 +75,8 @@ class OtpService {
 		$last = $this->repository->get_latest( $identifier_hash, $channel, $purpose );
 		if ( $last && ( time() - strtotime( $last->created_at . ' UTC' ) ) < $cooldown ) {
 			return new WP_Error(
-				'slr_otp_cooldown',
-				__( 'Please wait before requesting another code.', 'smart-login-registration' ),
+				'logixfast_auth_otp_cooldown',
+				__( 'Please wait before requesting another code.', 'logixfast-auth' ),
 				array( 'status' => 429 )
 			);
 		}
@@ -104,8 +104,8 @@ class OtpService {
 				? ' (' . $db_error . ')'
 				: '';
 			return new WP_Error(
-				'slr_otp_storage_failed',
-				__( 'Could not generate verification code. Please try again.', 'smart-login-registration' ) . $detail,
+				'logixfast_auth_otp_storage_failed',
+				__( 'Could not generate verification code. Please try again.', 'logixfast-auth' ) . $detail,
 				array( 'status' => 500 )
 			);
 		}
@@ -156,20 +156,20 @@ class OtpService {
 		$record = $this->repository->get_latest( $identifier_hash, $channel, $purpose );
 
 		if ( ! $record ) {
-			return new WP_Error( 'slr_otp_invalid', __( 'Invalid or expired code.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_otp_invalid', __( 'Invalid or expired code.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( strtotime( $record->expires_at . ' UTC' ) < time() ) {
-			return new WP_Error( 'slr_otp_expired', __( 'Code has expired. Please request a new one.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_otp_expired', __( 'Code has expired. Please request a new one.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( (int) $record->attempts >= $max_attempts ) {
-			return new WP_Error( 'slr_otp_max_attempts', __( 'Too many failed attempts.', 'smart-login-registration' ), array( 'status' => 429 ) );
+			return new WP_Error( 'logixfast_auth_otp_max_attempts', __( 'Too many failed attempts.', 'logixfast-auth' ), array( 'status' => 429 ) );
 		}
 
 		if ( ! wp_check_password( $code, $record->code_hash ) ) {
 			$this->repository->increment_attempts( $record->id );
-			return new WP_Error( 'slr_otp_invalid', __( 'Invalid code. Please try again.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_otp_invalid', __( 'Invalid code. Please try again.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$this->repository->delete( $record->id );
@@ -186,20 +186,20 @@ class OtpService {
 	 * @return true|WP_Error
 	 */
 	private function send_sms_otp( $phone, $code, $purpose ) {
-		$providers = apply_filters( 'slr_sms_providers', array() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
+		$providers = apply_filters( 'logixfast_auth_sms_providers', array() ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 
 		if ( empty( $providers ) ) {
-			return new WP_Error( 'slr_no_sms_provider', __( 'No SMS provider configured.', 'smart-login-registration' ), array( 'status' => 503 ) );
+			return new WP_Error( 'logixfast_auth_no_sms_provider', __( 'No SMS provider configured.', 'logixfast-auth' ), array( 'status' => 503 ) );
 		}
 
 		$provider = reset( $providers );
 		if ( ! $provider instanceof SmsProviderInterface ) {
-			return new WP_Error( 'slr_invalid_sms_provider', __( 'Invalid SMS provider.', 'smart-login-registration' ), array( 'status' => 500 ) );
+			return new WP_Error( 'logixfast_auth_invalid_sms_provider', __( 'Invalid SMS provider.', 'logixfast-auth' ), array( 'status' => 500 ) );
 		}
 
 		$message = sprintf(
 			/* translators: %s: OTP code */
-			__( 'Your verification code is: %s', 'smart-login-registration' ),
+			__( 'Your verification code is: %s', 'logixfast-auth' ),
 			$code
 		);
 
@@ -224,7 +224,7 @@ class OtpService {
 	private function normalize_channel( $channel ) {
 		$channel = sanitize_key( $channel );
 		if ( ! in_array( $channel, array( 'email', 'phone' ), true ) ) {
-			return new WP_Error( 'slr_invalid_channel', __( 'Invalid verification channel.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_invalid_channel', __( 'Invalid verification channel.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		return $channel;
@@ -239,7 +239,7 @@ class OtpService {
 	private function normalize_purpose( $purpose ) {
 		$purpose = sanitize_key( $purpose );
 		if ( ! in_array( $purpose, array( 'register', 'login', 'reset', 'verify' ), true ) ) {
-			return new WP_Error( 'slr_invalid_purpose', __( 'Invalid verification request.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_invalid_purpose', __( 'Invalid verification request.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		return $purpose;

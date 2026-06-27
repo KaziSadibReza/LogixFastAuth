@@ -12,8 +12,8 @@ interface EmptyStateProps {
 
 export function EmptyState({ icon = Info, title, description, action }: EmptyStateProps) {
   return (
-    <div className="slr-empty">
-      <div className="slr-empty-icon" aria-hidden="true">
+    <div className="logixfast-auth-empty">
+      <div className="logixfast-auth-empty-icon" aria-hidden="true">
         <Icon icon={icon} size={28} strokeWidth={1.5} />
       </div>
       <h4>{title}</h4>

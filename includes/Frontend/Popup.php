@@ -2,14 +2,14 @@
 /**
  * Popup portal and bootstrap.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Frontend; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Frontend; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Assets;
-use SLR\Integrations\Integration_Availability;
-use SLR\Settings;
+use LogixFastAuth\Assets;
+use LogixFastAuth\Integrations\Integration_Availability;
+use LogixFastAuth\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -34,17 +34,18 @@ class Popup {
 	 * @return void
 	 */
 	public function enqueue_bootstrap() {
-		if ( is_admin() || \SLR\Settings::is_dedicated_page() ) {
+		if ( is_admin() || \LogixFastAuth\Settings::is_dedicated_page() ) {
 			return;
 		}
 
 		if ( Assets::is_dev_mode() ) {
 			Frontend_Assets::enqueue_all( 'popup' );
+			$this->enqueue_early_click_guard( 'logixfast-auth-popup' );
 			return;
 		}
 
-		Frontend_Assets::enqueue_font();
-		wp_enqueue_script( 'slr-bootstrap' );
+		wp_enqueue_script( 'logixfast-auth-bootstrap' );
+		$this->enqueue_early_click_guard( 'logixfast-auth-bootstrap' );
 	}
 
 	/**
@@ -57,27 +58,27 @@ class Popup {
 			return;
 		}
 
-		$this->print_early_click_guard();
-		echo '<div id="slr-root" data-mode="popup" aria-hidden="true"></div>';
+		echo '<div id="logixfast-auth-root" data-mode="popup" aria-hidden="true"></div>';
 	}
 
 	/**
-	 * Intercept Tutor login triggers before deferred SLR scripts load.
+	 * Intercept Tutor login triggers before deferred LogixFastAuth scripts load.
 	 *
 	 * @return void
 	 */
-	private function print_early_click_guard() {
+	private function enqueue_early_click_guard( $handle ) {
 		$integrations = Settings::get( 'integrations' );
 		if ( ! Integration_Availability::is_tutor_available() || ! Settings::to_bool( $integrations['replace_tutor'] ?? false ) ) {
 			return;
 		}
-		?>
-		<script id="slr-early-click-guard">
-		(function () {
+
+		wp_add_inline_script(
+			$handle,
+			"(function () {
 			var selectors = '.tutor-open-login-modal, .tutor-course-entry-box-login button, .tutor-course-entry-box-login a';
 			function tryOpen() {
-				if (window.SLR && typeof window.SLR.open === 'function') {
-					window.SLR.open('login');
+				if (window.LogixFastAuth && typeof window.LogixFastAuth.open === 'function') {
+					window.LogixFastAuth.open('login');
 					return true;
 				}
 				return false;
@@ -88,11 +89,11 @@ class Popup {
 				event.preventDefault();
 				event.stopImmediatePropagation();
 				if (!tryOpen()) {
-					window.__SLR_EARLY_OPEN__ = 'login';
+					window.__LOGIXFAST_AUTH_EARLY_OPEN__ = 'login';
 				}
 			}, true);
-		})();
-		</script>
-		<?php
+		})();",
+			'before'
+		);
 	}
 }

@@ -1,15 +1,15 @@
 <?php
 /**
- * Replaces WooCommerce My Account login when SLR is enabled and no dedicated page redirect.
+ * Replaces WooCommerce My Account login when LogixFastAuth is enabled and no dedicated page redirect.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-use SLR\Integrations\WooCommerce_Login;
+use LogixFastAuth\Integrations\WooCommerce_Login;
 
 do_action( 'woocommerce_before_customer_login_form' ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WooCommerce core hook.
 

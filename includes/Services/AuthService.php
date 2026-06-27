@@ -2,15 +2,15 @@
 /**
  * Core authentication service.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Database\WebAuthnRepository;
-use SLR\Integrations\Tutor_Sync;
-use SLR\Integrations\WooCommerce_Sync;
-use SLR\Settings;
+use LogixFastAuth\Database\WebAuthnRepository;
+use LogixFastAuth\Integrations\Tutor_Sync;
+use LogixFastAuth\Integrations\WooCommerce_Sync;
+use LogixFastAuth\Settings;
 use WP_Error;
 use WP_User;
 
@@ -36,30 +36,30 @@ class AuthService {
 		$password  = $data['password'] ?? '';
 
 		if ( empty( $full_name ) || empty( $email ) || empty( $password ) ) {
-			return new WP_Error( 'slr_missing_fields', __( 'Please fill in all required fields.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_missing_fields', __( 'Please fill in all required fields.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$settings = Settings::get( 'auth' );
 		if ( ! empty( $settings['require_phone'] ) && empty( $phone ) ) {
-			return new WP_Error( 'slr_missing_phone', __( 'Phone number is required.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_missing_phone', __( 'Phone number is required.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( ! is_email( $email ) ) {
-			return new WP_Error( 'slr_invalid_email', __( 'Please enter a valid email address.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_invalid_email', __( 'Please enter a valid email address.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( strlen( (string) $password ) < 8 ) {
-			return new WP_Error( 'slr_password_short', __( 'Password must be at least 8 characters.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_password_short', __( 'Password must be at least 8 characters.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( strlen( (string) $password ) > 4096 ) {
-			return new WP_Error( 'slr_password_long', __( 'Password is too long.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_password_long', __( 'Password is too long.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( email_exists( $email ) ) {
 			return new WP_Error(
-				'slr_register_unavailable',
-				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'smart-login-registration' ),
+				'logixfast_auth_register_unavailable',
+				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'logixfast-auth' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -74,8 +74,8 @@ class AuthService {
 
 			if ( $this->resolve_user_id_by_phone( $phone ) ) {
 				return new WP_Error(
-					'slr_register_unavailable',
-					__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'smart-login-registration' ),
+					'logixfast_auth_register_unavailable',
+					__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'logixfast-auth' ),
 					array( 'status' => 400 )
 				);
 			}
@@ -123,16 +123,16 @@ class AuthService {
 
 		if ( email_exists( $pending['email'] ) ) {
 			return new WP_Error(
-				'slr_register_unavailable',
-				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'smart-login-registration' ),
+				'logixfast_auth_register_unavailable',
+				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'logixfast-auth' ),
 				array( 'status' => 400 )
 			);
 		}
 
 		if ( ! empty( $pending['phone'] ) && $this->resolve_user_id_by_phone( $pending['phone'] ) ) {
 			return new WP_Error(
-				'slr_register_unavailable',
-				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'smart-login-registration' ),
+				'logixfast_auth_register_unavailable',
+				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'logixfast-auth' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -184,8 +184,8 @@ class AuthService {
 
 		if ( ! empty( $phone ) && $this->resolve_user_id_by_phone( $phone ) ) {
 			return new WP_Error(
-				'slr_register_unavailable',
-				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'smart-login-registration' ),
+				'logixfast_auth_register_unavailable',
+				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'logixfast-auth' ),
 				array( 'status' => 400 )
 			);
 		}
@@ -202,7 +202,7 @@ class AuthService {
 		);
 
 		if ( is_wp_error( $user_id ) ) {
-			return new WP_Error( 'slr_register_failed', $user_id->get_error_message(), array( 'status' => 500 ) );
+			return new WP_Error( 'logixfast_auth_register_failed', $user_id->get_error_message(), array( 'status' => 500 ) );
 		}
 
 		if ( ! empty( $phone ) ) {
@@ -238,7 +238,7 @@ class AuthService {
 			)
 		);
 
-		do_action( 'slr_user_registered', $user_id, $data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
+		do_action( 'logixfast_auth_user_registered', $user_id, $data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 	}
 
 	/**
@@ -258,12 +258,12 @@ class AuthService {
 		}
 
 		if ( empty( $identifier ) || empty( $password ) ) {
-			return new WP_Error( 'slr_missing_credentials', __( 'Email or phone and password are required.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_missing_credentials', __( 'Email or phone and password are required.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$user = $this->resolve_user_for_password_login( $identifier );
 		if ( ! $user ) {
-			return new WP_Error( 'slr_invalid_credentials', __( 'Invalid email/phone or password.', 'smart-login-registration' ), array( 'status' => 401 ) );
+			return new WP_Error( 'logixfast_auth_invalid_credentials', __( 'Invalid email/phone or password.', 'logixfast-auth' ), array( 'status' => 401 ) );
 		}
 
 		$credentials = array(
@@ -272,11 +272,11 @@ class AuthService {
 			'remember'      => $remember,
 		);
 
-		$credentials = apply_filters( 'slr_login_credentials', $credentials, $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
+		$credentials = apply_filters( 'logixfast_auth_login_credentials', $credentials, $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 
 		if ( ! $this->verify_user_password( (int) $user->ID, $credentials['user_password'] ) ) {
-			do_action( 'slr_login_failed', new WP_Error( 'slr_invalid_password', __( 'Invalid password.', 'smart-login-registration' ) ), $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
-			return new WP_Error( 'slr_login_failed', __( 'Invalid email/phone or password.', 'smart-login-registration' ), array( 'status' => 401 ) );
+			do_action( 'logixfast_auth_login_failed', new WP_Error( 'logixfast_auth_invalid_password', __( 'Invalid password.', 'logixfast-auth' ) ), $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
+			return new WP_Error( 'logixfast_auth_login_failed', __( 'Invalid email/phone or password.', 'logixfast-auth' ), array( 'status' => 401 ) );
 		}
 
 		return $this->authenticate_user( (int) $user->ID, $remember );
@@ -449,7 +449,7 @@ class AuthService {
 	}
 
 	/**
-	 * Resolve a user by phone across SLR, WooCommerce, and Tutor profile fields.
+	 * Resolve a user by phone across LogixFastAuth, WooCommerce, and Tutor profile fields.
 	 *
 	 * @param string $phone Phone number.
 	 * @return int
@@ -515,7 +515,7 @@ class AuthService {
 	public function authenticate_user( $user_id, $remember = false ) {
 		$user = get_user_by( 'id', $user_id );
 		if ( ! $user ) {
-			return new WP_Error( 'slr_user_not_found', __( 'User not found.', 'smart-login-registration' ), array( 'status' => 404 ) );
+			return new WP_Error( 'logixfast_auth_user_not_found', __( 'User not found.', 'logixfast-auth' ), array( 'status' => 404 ) );
 		}
 
 		wp_clear_auth_cookie();
@@ -569,8 +569,8 @@ class AuthService {
 
 			if ( ! $user_id ) {
 				return new WP_Error(
-					'slr_user_not_found',
-					__( 'No account found with that phone number.', 'smart-login-registration' ),
+					'logixfast_auth_user_not_found',
+					__( 'No account found with that phone number.', 'logixfast-auth' ),
 					array( 'status' => 404 )
 				);
 			}
@@ -581,8 +581,8 @@ class AuthService {
 		$user = $this->resolve_user_by_email( $identifier );
 		if ( ! $user ) {
 			return new WP_Error(
-				'slr_user_not_found',
-				__( 'No account found with that email.', 'smart-login-registration' ),
+				'logixfast_auth_user_not_found',
+				__( 'No account found with that email.', 'logixfast-auth' ),
 				array( 'status' => 404 )
 			);
 		}
@@ -601,14 +601,14 @@ class AuthService {
 		if ( 'email' === $channel ) {
 			$user = $this->resolve_user_by_email( $identifier );
 			if ( ! $user ) {
-				return new WP_Error( 'slr_user_not_found', __( 'No account found with that email.', 'smart-login-registration' ), array( 'status' => 404 ) );
+				return new WP_Error( 'logixfast_auth_user_not_found', __( 'No account found with that email.', 'logixfast-auth' ), array( 'status' => 404 ) );
 			}
 			return (int) $user->ID;
 		}
 
 		$user_id = $this->resolve_user_id_by_phone( $identifier );
 		if ( ! $user_id ) {
-			return new WP_Error( 'slr_user_not_found', __( 'No account found with that phone number.', 'smart-login-registration' ), array( 'status' => 404 ) );
+			return new WP_Error( 'logixfast_auth_user_not_found', __( 'No account found with that phone number.', 'logixfast-auth' ), array( 'status' => 404 ) );
 		}
 
 		return $user_id;
@@ -626,7 +626,7 @@ class AuthService {
 		$token    = bin2hex( random_bytes( 32 ) );
 
 		set_transient(
-			'slr_pwreset_' . $token,
+			'logixfast_auth_pwreset_' . $token,
 			array(
 				'user_id' => (int) $user_id,
 			),
@@ -645,36 +645,36 @@ class AuthService {
 	 */
 	public function complete_password_reset( $reset_token, $password ) {
 		if ( empty( $reset_token ) || empty( $password ) ) {
-			return new WP_Error( 'slr_missing_fields', __( 'Please fill in all required fields.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_missing_fields', __( 'Please fill in all required fields.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( strlen( $password ) < 8 ) {
-			return new WP_Error( 'slr_password_short', __( 'Password must be at least 8 characters.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_password_short', __( 'Password must be at least 8 characters.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( strlen( $password ) > 4096 ) {
-			return new WP_Error( 'slr_password_long', __( 'Password is too long.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_password_long', __( 'Password is too long.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
-		$payload = get_transient( 'slr_pwreset_' . $reset_token );
+		$payload = get_transient( 'logixfast_auth_pwreset_' . $reset_token );
 		if ( ! is_array( $payload ) || empty( $payload['user_id'] ) ) {
-			return new WP_Error( 'slr_reset_expired', __( 'Reset session expired. Please start again.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_reset_expired', __( 'Reset session expired. Please start again.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$user_id = (int) $payload['user_id'];
 		$user    = get_user_by( 'id', $user_id );
 		if ( ! $user ) {
-			return new WP_Error( 'slr_user_not_found', __( 'User not found.', 'smart-login-registration' ), array( 'status' => 404 ) );
+			return new WP_Error( 'logixfast_auth_user_not_found', __( 'User not found.', 'logixfast-auth' ), array( 'status' => 404 ) );
 		}
 
 		wp_set_password( $password, $user_id );
 		$this->refresh_user_auth_cache_by_id( $user_id );
-		delete_transient( 'slr_pwreset_' . $reset_token );
+		delete_transient( 'logixfast_auth_pwreset_' . $reset_token );
 
 		if ( ! $this->verify_user_password( $user_id, $password ) ) {
 			return new WP_Error(
-				'slr_password_update_failed',
-				__( 'Could not save the new password. Please try again.', 'smart-login-registration' ),
+				'logixfast_auth_password_update_failed',
+				__( 'Could not save the new password. Please try again.', 'logixfast-auth' ),
 				array( 'status' => 500 )
 			);
 		}
@@ -689,7 +689,7 @@ class AuthService {
 
 		return array(
 			'success' => true,
-			'message' => __( 'Password updated. You can sign in now.', 'smart-login-registration' ),
+			'message' => __( 'Password updated. You can sign in now.', 'logixfast-auth' ),
 			'user_id' => $user_id,
 		);
 	}

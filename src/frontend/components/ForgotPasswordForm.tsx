@@ -1,19 +1,19 @@
 import { FormEvent, useState } from 'react';
 import { ArrowRight, Mail } from 'lucide-react';
 import { forgotPassword } from '../api/auth';
-import { SlrCountryPhone } from './SlrCountryPhone';
-import { SlrField } from './SlrField';
-import { SlrInput } from './SlrInput';
-import { useSlrToast } from './SlrToaster';
+import { LogixFastAuthCountryPhone } from './LogixFastAuthCountryPhone';
+import { LogixFastAuthField } from './LogixFastAuthField';
+import { LogixFastAuthInput } from './LogixFastAuthInput';
+import { useLogixFastAuthToast } from './LogixFastAuthToaster';
 import {
   getActiveOtpSessionForPurpose,
   loadFormSession,
   saveFormSession,
 } from '../utils/formStorage';
-import type { SlrConfig } from '@shared/types';
+import type { LogixFastAuthConfig } from '@shared/types';
 
 interface ForgotPasswordFormProps {
-  config: SlrConfig;
+  config: LogixFastAuthConfig;
   initialEmail?: string;
   onOtpRequired: (identifier: string, channel: string) => void;
   onResumeOtp: () => void;
@@ -27,7 +27,7 @@ export function ForgotPasswordForm({
   onResumeOtp,
   onBack,
 }: ForgotPasswordFormProps) {
-  const toast = useSlrToast();
+  const toast = useLogixFastAuthToast();
   const saved = loadFormSession();
   const pendingReset = getActiveOtpSessionForPurpose('reset');
 
@@ -79,27 +79,27 @@ export function ForgotPasswordForm({
 
   return (
     <form onSubmit={handleSubmit} noValidate>
-      <h2 id="slr-title" className="slr-title">{config.i18n.forgotPassword || 'Forgot password'}</h2>
-      <p className="slr-subtitle slr-subtitle--compact">
+      <h2 id="logixfast-auth-title" className="logixfast-auth-title">{config.i18n.forgotPassword || 'Forgot password'}</h2>
+      <p className="logixfast-auth-subtitle logixfast-auth-subtitle--compact">
         {config.i18n.forgotPasswordHint || 'Enter your email or phone and we will send a verification code.'}
       </p>
 
       {pendingReset && (
-        <div className="slr-otp-resume">
+        <div className="logixfast-auth-otp-resume">
           <p>
             {config.i18n.otpInProgress || 'Verification in progress for'}{' '}
             <strong>{pendingReset.identifier}</strong>
           </p>
-          <button type="button" className="slr-btn slr-btn--ghost slr-btn--sm" onClick={onResumeOtp}>
+          <button type="button" className="logixfast-auth-btn logixfast-auth-btn--ghost logixfast-auth-btn--sm" onClick={onResumeOtp}>
             {config.i18n.continueOtp || 'Continue verification'}
           </button>
         </div>
       )}
 
       {!usePhone ? (
-        <SlrField label={config.i18n.email} htmlFor="slr-forgot-email" required>
-          <SlrInput
-            id="slr-forgot-email"
+        <LogixFastAuthField label={config.i18n.email} htmlFor="logixfast-auth-forgot-email" required>
+          <LogixFastAuthInput
+            id="logixfast-auth-forgot-email"
             icon={Mail}
             type="email"
             value={email}
@@ -111,9 +111,9 @@ export function ForgotPasswordForm({
             autoComplete="email"
             placeholder="you@example.com"
           />
-        </SlrField>
+        </LogixFastAuthField>
       ) : (
-        <SlrCountryPhone
+        <LogixFastAuthCountryPhone
           label={config.i18n.phone}
           value={phone}
           onChange={(value) => {
@@ -127,7 +127,7 @@ export function ForgotPasswordForm({
       {config.auth.phoneOtp && (
         <button
           type="button"
-          className="slr-link-btn"
+          className="logixfast-auth-link-btn"
           onClick={() => {
             const nextUsePhone = !usePhone;
             setUsePhone(nextUsePhone);
@@ -140,27 +140,27 @@ export function ForgotPasswordForm({
         </button>
       )}
 
-      <div className="slr-otp-actions flex-column">
-        <button type="submit" className="slr-btn slr-btn--primary" disabled={loading}>
+      <div className="logixfast-auth-otp-actions flex-column">
+        <button type="submit" className="logixfast-auth-btn logixfast-auth-btn--primary" disabled={loading}>
           {loading ? (
             <>
-              <span className="slr-loading-spinner" aria-hidden="true" />
+              <span className="logixfast-auth-loading-spinner" aria-hidden="true" />
               {config.i18n.loading}
             </>
           ) : pendingReset ? (
             <>
               {config.i18n.continueOtp || 'Continue verification'}
-              <ArrowRight size={18} className="slr-btn-arrow" aria-hidden="true" />
+              <ArrowRight size={18} className="logixfast-auth-btn-arrow" aria-hidden="true" />
             </>
           ) : (
             <>
               {config.i18n.sendResetCode || 'Send reset code'}
-              <ArrowRight size={18} className="slr-btn-arrow" aria-hidden="true" />
+              <ArrowRight size={18} className="logixfast-auth-btn-arrow" aria-hidden="true" />
             </>
           )}
         </button>
 
-        <button type="button" className="slr-btn slr-btn--ghost" onClick={onBack}>
+        <button type="button" className="logixfast-auth-btn logixfast-auth-btn--ghost" onClick={onBack}>
           ← {config.i18n.backToLogin || 'Back to sign in'}
         </button>
       </div>

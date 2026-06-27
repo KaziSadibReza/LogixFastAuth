@@ -8,8 +8,8 @@ interface PageHeaderProps {
 
 export function PageHeader({ title, description, actions }: PageHeaderProps) {
   return (
-    <div className="slr-page-header">
-      <div className="slr-page-header-text">
+    <div className="logixfast-auth-page-header">
+      <div className="logixfast-auth-page-header-text">
         <h2>{title}</h2>
         {description && <p>{description}</p>}
       </div>

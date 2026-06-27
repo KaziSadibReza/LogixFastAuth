@@ -14,7 +14,7 @@ import {
   FileText,
   LayoutList,
 } from 'lucide-react';
-import type { SlrLoggedInRedirectType, SlrRedirectType } from '@shared/types';
+import type { LogixFastAuthLoggedInRedirectType, LogixFastAuthRedirectType } from '@shared/types';
 import { useSettings } from '../context/SettingsContext';
 import { ensureLoginPage } from '../api/settings';
 import {
@@ -83,13 +83,13 @@ export function GeneralPage() {
     { value: 0, label: '— Select a page —' },
     ...pageList.map((p) => ({
       value: p.id,
-      label: p.is_slr ? `${p.title} (SLR Sign In Page)` : p.title,
+      label: p.is_logixfastauth ? `${p.title} (LogixFastAuth Sign In Page)` : p.title,
       description: p.url,
     })),
   ];
 
   return (
-    <div className="slr-page slr-page--general">
+    <div className="logixfast-auth-page logixfast-auth-page--general">
       {stats && !statsLoading ? (
         <StatsGrid>
           <StatCard
@@ -100,16 +100,16 @@ export function GeneralPage() {
             tone="primary"
           />
           <StatCard
-            label="SLR logins today"
-            value={stats.slr_logins_today.toLocaleString()}
-            hint={`${stats.slr_logins_total.toLocaleString()} all time`}
+            label="LogixFastAuth logins today"
+            value={stats.logixfast_auth_logins_today.toLocaleString()}
+            hint={`${stats.logixfast_auth_logins_total.toLocaleString()} all time`}
             icon={KeyRound}
             tone="success"
           />
           <StatCard
             label="Registrations today"
-            value={stats.slr_registrations_today.toLocaleString()}
-            hint={`${stats.slr_registrations_total.toLocaleString()} all time`}
+            value={stats.logixfast_auth_registrations_today.toLocaleString()}
+            hint={`${stats.logixfast_auth_registrations_total.toLocaleString()} all time`}
             icon={UserRoundPlus}
             tone="info"
           />
@@ -121,16 +121,16 @@ export function GeneralPage() {
           />
         </StatsGrid>
       ) : (
-        <div className="slr-stats-grid">
+        <div className="logixfast-auth-stats-grid">
           <Skeleton variant="box" height={88} count={4} />
         </div>
       )}
 
       <Card
-        className="slr-card--flush-body"
+        className="logixfast-auth-card--flush-body"
         title={
-          <span className="slr-card-title-row">
-            <span className="slr-card-title-icon slr-card-title-icon--primary">
+          <span className="logixfast-auth-card-title-row">
+            <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--primary">
               <Icon icon={MonitorSmartphone} size={18} />
             </span>
             Sign In & Register
@@ -144,27 +144,27 @@ export function GeneralPage() {
             </Button>
           ) : null
         }
-        bodyClassName="slr-card-body--flush"
+        bodyClassName="logixfast-auth-card-body--flush"
       >
         {pagesLoading || creatingPage ? (
-          <div className="slr-card-inset">
+          <div className="logixfast-auth-card-inset">
             <Skeleton variant="box" height={56} />
           </div>
         ) : g.dedicated_page_id > 0 && activePage ? (
-          <div className="slr-page-banner slr-page-banner--active">
-            <div className="slr-page-banner-main">
-              <span className="slr-page-banner-icon">
+          <div className="logixfast-auth-page-banner logixfast-auth-page-banner--active">
+            <div className="logixfast-auth-page-banner-main">
+              <span className="logixfast-auth-page-banner-icon">
                 <Icon icon={FileText} size={18} />
               </span>
-              <div className="slr-page-banner-text">
-                <span className="slr-page-banner-title">
+              <div className="logixfast-auth-page-banner-text">
+                <span className="logixfast-auth-page-banner-title">
                   {activePage.title}
                   <Badge variant="primary">Sign In + Register</Badge>
                 </span>
-                <span className="slr-page-banner-url">{activePage.url}</span>
+                <span className="logixfast-auth-page-banner-url">{activePage.url}</span>
               </div>
             </div>
-            <div className="slr-page-banner-actions">
+            <div className="logixfast-auth-page-banner-actions">
               <Button
                 variant="secondary"
                 size="sm"
@@ -178,7 +178,7 @@ export function GeneralPage() {
                 size="sm"
                 icon={LayoutList}
                 onClick={() => {
-                  const base = window.SLR_ADMIN?.homeUrl ?? '/wp-admin/';
+                  const base = window.LOGIXFAST_AUTH_ADMIN?.homeUrl ?? '/wp-admin/';
                   window.open(`${base}edit.php?post_type=page`, '_self');
                 }}
               >
@@ -187,14 +187,14 @@ export function GeneralPage() {
             </div>
           </div>
         ) : (
-          <div className="slr-page-banner slr-page-banner--empty">
-            <div className="slr-page-banner-main">
-              <span className="slr-page-banner-icon">
+          <div className="logixfast-auth-page-banner logixfast-auth-page-banner--empty">
+            <div className="logixfast-auth-page-banner-main">
+              <span className="logixfast-auth-page-banner-icon">
                 <Icon icon={MonitorSmartphone} size={18} />
               </span>
-              <div className="slr-page-banner-text">
-                <span className="slr-page-banner-title">No auth page yet</span>
-                <span className="slr-page-banner-url">Create a page with Sign In and Register tabs, like the popup.</span>
+              <div className="logixfast-auth-page-banner-text">
+                <span className="logixfast-auth-page-banner-title">No auth page yet</span>
+                <span className="logixfast-auth-page-banner-url">Create a page with Sign In and Register tabs, like the popup.</span>
               </div>
             </div>
             <Button variant="primary" size="sm" icon={Sparkles} loading={creatingPage} onClick={setupLoginPage}>
@@ -233,19 +233,19 @@ export function GeneralPage() {
         </SettingsGroup>
       </Card>
 
-      <div className="slr-page-columns slr-page-columns--split">
+      <div className="logixfast-auth-page-columns logixfast-auth-page-columns--split">
         <Card
-          className="slr-card--flush-body slr-card--redirects"
+          className="logixfast-auth-card--flush-body logixfast-auth-card--redirects"
           title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon">
+            <span className="logixfast-auth-card-title-row">
+              <span className="logixfast-auth-card-title-icon">
                 <Icon icon={ArrowRightLeft} size={18} />
               </span>
               Redirects
             </span>
           }
           description="Choose where users go after sign-in or sign-up — or keep them on the same page."
-          bodyClassName="slr-card-body--flush"
+          bodyClassName="logixfast-auth-card-body--flush"
         >
           <SettingsGroup>
             <SettingsRow
@@ -253,7 +253,7 @@ export function GeneralPage() {
               description="Popup example: stay on About after signing in from that page."
             >
               <RedirectControl
-                type={(g.login_redirect_type || 'stay') as SlrRedirectType}
+                type={(g.login_redirect_type || 'stay') as LogixFastAuthRedirectType}
                 pageId={g.login_redirect_page_id || 0}
                 url={g.login_redirect_url}
                 pages={pageList}
@@ -266,7 +266,7 @@ export function GeneralPage() {
             </SettingsRow>
             <SettingsRow title="After registration" description="Where new accounts land after completing registration.">
               <RedirectControl
-                type={(g.register_redirect_type || 'stay') as SlrRedirectType}
+                type={(g.register_redirect_type || 'stay') as LogixFastAuthRedirectType}
                 pageId={g.register_redirect_page_id || 0}
                 url={g.register_redirect_url}
                 pages={pageList}
@@ -290,7 +290,7 @@ export function GeneralPage() {
                 pagesLoading={pagesLoading}
                 onTypeChange={(type) =>
                   updateSection('general', {
-                    login_page_logged_in_redirect_type: type as SlrLoggedInRedirectType,
+                    login_page_logged_in_redirect_type: type as LogixFastAuthLoggedInRedirectType,
                   })
                 }
                 onPageChange={(pageId) => updateSection('general', { login_page_logged_in_redirect_page_id: pageId })}
@@ -302,22 +302,22 @@ export function GeneralPage() {
         </Card>
 
         <Card
-          className="slr-card--flush-body"
+          className="logixfast-auth-card--flush-body"
           title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon slr-card-title-icon--success">
+            <span className="logixfast-auth-card-title-row">
+              <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--success">
                 <Icon icon={ShieldCheck} size={18} />
               </span>
               Spam protection
             </span>
           }
           description="Lightweight bot protection without captchas."
-          bodyClassName="slr-card-body--flush"
+          bodyClassName="logixfast-auth-card-body--flush"
         >
           <SettingsGroup>
             <SettingsRow
               title={
-                <span className="slr-settings-row-title-inline">
+                <span className="logixfast-auth-settings-row-title-inline">
                   Honeypot field <Badge variant="success">recommended</Badge>
                 </span>
               }

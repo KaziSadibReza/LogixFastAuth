@@ -71,20 +71,20 @@ export function SecurityPage() {
   return (
     <>
       <Card
-        className="slr-card--flush-body"
+        className="logixfast-auth-card--flush-body"
         title={
-          <span className="slr-card-title-row">
-            <span className="slr-card-title-icon slr-card-title-icon--primary">
+          <span className="logixfast-auth-card-title-row">
+            <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--primary">
               <Icon icon={ShieldCheck} size={18} />
             </span>
             Protected flows
           </span>
         }
-        description="Where SLR applies rate limits, OTP rules and passkey security."
-        bodyClassName="slr-card-body--flush"
+        description="Where LogixFastAuth applies rate limits, OTP rules and passkey security."
+        bodyClassName="logixfast-auth-card-body--flush"
       >
-        <div className="slr-security-panel">
-          <div className="slr-icon-card-grid slr-icon-card-grid--security">
+        <div className="logixfast-auth-security-panel">
+          <div className="logixfast-auth-icon-card-grid logixfast-auth-icon-card-grid--security">
             <IntegrationIconCard
               icon={LogIn}
               iconVariant="passkey"
@@ -121,25 +121,25 @@ export function SecurityPage() {
         </div>
       </Card>
 
-      <div className="slr-page-columns slr-page-columns--split">
+      <div className="logixfast-auth-page-columns logixfast-auth-page-columns--split">
         <Card
-          className="slr-card--flush-body"
+          className="logixfast-auth-card--flush-body"
           title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon">
+            <span className="logixfast-auth-card-title-row">
+              <span className="logixfast-auth-card-title-icon">
                 <Icon icon={Gauge} size={18} />
               </span>
               Rate limits
             </span>
           }
           description="Applied per IP on sign-in, registration and forgot password — not on OTP code entry."
-          bodyClassName="slr-card-body--flush"
+          bodyClassName="logixfast-auth-card-body--flush"
         >
           <SettingsGroup>
             <SettingsRow
               title={
-                <span className="slr-settings-row-title-inline">
-                  <Icon icon={Gauge} size={16} className="slr-setting-row-icon" />
+                <span className="logixfast-auth-settings-row-title-inline">
+                  <Icon icon={Gauge} size={16} className="logixfast-auth-setting-row-icon" />
                   Max attempts
                 </span>
               }
@@ -154,8 +154,8 @@ export function SecurityPage() {
             </SettingsRow>
             <SettingsRow
               title={
-                <span className="slr-settings-row-title-inline">
-                  <Icon icon={Clock} size={16} className="slr-setting-row-icon" />
+                <span className="logixfast-auth-settings-row-title-inline">
+                  <Icon icon={Clock} size={16} className="logixfast-auth-setting-row-icon" />
                   Window (seconds)
                 </span>
               }
@@ -172,19 +172,19 @@ export function SecurityPage() {
         </Card>
 
         <Card
-          className="slr-card--flush-body"
+          className="logixfast-auth-card--flush-body"
           title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon slr-card-title-icon--success">
+            <span className="logixfast-auth-card-title-row">
+              <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--success">
                 <Icon icon={ShieldBan} size={18} />
               </span>
               Blocked IPs
             </span>
           }
           description="Users who hit the rate limit. Unblock to allow sign-in or registration again."
-          bodyClassName="slr-card-body--flush"
+          bodyClassName="logixfast-auth-card-body--flush"
         >
-          <div className="slr-security-panel slr-security-panel--blocks">
+          <div className="logixfast-auth-security-panel logixfast-auth-security-panel--blocks">
             {blocksLoading || rateBlocks === null ? (
               <SkeletonBlockList count={2} />
             ) : blocks.length === 0 ? (
@@ -194,16 +194,16 @@ export function SecurityPage() {
                 description="IPs that exceed the rate limit will appear here for quick review and unblock."
               />
             ) : (
-              <div className="slr-block-list">
+              <div className="logixfast-auth-block-list">
                 {blocks.map((block) => (
-                  <div key={block.id} className="slr-block-item">
-                    <div className="slr-block-item__main">
-                      <span className="slr-block-item__icon" aria-hidden="true">
+                  <div key={block.id} className="logixfast-auth-block-item">
+                    <div className="logixfast-auth-block-item__main">
+                      <span className="logixfast-auth-block-item__icon" aria-hidden="true">
                         <Icon icon={Ban} size={16} />
                       </span>
                       <div>
                         <strong>{block.ip || block.key}</strong>
-                        <span className="slr-block-meta">
+                        <span className="logixfast-auth-block-meta">
                           {block.action} · until {new Date(block.expires_at * 1000).toLocaleString()}
                         </span>
                       </div>
@@ -225,25 +225,25 @@ export function SecurityPage() {
         </Card>
       </div>
 
-      <div className="slr-page-columns slr-page-columns--split">
+      <div className="logixfast-auth-page-columns logixfast-auth-page-columns--split">
         <Card
-          className="slr-card--flush-body"
+          className="logixfast-auth-card--flush-body"
           title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon slr-card-title-icon--primary">
+            <span className="logixfast-auth-card-title-row">
+              <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--primary">
                 <Icon icon={Timer} size={18} />
               </span>
               One-time codes
             </span>
           }
           description="OTP lifetime, resend spacing and wrong-guess limits."
-          bodyClassName="slr-card-body--flush"
+          bodyClassName="logixfast-auth-card-body--flush"
         >
           <SettingsGroup>
             <SettingsRow
               title={
-                <span className="slr-settings-row-title-inline">
-                  <Icon icon={Timer} size={16} className="slr-setting-row-icon" />
+                <span className="logixfast-auth-settings-row-title-inline">
+                  <Icon icon={Timer} size={16} className="logixfast-auth-setting-row-icon" />
                   Code lifetime (sec)
                 </span>
               }
@@ -258,8 +258,8 @@ export function SecurityPage() {
             </SettingsRow>
             <SettingsRow
               title={
-                <span className="slr-settings-row-title-inline">
-                  <Icon icon={RefreshCw} size={16} className="slr-setting-row-icon" />
+                <span className="logixfast-auth-settings-row-title-inline">
+                  <Icon icon={RefreshCw} size={16} className="logixfast-auth-setting-row-icon" />
                   Resend cooldown (sec)
                 </span>
               }
@@ -274,8 +274,8 @@ export function SecurityPage() {
             </SettingsRow>
             <SettingsRow
               title={
-                <span className="slr-settings-row-title-inline">
-                  <Icon icon={Shield} size={16} className="slr-setting-row-icon" />
+                <span className="logixfast-auth-settings-row-title-inline">
+                  <Icon icon={Shield} size={16} className="logixfast-auth-setting-row-icon" />
                   Max verify attempts
                 </span>
               }
@@ -292,20 +292,20 @@ export function SecurityPage() {
         </Card>
 
         <Card
-          className="slr-card--flush-body"
+          className="logixfast-auth-card--flush-body"
           title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon slr-card-title-icon--passkey">
+            <span className="logixfast-auth-card-title-row">
+              <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--passkey">
                 <PasskeyIcon size={18} />
               </span>
               WebAuthn / Passkeys
             </span>
           }
           description="Domain binding for passkey registration and authentication."
-          bodyClassName="slr-card-body--flush"
+          bodyClassName="logixfast-auth-card-body--flush"
         >
-          <div className="slr-security-panel">
-            <div className="slr-icon-card-grid">
+          <div className="logixfast-auth-security-panel">
+            <div className="logixfast-auth-icon-card-grid">
               <IntegrationIconCard
                 icon={ScanFace}
                 iconVariant="passkey"
@@ -336,12 +336,12 @@ export function SecurityPage() {
               />
             </div>
 
-            <div className="slr-security-rp-field">
+            <div className="logixfast-auth-security-rp-field">
               <SettingsGroup>
                 <SettingsRow
                   title={
-                    <span className="slr-settings-row-title-inline">
-                      <Icon icon={Globe} size={16} className="slr-setting-row-icon" />
+                    <span className="logixfast-auth-settings-row-title-inline">
+                      <Icon icon={Globe} size={16} className="logixfast-auth-setting-row-icon" />
                       Relying Party ID
                     </span>
                   }

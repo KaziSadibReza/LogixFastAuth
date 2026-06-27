@@ -2,12 +2,12 @@
 /**
  * Passkey management on the WordPress user profile screen.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Profile; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Profile; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Services\Passkey_Surfaces;
+use LogixFastAuth\Services\Passkey_Surfaces;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -41,9 +41,9 @@ class Passkey_Profile {
 			return;
 		}
 		?>
-		<h2 id="slr-passkey-manager"><?php esc_html_e( 'Passkeys', 'smart-login-registration' ); ?></h2>
+		<h2 id="logixfast-auth-passkey-manager"><?php esc_html_e( 'Passkeys', 'logixfast-auth' ); ?></h2>
 		<p class="description">
-			<?php esc_html_e( 'Add or remove passkeys for your account. Each passkey is tied to this user only.', 'smart-login-registration' ); ?>
+			<?php esc_html_e( 'Add or remove passkeys for your account. Each passkey is tied to this user only.', 'logixfast-auth' ); ?>
 		</p>
 		<?php
 		Passkey_Surfaces::render_manager(

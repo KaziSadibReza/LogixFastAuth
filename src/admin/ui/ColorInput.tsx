@@ -6,7 +6,7 @@ interface ColorInputProps {
 
 export function ColorInput({ value, onChange, id }: ColorInputProps) {
   return (
-    <div className="slr-color-input">
+    <div className="logixfast-auth-color-input">
       <input
         type="color"
         value={value}

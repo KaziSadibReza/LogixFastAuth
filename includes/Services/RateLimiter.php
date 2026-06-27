@@ -2,12 +2,12 @@
 /**
  * Rate limiting for auth endpoints.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Settings;
+use LogixFastAuth\Settings;
 use WP_Error;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class RateLimiter {
 
-	const BLOCKS_OPTION = 'slr_rate_blocks';
+	const BLOCKS_OPTION = 'logixfast_auth_rate_blocks';
 
 	/**
 	 * Actions that share the global rate limit (Create Account, Sign In, etc.).
@@ -48,8 +48,8 @@ class RateLimiter {
 
 		if ( $this->is_manually_blocked( $block_id ) ) {
 			return new WP_Error(
-				'slr_rate_limited',
-				__( 'Too many attempts. Please try again later.', 'smart-login-registration' ),
+				'logixfast_auth_rate_limited',
+				__( 'Too many attempts. Please try again later.', 'logixfast-auth' ),
 				array( 'status' => 429 )
 			);
 		}
@@ -61,8 +61,8 @@ class RateLimiter {
 				$this->log_block( $action, $key, $window );
 			}
 			return new WP_Error(
-				'slr_rate_limited',
-				__( 'Too many attempts. Please try again later.', 'smart-login-registration' ),
+				'logixfast_auth_rate_limited',
+				__( 'Too many attempts. Please try again later.', 'logixfast-auth' ),
 				array( 'status' => 429 )
 			);
 		}
@@ -381,7 +381,7 @@ class RateLimiter {
 	 * @return string
 	 */
 	private function get_transient_key( $action, $key ) {
-		return 'slr_rl_' . md5( $action . '_' . $key );
+		return 'logixfast_auth_rl_' . md5( $action . '_' . $key );
 	}
 
 	/**
@@ -392,7 +392,7 @@ class RateLimiter {
 	public static function get_client_ip() {
 		$ip = '';
 
-		if ( apply_filters( 'slr_trust_proxy_headers', false ) && ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- SLR plugin hook.
+		if ( apply_filters( 'logixfast_auth_trust_proxy_headers', false ) && ! empty( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) { // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 			$ips = explode( ',', sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_FORWARDED_FOR'] ) ) );
 			$ip  = trim( $ips[0] );
 		} elseif ( ! empty( $_SERVER['REMOTE_ADDR'] ) ) {

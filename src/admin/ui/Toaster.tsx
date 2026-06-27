@@ -111,19 +111,19 @@ function Toaster({
   if (!mounted) return null;
 
   return createPortal(
-    <div className="slr-toaster" role="region" aria-live="polite" aria-label="Notifications">
+    <div className="logixfast-auth-toaster" role="region" aria-live="polite" aria-label="Notifications">
       {toasts.map((t) => (
-        <div key={t.id} className={`slr-toast slr-toast--${t.variant} ${exiting.has(t.id) ? 'exiting' : ''}`}>
-          <span className="slr-toast-icon" aria-hidden="true">
+        <div key={t.id} className={`logixfast-auth-toast logixfast-auth-toast--${t.variant} ${exiting.has(t.id) ? 'exiting' : ''}`}>
+          <span className="logixfast-auth-toast-icon" aria-hidden="true">
             <Icon icon={variantIcon[t.variant]} size={16} />
           </span>
-          <div className="slr-toast-body">
-            {t.title && <div className="slr-toast-title">{t.title}</div>}
-            <div className="slr-toast-message">{t.message}</div>
+          <div className="logixfast-auth-toast-body">
+            {t.title && <div className="logixfast-auth-toast-title">{t.title}</div>}
+            <div className="logixfast-auth-toast-message">{t.message}</div>
           </div>
           <button
             type="button"
-            className="slr-toast-close"
+            className="logixfast-auth-toast-close"
             onClick={() => onDismiss(t.id)}
             aria-label="Dismiss notification"
           >

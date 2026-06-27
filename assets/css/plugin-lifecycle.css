@@ -1,10 +1,10 @@
-/* SLR deactivate / delete glass modal */
+/* LogixFastAuth deactivate / delete glass modal */
 
-.slr-lifecycle-overlay {
-  --slr-primary: #d6336c;
-  --slr-text: #1e293b;
-  --slr-blur: 24px;
-  --slr-radius: 12px;
+.logixfast-auth-lifecycle-overlay {
+  --logixfast-auth-primary: #d6336c;
+  --logixfast-auth-text: #1e293b;
+  --logixfast-auth-blur: 24px;
+  --logixfast-auth-radius: 12px;
 
   position: fixed;
   inset: 0;
@@ -15,78 +15,78 @@
   padding: 1.25rem;
   font-family: Urbanist, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(var(--slr-blur)) saturate(140%);
-  -webkit-backdrop-filter: blur(var(--slr-blur)) saturate(140%);
-  animation: slr-lifecycle-in 0.28s ease;
+  backdrop-filter: blur(var(--logixfast-auth-blur)) saturate(140%);
+  -webkit-backdrop-filter: blur(var(--logixfast-auth-blur)) saturate(140%);
+  animation: logixfast-auth-lifecycle-in 0.28s ease;
 }
 
-.slr-lifecycle-card {
+.logixfast-auth-lifecycle-card {
   width: 100%;
   max-width: min(470px, calc(100vw - 2rem));
   background: rgba(255, 255, 255, 0.94);
-  color: var(--slr-text);
-  border-radius: calc(var(--slr-radius) + 2px);
+  color: var(--logixfast-auth-text);
+  border-radius: calc(var(--logixfast-auth-radius) + 2px);
   border: 1px solid rgba(255, 255, 255, 0.72);
   box-shadow: 0 32px 64px -12px rgba(15, 23, 42, 0.18), inset 0 1px 0 rgba(255, 255, 255, 0.9);
   padding: 1.35rem 1.35rem 1.15rem;
 }
 
-.slr-lifecycle-card input[type=checkbox], input[type=radio]{
+.logixfast-auth-lifecycle-card input[type=checkbox], input[type=radio]{
   margin: 0px ;
 }
 
-.slr-lifecycle-card h2 {
+.logixfast-auth-lifecycle-card h2 {
   margin: 0 0 1rem;
   font-size: 1.2rem;
   font-weight: 700;
   line-height: 1.3;
 }
 
-.slr-lifecycle-toggle {
+.logixfast-auth-lifecycle-toggle {
   display: flex;
   align-items: center;
   gap: 0.7rem;
   margin: 0 0 0.75rem;
   padding: 0.75rem 0.9rem;
-  border-radius: var(--slr-radius);
+  border-radius: var(--logixfast-auth-radius);
   background: rgba(15, 23, 42, 0.04);
   border: 1px solid rgba(15, 23, 42, 0.08);
   cursor: pointer;
 }
 
-.slr-lifecycle-toggle input,
-.slr-lifecycle-ack input {
+.logixfast-auth-lifecycle-toggle input,
+.logixfast-auth-lifecycle-ack input {
   flex-shrink: 0;
   width: 16px;
   height: 16px;
   margin: 0;
 }
 
-.slr-lifecycle-toggle__text {
+.logixfast-auth-lifecycle-toggle__text {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
   min-width: 0;
 }
 
-.slr-lifecycle-toggle strong {
+.logixfast-auth-lifecycle-toggle strong {
   font-size: 0.9rem;
   font-weight: 600;
   line-height: 1.35;
 }
 
-.slr-lifecycle-toggle em {
+.logixfast-auth-lifecycle-toggle em {
   font-size: 0.8125rem;
   font-style: normal;
   line-height: 1.4;
   color: rgba(30, 41, 59, 0.72);
 }
 
-.slr-lifecycle-warn {
+.logixfast-auth-lifecycle-warn {
   display: none;
   margin: 0 0 0.75rem;
   padding: 0.65rem 0.8rem;
-  border-radius: calc(var(--slr-radius) - 2px);
+  border-radius: calc(var(--logixfast-auth-radius) - 2px);
   background: rgba(220, 38, 38, 0.08);
   border: 1px solid rgba(220, 38, 38, 0.22);
   font-size: 0.8125rem;
@@ -94,11 +94,11 @@
   color: #991b1b;
 }
 
-.slr-lifecycle-warn.is-visible {
+.logixfast-auth-lifecycle-warn.is-visible {
   display: block;
 }
 
-.slr-lifecycle-ack {
+.logixfast-auth-lifecycle-ack {
   display: none;
   align-items: center;
   gap: 0.55rem;
@@ -108,24 +108,24 @@
   cursor: pointer;
 }
 
-.slr-lifecycle-ack.is-visible {
+.logixfast-auth-lifecycle-ack.is-visible {
   display: flex;
 }
 
-.slr-lifecycle-ack span {
+.logixfast-auth-lifecycle-ack span {
   line-height: 1.35;
 }
 
-.slr-lifecycle-actions {
+.logixfast-auth-lifecycle-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.55rem;
   justify-content: flex-end;
 }
 
-.slr-lifecycle-btn {
+.logixfast-auth-lifecycle-btn {
   border: 1px solid transparent;
-  border-radius: calc(var(--slr-radius) - 2px);
+  border-radius: calc(var(--logixfast-auth-radius) - 2px);
   padding: 0.5rem 0.9rem;
   font: inherit;
   font-size: 0.875rem;
@@ -133,32 +133,32 @@
   cursor: pointer;
 }
 
-.slr-lifecycle-btn:disabled {
+.logixfast-auth-lifecycle-btn:disabled {
   opacity: 0.45;
   cursor: not-allowed;
 }
 
-.slr-lifecycle-btn.is-hidden {
+.logixfast-auth-lifecycle-btn.is-hidden {
   display: none;
 }
 
-.slr-lifecycle-btn--ghost {
+.logixfast-auth-lifecycle-btn--ghost {
   background: rgba(15, 23, 42, 0.05);
   border-color: rgba(15, 23, 42, 0.1);
-  color: var(--slr-text);
+  color: var(--logixfast-auth-text);
 }
 
-.slr-lifecycle-btn--primary {
-  background: var(--slr-primary);
+.logixfast-auth-lifecycle-btn--primary {
+  background: var(--logixfast-auth-primary);
   color: #fff;
 }
 
-.slr-lifecycle-btn--danger {
+.logixfast-auth-lifecycle-btn--danger {
   background: #dc2626;
   color: #fff;
 }
 
-@keyframes slr-lifecycle-in {
+@keyframes logixfast-auth-lifecycle-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }

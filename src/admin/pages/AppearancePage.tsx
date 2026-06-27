@@ -23,20 +23,20 @@ export function AppearancePage() {
   return (
     <>
       <Card
-        className="slr-card--flush-body"
+        className="logixfast-auth-card--flush-body"
         title={
-          <span className="slr-card-title-row">
-            <span className="slr-card-title-icon slr-card-title-icon--primary">
+          <span className="logixfast-auth-card-title-row">
+            <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--primary">
               <Icon icon={Sparkles} size={18} />
             </span>
             Color presets
           </span>
         }
         description="One click to apply a palette — fine-tune individual colors below."
-        bodyClassName="slr-card-body--flush"
+        bodyClassName="logixfast-auth-card-body--flush"
       >
-        <div className="slr-appearance-presets-panel">
-          <div className="slr-preset-icon-grid">
+        <div className="logixfast-auth-appearance-presets-panel">
+          <div className="logixfast-auth-preset-icon-grid">
             {presets.map((p) => (
               <PresetIconCard
                 key={p.name}
@@ -58,21 +58,21 @@ export function AppearancePage() {
         </div>
       </Card>
 
-      <div className="slr-page-columns slr-page-columns--split">
+      <div className="logixfast-auth-page-columns logixfast-auth-page-columns--split">
         <Card
-          className="slr-card--flush-body"
+          className="logixfast-auth-card--flush-body"
           title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon">
+            <span className="logixfast-auth-card-title-row">
+              <span className="logixfast-auth-card-title-icon">
                 <Icon icon={Palette} size={18} />
               </span>
               Brand colors
             </span>
           }
           description="Buttons, card background and body text."
-          bodyClassName="slr-card-body--flush"
+          bodyClassName="logixfast-auth-card-body--flush"
         >
-          <div className="slr-appearance-settings-panel">
+          <div className="logixfast-auth-appearance-settings-panel">
             <Field label="Primary" help="Buttons, links and focus rings.">
               <ColorInput value={a.primary} onChange={(v) => updateSection('appearance', { primary: v })} />
             </Field>
@@ -86,34 +86,34 @@ export function AppearancePage() {
         </Card>
 
         <Card
-          className="slr-card--flush-body"
+          className="logixfast-auth-card--flush-body"
           title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon slr-card-title-icon--success">
+            <span className="logixfast-auth-card-title-row">
+              <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--success">
                 <Icon icon={LayoutGrid} size={18} />
               </span>
               Layout & overlay
             </span>
           }
           description="Popup glass effect, corners and internal spacing."
-          bodyClassName="slr-card-body--flush"
+          bodyClassName="logixfast-auth-card-body--flush"
         >
-          <div className="slr-appearance-settings-panel">
+          <div className="logixfast-auth-appearance-settings-panel">
             <Field label="Backdrop blur" help="Popup overlay frosted glass, e.g. 24px">
-              <div className="slr-appearance-field-with-icon">
-                <Icon icon={Droplets} size={16} className="slr-appearance-field-icon" />
+              <div className="logixfast-auth-appearance-field-with-icon">
+                <Icon icon={Droplets} size={16} className="logixfast-auth-appearance-field-icon" />
                 <Input value={a.blur} onChange={(e) => updateSection('appearance', { blur: e.target.value })} />
               </div>
             </Field>
             <Field label="Border radius" help="Card corners, e.g. 12px">
-              <div className="slr-appearance-field-with-icon">
-                <Icon icon={Maximize2} size={16} className="slr-appearance-field-icon" />
+              <div className="logixfast-auth-appearance-field-with-icon">
+                <Icon icon={Maximize2} size={16} className="logixfast-auth-appearance-field-icon" />
                 <Input value={a.radius} onChange={(e) => updateSection('appearance', { radius: e.target.value })} />
               </div>
             </Field>
             <Field label="Spacing" help="Padding and gaps, e.g. 1rem">
-              <div className="slr-appearance-field-with-icon">
-                <Icon icon={LayoutGrid} size={16} className="slr-appearance-field-icon" />
+              <div className="logixfast-auth-appearance-field-with-icon">
+                <Icon icon={LayoutGrid} size={16} className="logixfast-auth-appearance-field-icon" />
                 <Input value={a.spacing} onChange={(e) => updateSection('appearance', { spacing: e.target.value })} />
               </div>
             </Field>
@@ -122,19 +122,19 @@ export function AppearancePage() {
       </div>
 
       <Card
-        className="slr-card--flush-body slr-card--preview"
+        className="logixfast-auth-card--flush-body logixfast-auth-card--preview"
         title={
-          <span className="slr-card-title-row">
-            <span className="slr-card-title-icon slr-card-title-icon--primary">
+          <span className="logixfast-auth-card-title-row">
+            <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--primary">
               <Icon icon={Eye} size={18} />
             </span>
             Live preview
           </span>
         }
         description="Switch login/register, popup vs dedicated page, and device size. Use fullscreen for a closer look."
-        bodyClassName="slr-card-body--flush"
+        bodyClassName="logixfast-auth-card-body--flush"
       >
-        <div className="slr-appearance-preview-wrap">
+        <div className="logixfast-auth-appearance-preview-wrap">
           <AppearancePreview appearance={a} />
         </div>
       </Card>

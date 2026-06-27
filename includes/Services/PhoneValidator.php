@@ -2,10 +2,10 @@
 /**
  * International phone validation.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 use WP_Error;
 
@@ -41,11 +41,11 @@ class PhoneValidator {
 		try {
 			$number = $util->parse( $phone, $region );
 		} catch ( \Exception $e ) {
-			return new WP_Error( 'slr_invalid_phone', __( 'Please enter a valid phone number.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_invalid_phone', __( 'Please enter a valid phone number.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( ! $util->isValidNumber( $number ) ) {
-			return new WP_Error( 'slr_invalid_phone', __( 'Please enter a valid phone number.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_invalid_phone', __( 'Please enter a valid phone number.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		return $util->format( $number, constant( self::LIB_FORMAT . '::E164' ) );
@@ -61,7 +61,7 @@ class PhoneValidator {
 		$phone = preg_replace( '/[^\d+]/', '', $phone );
 
 		if ( strlen( $phone ) < 8 ) {
-			return new WP_Error( 'slr_invalid_phone', __( 'Please enter a valid phone number.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new WP_Error( 'logixfast_auth_invalid_phone', __( 'Please enter a valid phone number.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		return $phone;

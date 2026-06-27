@@ -2,19 +2,19 @@
 /**
  * OTP REST endpoints.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Services\AuthService;
-use SLR\Services\RedirectService;
-use SLR\Services\StatsService;
-use SLR\Services\OtpService;
-use SLR\Services\PendingRegistrationService;
-use SLR\Services\RateLimiter;
-use SLR\Services\SpamProtection;
-use SLR\Settings;
+use LogixFastAuth\Services\AuthService;
+use LogixFastAuth\Services\RedirectService;
+use LogixFastAuth\Services\StatsService;
+use LogixFastAuth\Services\OtpService;
+use LogixFastAuth\Services\PendingRegistrationService;
+use LogixFastAuth\Services\RateLimiter;
+use LogixFastAuth\Services\SpamProtection;
+use LogixFastAuth\Settings;
 use WP_REST_Server;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -33,22 +33,22 @@ class OtpController {
 	 */
 	public function register_routes() {
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/otp/send',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'send' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => '__return_true', // Public OTP request endpoint; guarded by identifier/IP rate limiting.
 			)
 		);
 
 		register_rest_route(
-			'slr/v1',
+			'logixfast-auth/v1',
 			'/otp/verify',
 			array(
 				'methods'             => WP_REST_Server::CREATABLE,
 				'callback'            => array( $this, 'verify' ),
-				'permission_callback' => '__return_true',
+				'permission_callback' => '__return_true', // Public OTP verification endpoint; requires matching hashed code/session state.
 			)
 		);
 	}
@@ -240,32 +240,32 @@ class OtpController {
 	 */
 	private function validate_request_context( $identifier, $channel, $purpose, $pending_token = '' ) {
 		if ( ! in_array( $channel, array( 'email', 'phone' ), true ) ) {
-			return new \WP_Error( 'slr_invalid_channel', __( 'Invalid verification channel.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'logixfast_auth_invalid_channel', __( 'Invalid verification channel.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( ! in_array( $purpose, array( 'register', 'login', 'reset' ), true ) ) {
-			return new \WP_Error( 'slr_invalid_purpose', __( 'Invalid verification request.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'logixfast_auth_invalid_purpose', __( 'Invalid verification request.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( empty( $identifier ) ) {
-			return new \WP_Error( 'slr_missing_identifier', __( 'Email or phone is required.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'logixfast_auth_missing_identifier', __( 'Email or phone is required.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( 'email' === $channel && ! is_email( $identifier ) ) {
-			return new \WP_Error( 'slr_invalid_email', __( 'Please enter a valid email address.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'logixfast_auth_invalid_email', __( 'Please enter a valid email address.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		if ( 'register' === $purpose && empty( $pending_token ) ) {
-			return new \WP_Error( 'slr_missing_pending_token', __( 'Registration session expired. Please sign up again.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'logixfast_auth_missing_pending_token', __( 'Registration session expired. Please sign up again.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$auth = Settings::get( 'auth' );
 		if ( 'login' === $purpose && empty( $auth['otp_login_enabled'] ) ) {
-			return new \WP_Error( 'slr_otp_login_disabled', __( 'Code login is not available.', 'smart-login-registration' ), array( 'status' => 403 ) );
+			return new \WP_Error( 'logixfast_auth_otp_login_disabled', __( 'Code login is not available.', 'logixfast-auth' ), array( 'status' => 403 ) );
 		}
 
 		if ( 'phone' === $channel && empty( $auth['phone_otp_enabled'] ) ) {
-			return new \WP_Error( 'slr_phone_otp_disabled', __( 'Phone verification is not available.', 'smart-login-registration' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'logixfast_auth_phone_otp_disabled', __( 'Phone verification is not available.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		return true;

@@ -37,10 +37,10 @@ export function SmsPage() {
             description="Add a provider with the snippet below. Your class must implement SmsProviderInterface."
           />
         ) : (
-          <div className="slr-provider-list">
+          <div className="logixfast-auth-provider-list">
             {providers.map((p) => (
-              <div key={p.name} className="slr-provider-item">
-                <div className="slr-provider-item-info">
+              <div key={p.name} className="logixfast-auth-provider-item">
+                <div className="logixfast-auth-provider-item-info">
                   <Icon icon={Smartphone} size={18} />
                   <strong>{p.name}</strong>
                 </div>
@@ -52,8 +52,8 @@ export function SmsPage() {
       </Card>
 
       <Card title="Register a provider" description="Add to functions.php or a small mu-plugin.">
-        <pre className="slr-code">
-{`add_filter( 'slr_sms_providers', function( $providers ) {
+        <pre className="logixfast-auth-code">
+{`add_filter( 'logixfast_auth_sms_providers', function( $providers ) {
     require_once __DIR__ . '/MySmsProvider.php';
     $providers[] = new My_Sms_Provider();
     return $providers;

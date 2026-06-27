@@ -3,12 +3,12 @@
 @use 'components';
 
 /* Reset spacing WP admin adds */
-#slr-admin-root {
+#logixfast-auth-admin-root {
   margin: 0;
 }
 
-/* Hide native select styles inside SLR app */
-.slr-app select.slr-input,
-.slr-app input.slr-input {
+/* Hide native select styles inside LogixFastAuth app */
+.logixfast-auth-app select.logixfast-auth-input,
+.logixfast-auth-app input.logixfast-auth-input {
   appearance: none;
 }

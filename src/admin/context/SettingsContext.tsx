@@ -1,15 +1,15 @@
 import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode } from 'react';
-import type { SlrSettings } from '@shared/types';
+import type { LogixFastAuthSettings } from '@shared/types';
 import { fetchSettings, saveSettings as apiSave } from '../api/settings';
 import { useToast } from '../ui/Toaster';
 
 interface SettingsContextValue {
-  settings: SlrSettings | null;
+  settings: LogixFastAuthSettings | null;
   loading: boolean;
   saving: boolean;
   dirty: boolean;
   error: string;
-  updateSection: <K extends keyof SlrSettings>(section: K, data: Partial<SlrSettings[K]>) => void;
+  updateSection: <K extends keyof LogixFastAuthSettings>(section: K, data: Partial<LogixFastAuthSettings[K]>) => void;
   save: () => Promise<void>;
   reset: () => void;
   reload: () => Promise<void>;
@@ -18,15 +18,15 @@ interface SettingsContextValue {
 const SettingsContext = createContext<SettingsContextValue | null>(null);
 
 export function SettingsProvider({ children }: { children: ReactNode }) {
-  const [settings, setSettings] = useState<SlrSettings | null>(null);
-  const [originalSettings, setOriginalSettings] = useState<SlrSettings | null>(null);
+  const [settings, setSettings] = useState<LogixFastAuthSettings | null>(null);
+  const [originalSettings, setOriginalSettings] = useState<LogixFastAuthSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [dirty, setDirty] = useState(false);
   const toast = useToast();
   const initialLoad = useRef(true);
-  const settingsRef = useRef<SlrSettings | null>(null);
+  const settingsRef = useRef<LogixFastAuthSettings | null>(null);
 
   useEffect(() => {
     settingsRef.current = settings;
@@ -48,7 +48,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
       });
   }, [toast]);
 
-  const updateSection = useCallback(<K extends keyof SlrSettings>(section: K, data: Partial<SlrSettings[K]>) => {
+  const updateSection = useCallback(<K extends keyof LogixFastAuthSettings>(section: K, data: Partial<LogixFastAuthSettings[K]>) => {
     setSettings((prev) => {
       if (!prev) return prev;
       const next = { ...prev, [section]: { ...prev[section], ...data } };
@@ -57,7 +57,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     setDirty(true);
   }, []);
 
-  const persistSettings = useCallback(async (next: SlrSettings, message = 'Settings updated') => {
+  const persistSettings = useCallback(async (next: LogixFastAuthSettings, message = 'Settings updated') => {
     setSaving(true);
     setError('');
     try {

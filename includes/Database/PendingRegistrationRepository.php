@@ -2,12 +2,12 @@
 /**
  * Pending registration storage (before OTP verification).
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Database; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Database; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Activator;
+use LogixFastAuth\Activator;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -26,7 +26,7 @@ class PendingRegistrationRepository {
 	 */
 	private function table() {
 		global $wpdb;
-		return $wpdb->prefix . 'slr_pending_registrations';
+		return $wpdb->prefix . 'logixfast_auth_pending_registrations';
 	}
 
 	/**
@@ -169,7 +169,7 @@ class PendingRegistrationRepository {
 		}
 
 		foreach ( $rows as $row ) {
-			if ( \SLR\Services\PendingRegistrationService::is_expired( $row->expires_at ) ) {
+			if ( \LogixFastAuth\Services\PendingRegistrationService::is_expired( $row->expires_at ) ) {
 				$wpdb->delete( $this->table(), array( 'id' => (int) $row->id ), array( '%d' ) );
 			}
 		}

@@ -2,7 +2,7 @@
 /**
  * Runs when the plugin is deleted from WordPress admin.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -13,14 +13,14 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 	exit;
 }
 
-if ( ! file_exists( dirname( __FILE__ ) . '/includes/Services/class-slr-uninstall-service.php' ) ) {
+if ( ! file_exists( dirname( __FILE__ ) . '/includes/Services/class-logixfast-auth-uninstall-service.php' ) ) {
 	return;
 }
 
-require_once dirname( __FILE__ ) . '/includes/Services/class-slr-uninstall-service.php';
+require_once dirname( __FILE__ ) . '/includes/Services/class-logixfast-auth-uninstall-service.php';
 
-if ( ! \SLR\Services\UninstallService::should_purge_data() ) {
+if ( ! \LogixFastAuth\Services\UninstallService::should_purge_data() ) {
 	return;
 }
 
-\SLR\Services\UninstallService::purge_all_data();
+\LogixFastAuth\Services\UninstallService::purge_all_data();

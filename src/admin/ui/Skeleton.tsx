@@ -13,7 +13,7 @@ export function Skeleton({ variant = 'text', width, height, count = 1 }: Skeleto
   return (
     <>
       {Array.from({ length: count }).map((_, i) => (
-        <span key={i} className={`slr-skeleton slr-skeleton--${variant}`} style={style} />
+        <span key={i} className={`logixfast-auth-skeleton logixfast-auth-skeleton--${variant}`} style={style} />
       ))}
     </>
   );
@@ -21,8 +21,8 @@ export function Skeleton({ variant = 'text', width, height, count = 1 }: Skeleto
 
 export function SkeletonCard() {
   return (
-    <div className="slr-card">
-      <div className="slr-card-body">
+    <div className="logixfast-auth-card">
+      <div className="logixfast-auth-card-body">
         <Skeleton variant="title" />
         <Skeleton variant="text" count={3} />
       </div>

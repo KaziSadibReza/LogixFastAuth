@@ -2,12 +2,12 @@
 /**
  * WooCommerce login replacement.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Settings;
+use LogixFastAuth\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -61,7 +61,7 @@ class WooCommerce_Login {
 	}
 
 	/**
-	 * Redirect logged-out My Account visitors to the SLR dedicated login page.
+	 * Redirect logged-out My Account visitors to the LogixFastAuth dedicated login page.
 	 *
 	 * @return void
 	 */
@@ -89,7 +89,7 @@ class WooCommerce_Login {
 	}
 
 	/**
-	 * Swap WooCommerce login templates for SLR when no redirect applies.
+	 * Swap WooCommerce login templates for LogixFastAuth when no redirect applies.
 	 *
 	 * @param string $template      Template path.
 	 * @param string $template_name Template name.
@@ -106,20 +106,20 @@ class WooCommerce_Login {
 				return $template;
 			}
 
-			$slr_template = SLR_PLUGIN_DIR . 'templates/woocommerce-myaccount-login-replace.php';
-			return file_exists( $slr_template ) ? $slr_template : $template;
+			$logixfast_auth_template = LOGIXFAST_AUTH_PLUGIN_DIR . 'templates/woocommerce-myaccount-login-replace.php';
+			return file_exists( $logixfast_auth_template ) ? $logixfast_auth_template : $template;
 		}
 
 		if ( 'checkout/form-login.php' === $template_name ) {
-			$slr_template = SLR_PLUGIN_DIR . 'templates/woocommerce-checkout-login-replace.php';
-			return file_exists( $slr_template ) ? $slr_template : $template;
+			$logixfast_auth_template = LOGIXFAST_AUTH_PLUGIN_DIR . 'templates/woocommerce-checkout-login-replace.php';
+			return file_exists( $logixfast_auth_template ) ? $logixfast_auth_template : $template;
 		}
 
 		return $template;
 	}
 
 	/**
-	 * Disable native WooCommerce registration on My Account when SLR is active.
+	 * Disable native WooCommerce registration on My Account when LogixFastAuth is active.
 	 *
 	 * @param bool $enabled Whether registration is enabled.
 	 * @return bool
@@ -133,15 +133,15 @@ class WooCommerce_Login {
 	}
 
 	/**
-	 * Output SLR login embed for WooCommerce surfaces.
+	 * Output LogixFastAuth login embed for WooCommerce surfaces.
 	 *
 	 * @return void
 	 */
 	public static function render_login_embed() {
-		\SLR\Frontend\Frontend_Assets::enqueue_all( 'page' );
+		\LogixFastAuth\Frontend\Frontend_Assets::enqueue_all( 'page' );
 		?>
-		<div class="slr-wc-login-replace-wrap">
-			<div id="slr-root" data-mode="page"></div>
+		<div class="logixfast-auth-wc-login-replace-wrap">
+			<div id="logixfast-auth-root" data-mode="page"></div>
 		</div>
 		<?php
 	}

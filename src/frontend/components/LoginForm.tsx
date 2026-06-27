@@ -1,23 +1,23 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { ArrowRight, Eye, EyeOff, KeyRound, Lock, Mail, ShieldCheck } from 'lucide-react';
 import { login, webauthnLogin } from '../api/auth';
-import { SlrCountryPhone } from './SlrCountryPhone';
-import { SlrField } from './SlrField';
-import { SlrInput } from './SlrInput';
-import { SlrOtpChannelToggle, type OtpChannel } from './SlrOtpChannelToggle';
-import { useSlrToast } from './SlrToaster';
+import { LogixFastAuthCountryPhone } from './LogixFastAuthCountryPhone';
+import { LogixFastAuthField } from './LogixFastAuthField';
+import { LogixFastAuthInput } from './LogixFastAuthInput';
+import { LogixFastAuthOtpChannelToggle, type OtpChannel } from './LogixFastAuthOtpChannelToggle';
+import { useLogixFastAuthToast } from './LogixFastAuthToaster';
 import {
   mapApiErrorToLoginFields,
   validateLoginFields,
   type FieldErrors,
   type LoginField,
 } from '../utils/formErrors';
-import type { SlrConfig } from '@shared/types';
+import type { LogixFastAuthConfig } from '@shared/types';
 import { loadFormSession, saveFormSession } from '../utils/formStorage';
 import type { AuthRedirectResult } from '../utils/redirect';
 
 interface LoginFormProps {
-  config: SlrConfig;
+  config: LogixFastAuthConfig;
   onOtpRequired: (identifier: string, channel: string) => void;
   onForgotPassword: () => void;
   onSuccess: (result: AuthRedirectResult) => void;
@@ -26,11 +26,11 @@ interface LoginFormProps {
 
 type LoginMode = 'password' | 'otp';
 
-function canUseOtpLogin(config: SlrConfig): boolean {
+function canUseOtpLogin(config: LogixFastAuthConfig): boolean {
   return config.auth.otpLogin;
 }
 
-function canUsePhoneOtpLogin(config: SlrConfig): boolean {
+function canUsePhoneOtpLogin(config: LogixFastAuthConfig): boolean {
   return config.auth.otpLogin && config.auth.phoneOtp;
 }
 
@@ -41,7 +41,7 @@ export function LoginForm({
   onSuccess,
   passwordAutoComplete = 'current-password',
 }: LoginFormProps) {
-  const toast = useSlrToast();
+  const toast = useLogixFastAuthToast();
   const otpLoginAvailable = canUseOtpLogin(config);
   const phoneOtpAvailable = canUsePhoneOtpLogin(config);
   const emailOtpAvailable = otpLoginAvailable;
@@ -107,7 +107,7 @@ export function LoginForm({
 		...(identifier.includes('@') ? { email: identifier } : { phone: identifier }),
 		password,
 		remember,
-		slr_hp: '',
+		logixfast_auth_hp: '',
 	  });
       if (result.requiresOtp) {
         onOtpRequired(email, result.otpChannel || 'email');
@@ -146,7 +146,7 @@ export function LoginForm({
         phone: activeChannel === 'phone' ? phone : undefined,
         channel: activeChannel,
         remember,
-        slr_hp: '',
+        logixfast_auth_hp: '',
       });
 
       if (result.requiresOtp) {
@@ -186,20 +186,20 @@ export function LoginForm({
   if (loginMode === 'otp' && otpLoginAvailable) {
     return (
       <form onSubmit={handleOtpLoginSubmit} noValidate>
-        <div className="slr-otp-login-header">
-          <span className="slr-otp-login-icon" aria-hidden="true">
+        <div className="logixfast-auth-otp-login-header">
+          <span className="logixfast-auth-otp-login-icon" aria-hidden="true">
             <ShieldCheck size={22} strokeWidth={2} />
           </span>
           <div>
-            <h3 className="slr-otp-login-title">{config.i18n.otpLoginTitle || 'Sign in with code'}</h3>
-            <p className="slr-otp-login-subtitle">
+            <h3 className="logixfast-auth-otp-login-title">{config.i18n.otpLoginTitle || 'Sign in with code'}</h3>
+            <p className="logixfast-auth-otp-login-subtitle">
               {config.i18n.otpLoginSubtitle || 'We will send a 6-digit code to verify it is you.'}
             </p>
           </div>
         </div>
 
         {showChannelPicker && (
-          <SlrOtpChannelToggle
+          <LogixFastAuthOtpChannelToggle
             channel={otpChannel}
             emailLabel={config.i18n.otpChannelEmail || 'Email'}
             phoneLabel={config.i18n.otpChannelPhone || 'Phone'}
@@ -208,9 +208,9 @@ export function LoginForm({
         )}
 
         {(showChannelPicker ? otpChannel === 'email' : emailOtpAvailable) ? (
-          <SlrField label={config.i18n.email} htmlFor="slr-login-otp-email" required hasError={fieldErrors.email}>
-            <SlrInput
-              id="slr-login-otp-email"
+          <LogixFastAuthField label={config.i18n.email} htmlFor="logixfast-auth-login-otp-email" required hasError={fieldErrors.email}>
+            <LogixFastAuthInput
+              id="logixfast-auth-login-otp-email"
               icon={Mail}
               type="email"
               value={email}
@@ -224,9 +224,9 @@ export function LoginForm({
               placeholder="you@example.com"
               hasError={fieldErrors.email}
             />
-          </SlrField>
+          </LogixFastAuthField>
         ) : (
-          <SlrCountryPhone
+          <LogixFastAuthCountryPhone
             label={config.i18n.phone}
             value={phone}
             onChange={setPhone}
@@ -235,25 +235,25 @@ export function LoginForm({
             hasError={fieldErrors.email}
           />
         )}
-        <div className="slr-otp-actions flex-column">
+        <div className="logixfast-auth-otp-actions flex-column">
 
-        <button type="submit" className="slr-btn slr-btn--primary" disabled={loading}>
+        <button type="submit" className="logixfast-auth-btn logixfast-auth-btn--primary" disabled={loading}>
           {loading ? (
             <>
-              <span className="slr-loading-spinner" aria-hidden="true" />
+              <span className="logixfast-auth-loading-spinner" aria-hidden="true" />
               {config.i18n.loading}
             </>
           ) : (
             <>
               {config.i18n.sendLoginCode || 'Send verification code'}
-              <ArrowRight size={18} className="slr-btn-arrow" aria-hidden="true" />
+              <ArrowRight size={18} className="logixfast-auth-btn-arrow" aria-hidden="true" />
             </>
           )}
         </button>
 
         <button
           type="button"
-          className="slr-btn slr-btn--ghost"
+          className="logixfast-auth-btn logixfast-auth-btn--ghost"
           onClick={() => {
             setLoginMode('password');
             setFieldErrors({});
@@ -269,9 +269,9 @@ export function LoginForm({
 
   return (
     <form onSubmit={handlePasswordSubmit} noValidate>
-	  <SlrField label={config.i18n.emailOrPhone || 'Email or phone number'} htmlFor="slr-login-email" required hasError={fieldErrors.email}>
-        <SlrInput
-          id="slr-login-email"
+	  <LogixFastAuthField label={config.i18n.emailOrPhone || 'Email or phone number'} htmlFor="logixfast-auth-login-email" required hasError={fieldErrors.email}>
+        <LogixFastAuthInput
+          id="logixfast-auth-login-email"
           icon={Mail}
 		  type="text"
           value={email}
@@ -285,11 +285,11 @@ export function LoginForm({
 		  placeholder="you@example.com or +8801XXXXXXXXX"
           hasError={fieldErrors.email}
         />
-      </SlrField>
+      </LogixFastAuthField>
 
-      <SlrField label={config.i18n.password} htmlFor="slr-login-password" required hasError={fieldErrors.password}>
-        <SlrInput
-          id="slr-login-password"
+      <LogixFastAuthField label={config.i18n.password} htmlFor="logixfast-auth-login-password" required hasError={fieldErrors.password}>
+        <LogixFastAuthInput
+          id="logixfast-auth-login-password"
           icon={Lock}
           type={showPassword ? 'text' : 'password'}
           value={password}
@@ -305,7 +305,7 @@ export function LoginForm({
           suffix={
             <button
               type="button"
-              className="slr-input-action"
+              className="logixfast-auth-input-action"
               onClick={() => setShowPassword((v) => !v)}
               aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
@@ -313,40 +313,40 @@ export function LoginForm({
             </button>
           }
         />
-      </SlrField>
+      </LogixFastAuthField>
 
-      <div className="slr-login-meta">
-        <label className="slr-checkbox-row">
+      <div className="logixfast-auth-login-meta">
+        <label className="logixfast-auth-checkbox-row">
           <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)} />
           {config.i18n.remember || 'Remember me'}
         </label>
-        <button type="button" className="slr-link-btn" onClick={onForgotPassword}>
+        <button type="button" className="logixfast-auth-link-btn" onClick={onForgotPassword}>
           {config.i18n.forgotPassword || 'Forgot password?'}
         </button>
       </div>
 
-      <input type="text" name="slr_hp" className="slr-hp" tabIndex={-1} autoComplete="off" aria-hidden="true" />
+      <input type="text" name="logixfast_auth_hp" className="logixfast-auth-hp" tabIndex={-1} autoComplete="off" aria-hidden="true" />
 
-      <button type="submit" className="slr-btn slr-btn--primary" disabled={loading}>
+      <button type="submit" className="logixfast-auth-btn logixfast-auth-btn--primary" disabled={loading}>
         {loading ? (
           <>
-            <span className="slr-loading-spinner" aria-hidden="true" />
+            <span className="logixfast-auth-loading-spinner" aria-hidden="true" />
             {config.i18n.loading}
           </>
         ) : (
           <>
             {config.i18n.submitLogin}
-            <ArrowRight size={18} className="slr-btn-arrow" aria-hidden="true" />
+            <ArrowRight size={18} className="logixfast-auth-btn-arrow" aria-hidden="true" />
           </>
         )}
       </button>
 
       {otpLoginAvailable && (
         <>
-          <div className="slr-divider">{config.i18n.or}</div>
+          <div className="logixfast-auth-divider">{config.i18n.or}</div>
           <button
             type="button"
-            className="slr-btn slr-btn--ghost slr-btn--otp-login"
+            className="logixfast-auth-btn logixfast-auth-btn--ghost logixfast-auth-btn--otp-login"
             onClick={() => {
               setLoginMode('otp');
               setFieldErrors({});
@@ -363,11 +363,11 @@ export function LoginForm({
 
       {config.auth.webauthn && (
         <>
-          <div className="slr-divider">{config.i18n.or}</div>
-          <button type="button" className="slr-btn slr-btn--ghost" onClick={handlePasskey} disabled={passkeyLoading || loading}>
+          <div className="logixfast-auth-divider">{config.i18n.or}</div>
+          <button type="button" className="logixfast-auth-btn logixfast-auth-btn--ghost" onClick={handlePasskey} disabled={passkeyLoading || loading}>
             {passkeyLoading ? (
               <>
-                <span className="slr-loading-spinner" aria-hidden="true" />
+                <span className="logixfast-auth-loading-spinner" aria-hidden="true" />
                 {config.i18n.loading}
               </>
             ) : (

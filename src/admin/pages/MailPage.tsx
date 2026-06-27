@@ -98,7 +98,7 @@ export function MailPage() {
   const smtpConflicts = settings.mail_smtp_conflicts ?? [];
   const showConflictNotice = !conflictDismissed && smtpConflicts.length > 0;
   const conflictNames = smtpConflicts.map((plugin) => plugin.name).join(', ');
-  const usingSlrSmtp = m.transport === 'smtp' || m.transport === 'google';
+  const usingLogixFastAuthSmtp = m.transport === 'smtp' || m.transport === 'google';
 
   const transportBadge =
     m.transport === 'wp_mail'
@@ -167,21 +167,21 @@ export function MailPage() {
     <>
       {showConflictNotice && (
         <NoticeBanner
-          variant={usingSlrSmtp ? 'warning' : 'info'}
-          title={usingSlrSmtp ? 'Another SMTP plugin is active' : 'SMTP handled by another plugin'}
+          variant={usingLogixFastAuthSmtp ? 'warning' : 'info'}
+          title={usingLogixFastAuthSmtp ? 'Another SMTP plugin is active' : 'SMTP handled by another plugin'}
           onDismiss={() => setConflictDismissed(true)}
         >
-          {usingSlrSmtp ? (
+          {usingLogixFastAuthSmtp ? (
             <>
               <p>
                 <strong>{conflictNames}</strong> may also configure <code>wp_mail()</code>. Running two SMTP
                 handlers can cause duplicate or failed delivery.
               </p>
-              <p>Disable the other plugin or switch SLR to <strong>WordPress mail</strong> to avoid conflicts.</p>
+              <p>Disable the other plugin or switch LogixFastAuth to <strong>WordPress mail</strong> to avoid conflicts.</p>
             </>
           ) : (
             <p>
-              <strong>{conflictNames}</strong> is active, so site email is likely routed through that plugin. SLR is
+              <strong>{conflictNames}</strong> is active, so site email is likely routed through that plugin. LogixFastAuth is
               currently set to <strong>WordPress mail</strong>.
             </p>
           )}
@@ -189,21 +189,21 @@ export function MailPage() {
       )}
 
       <Card
-        className="slr-card--flush-body"
+        className="logixfast-auth-card--flush-body"
         title={
-          <span className="slr-card-title-row">
-            <span className="slr-card-title-icon slr-card-title-icon--primary">
+          <span className="logixfast-auth-card-title-row">
+            <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--primary">
               <Icon icon={Zap} size={18} />
             </span>
             Delivery method
           </span>
         }
-        description="Choose how this site sends email — SLR OTPs, WooCommerce, WordPress, and other plugins."
+        description="Choose how this site sends email — LogixFastAuth OTPs, WooCommerce, WordPress, and other plugins."
         actions={<Badge variant={transportBadge.variant} dot>{transportBadge.label}</Badge>}
-        bodyClassName="slr-card-body--flush"
+        bodyClassName="logixfast-auth-card-body--flush"
       >
-        <div className="slr-mail-transport-panel">
-          <div className="slr-transport-cards">
+        <div className="logixfast-auth-mail-transport-panel">
+          <div className="logixfast-auth-transport-cards">
             {transports.map((item) => (
               <TransportIconCard
                 key={item.value}
@@ -219,8 +219,8 @@ export function MailPage() {
           </div>
 
           {m.transport === 'smtp' && (
-            <div className="slr-mail-transport-config">
-              <div className="slr-form-grid slr-form-grid--tight">
+            <div className="logixfast-auth-mail-transport-config">
+              <div className="logixfast-auth-form-grid logixfast-auth-form-grid--tight">
                 <Field label="SMTP host" required>
                   <Input
                     value={m.smtp_host}
@@ -265,13 +265,13 @@ export function MailPage() {
           )}
 
           {m.transport === 'google' && (
-            <div className="slr-mail-transport-config slr-mail-google-panel">
-              <div className="slr-mail-google-columns">
-                <div className="slr-mail-google-credentials">
-                  <div className="slr-integration-panel-head slr-integration-panel-head--with-help">
+            <div className="logixfast-auth-mail-transport-config logixfast-auth-mail-google-panel">
+              <div className="logixfast-auth-mail-google-columns">
+                <div className="logixfast-auth-mail-google-credentials">
+                  <div className="logixfast-auth-integration-panel-head logixfast-auth-integration-panel-head--with-help">
                     <div>
-                      <h4 className="slr-integration-panel-title">Google OAuth credentials</h4>
-                      <p className="slr-integration-panel-desc">
+                      <h4 className="logixfast-auth-integration-panel-title">Google OAuth credentials</h4>
+                      <p className="logixfast-auth-integration-panel-desc">
                         Create a Google Cloud OAuth app once, then connect with one click.
                       </p>
                     </div>
@@ -279,7 +279,7 @@ export function MailPage() {
                       <GoogleOAuthSetupGuide />
                     </HelpTooltip>
                   </div>
-                  <div className="slr-form-stack">
+                  <div className="logixfast-auth-form-stack">
                     <Field label="Client ID" required>
                       <Input
                         value={m.google_client_id ?? ''}
@@ -304,17 +304,17 @@ export function MailPage() {
                   </div>
                 </div>
 
-                <div className="slr-mail-google-divider" aria-hidden="true" />
+                <div className="logixfast-auth-mail-google-divider" aria-hidden="true" />
 
-                <div className="slr-mail-google-connect">
+                <div className="logixfast-auth-mail-google-connect">
                   {m.google_connected ? (
-                    <div className="slr-google-connected-card">
-                      <div className="slr-google-connected-card__icon">
+                    <div className="logixfast-auth-google-connected-card">
+                      <div className="logixfast-auth-google-connected-card__icon">
                         <GoogleIcon size={28} />
                       </div>
-                      <div className="slr-google-connected-card__body">
+                      <div className="logixfast-auth-google-connected-card__body">
                         <strong>Connected to Google</strong>
-                        <div className="slr-google-connected-card__meta">
+                        <div className="logixfast-auth-google-connected-card__meta">
                           <span>{m.google_account_email || m.from_email}</span>
                           <Badge variant="success" dot>
                             Active
@@ -326,8 +326,8 @@ export function MailPage() {
                       </Button>
                     </div>
                   ) : (
-                    <div className="slr-google-connect-card">
-                      <div className="slr-google-connect-card__icon">
+                    <div className="logixfast-auth-google-connect-card">
+                      <div className="logixfast-auth-google-connect-card__icon">
                         <GoogleIcon size={32} />
                       </div>
                       <h4>Connect Gmail in one click</h4>
@@ -349,11 +349,11 @@ export function MailPage() {
         </div>
       </Card>
 
-      <div className="slr-page-columns slr-page-columns--split">
+      <div className="logixfast-auth-page-columns logixfast-auth-page-columns--split">
         <Card
           title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon">
+            <span className="logixfast-auth-card-title-row">
+              <span className="logixfast-auth-card-title-icon">
                 <Icon icon={UserCircle} size={18} />
               </span>
               Sender identity
@@ -361,7 +361,7 @@ export function MailPage() {
           }
           description="How your messages appear in the inbox."
         >
-          <div className="slr-form-grid">
+          <div className="logixfast-auth-form-grid">
             <Field label="From email" required>
               <Input
                 type="email"
@@ -384,8 +384,8 @@ export function MailPage() {
 
         <Card
           title={
-            <span className="slr-card-title-row">
-              <span className="slr-card-title-icon slr-card-title-icon--success">
+            <span className="logixfast-auth-card-title-row">
+              <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--success">
                 <Icon icon={Send} size={18} />
               </span>
               Test delivery
@@ -393,8 +393,8 @@ export function MailPage() {
           }
           description={`Send a test to ${m.from_email || 'your From email'}.`}
         >
-          <div className="slr-mail-test-panel">
-            <p className="slr-mail-test-hint">
+          <div className="logixfast-auth-mail-test-panel">
+            <p className="logixfast-auth-mail-test-hint">
               Verifies your current transport settings before users receive OTP emails.
             </p>
             <Button variant="secondary" icon={Send} onClick={handleTest} loading={testing}>
@@ -405,20 +405,20 @@ export function MailPage() {
       </div>
 
       <Card
-        className="slr-card--flush-body"
+        className="logixfast-auth-card--flush-body"
         title={
-          <span className="slr-card-title-row">
-            <span className="slr-card-title-icon slr-card-title-icon--primary">
+          <span className="logixfast-auth-card-title-row">
+            <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--primary">
               <Icon icon={ShieldCheck} size={18} />
             </span>
             Email integrations
           </span>
         }
-        description="SLR features that send email through this delivery method."
-        bodyClassName="slr-card-body--flush"
+        description="LogixFastAuth features that send email through this delivery method."
+        bodyClassName="logixfast-auth-card-body--flush"
       >
-        <div className="slr-mail-integrations-panel">
-          <div className="slr-icon-card-grid slr-icon-card-grid--mail">
+        <div className="logixfast-auth-mail-integrations-panel">
+          <div className="logixfast-auth-icon-card-grid logixfast-auth-icon-card-grid--mail">
             <IntegrationIconCard
               icon={Mail}
               iconVariant="passkey"

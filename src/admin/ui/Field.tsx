@@ -13,15 +13,15 @@ interface FieldProps {
 export function Field({ label, htmlFor, help, error, required, children, inline }: FieldProps) {
   if (inline) {
     return (
-      <div className="slr-field slr-field--inline">
-        <div className="slr-field-text">
+      <div className="logixfast-auth-field logixfast-auth-field--inline">
+        <div className="logixfast-auth-field-text">
           {label && (
-            <div className="slr-field-label">
+            <div className="logixfast-auth-field-label">
               {label}
-              {required && <span className="slr-field-required" aria-hidden="true">*</span>}
+              {required && <span className="logixfast-auth-field-required" aria-hidden="true">*</span>}
             </div>
           )}
-          {help && <p className="slr-field-help">{help}</p>}
+          {help && <p className="logixfast-auth-field-help">{help}</p>}
         </div>
         {children}
       </div>
@@ -29,16 +29,16 @@ export function Field({ label, htmlFor, help, error, required, children, inline 
   }
 
   return (
-    <div className="slr-field">
+    <div className="logixfast-auth-field">
       {label && (
-        <label className="slr-field-label" htmlFor={htmlFor}>
+        <label className="logixfast-auth-field-label" htmlFor={htmlFor}>
           {label}
-          {required && <span className="slr-field-required" aria-hidden="true">*</span>}
+          {required && <span className="logixfast-auth-field-required" aria-hidden="true">*</span>}
         </label>
       )}
       {children}
-      {error && <p className="slr-field-error" role="alert">{error}</p>}
-      {!error && help && <p className="slr-field-help">{help}</p>}
+      {error && <p className="logixfast-auth-field-error" role="alert">{error}</p>}
+      {!error && help && <p className="logixfast-auth-field-help">{help}</p>}
     </div>
   );
 }

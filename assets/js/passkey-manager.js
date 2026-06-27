@@ -4,7 +4,7 @@
 (function () {
 	'use strict';
 
-	var cfg = window.SLR_PASSKEY_MANAGER;
+	var cfg = window.LOGIXFAST_AUTH_PASSKEY_MANAGER;
 	if (!cfg) {
 		return;
 	}
@@ -49,14 +49,14 @@
 	}
 
 	function initPasskeyManager(root) {
-		if (!root || root.dataset.slrPkReady === '1') {
+		if (!root || root.dataset.logixfastauthPkReady === '1') {
 			return;
 		}
 
-		var listEl = root.querySelector('.slr-pk-list');
-		var emptyEl = root.querySelector('.slr-pk-empty');
-		var addBtn = root.querySelector('.slr-pk-add');
-		var toastEl = root.querySelector('.slr-pk-toast');
+		var listEl = root.querySelector('.logixfast-auth-pk-list');
+		var emptyEl = root.querySelector('.logixfast-auth-pk-empty');
+		var addBtn = root.querySelector('.logixfast-auth-pk-add');
+		var toastEl = root.querySelector('.logixfast-auth-pk-toast');
 		var iconSvg = cfg.iconSvg || '';
 		var i18n = cfg.i18n || {};
 
@@ -64,7 +64,7 @@
 			return;
 		}
 
-		root.dataset.slrPkReady = '1';
+		root.dataset.logixfastauthPkReady = '1';
 
 		function iconMarkup() {
 			return iconSvg;
@@ -103,14 +103,14 @@
 			listEl.innerHTML = list
 				.map(function (pk, index) {
 					return (
-						'<div class="slr-pk-card" data-id="' +
+						'<div class="logixfast-auth-pk-card" data-id="' +
 						pk.id +
 						'">' +
-						'<div class="slr-pk-card-info">' +
-						'<div class="slr-pk-icon">' +
+						'<div class="logixfast-auth-pk-card-info">' +
+						'<div class="logixfast-auth-pk-icon">' +
 						iconMarkup() +
 						'</div>' +
-						'<div class="slr-pk-meta">' +
+						'<div class="logixfast-auth-pk-meta">' +
 						'<strong>' +
 						(i18n.passkeyLabel || 'Passkey') +
 						' ' +
@@ -125,7 +125,7 @@
 							? '<span>' + (i18n.lastUsed || 'Last used') + ': ' + fmtDate(pk.last_used_at) + '</span>'
 							: '') +
 						'</div></div>' +
-						'<button type="button" class="slr-pk-del" data-id="' +
+						'<button type="button" class="logixfast-auth-pk-del" data-id="' +
 						pk.id +
 						'">' +
 						(i18n.remove || 'Remove') +
@@ -137,7 +137,7 @@
 		}
 
 		function load() {
-			listEl.innerHTML = '<div class="slr-pk-loading">' + (i18n.loading || 'Loading…') + '</div>';
+			listEl.innerHTML = '<div class="logixfast-auth-pk-loading">' + (i18n.loading || 'Loading…') + '</div>';
 
 			fetch(cfg.apiUrl + 'webauthn/credentials', {
 				headers: { 'X-WP-Nonce': cfg.nonce },
@@ -148,7 +148,7 @@
 				})
 				.catch(function (err) {
 					listEl.innerHTML =
-						'<p class="slr-pk-error">' +
+						'<p class="logixfast-auth-pk-error">' +
 						(i18n.loadFailed || 'Failed to load passkeys:') +
 						' ' +
 						(err.message || 'error') +
@@ -157,7 +157,7 @@
 		}
 
 		listEl.addEventListener('click', function (event) {
-			var btn = event.target.closest('.slr-pk-del');
+			var btn = event.target.closest('.logixfast-auth-pk-del');
 			if (!btn) {
 				return;
 			}
@@ -290,7 +290,7 @@
 	}
 
 	function boot() {
-		var roots = document.querySelectorAll('.slr-passkey-manager');
+		var roots = document.querySelectorAll('.logixfast-auth-passkey-manager');
 		for (var i = 0; i < roots.length; i++) {
 			initPasskeyManager(roots[i]);
 		}

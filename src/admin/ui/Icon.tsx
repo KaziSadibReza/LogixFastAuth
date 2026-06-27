@@ -8,5 +8,5 @@ interface IconProps {
 }
 
 export function Icon({ icon: Lucide, size = 18, className = '', strokeWidth = 2 }: IconProps) {
-  return <Lucide size={size} strokeWidth={strokeWidth} className={`slr-icon ${className}`.trim()} aria-hidden="true" />;
+  return <Lucide size={size} strokeWidth={strokeWidth} className={`logixfast-auth-icon ${className}`.trim()} aria-hidden="true" />;
 }

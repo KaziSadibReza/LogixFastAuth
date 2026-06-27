@@ -1,20 +1,20 @@
-import type { SlrMode } from '@shared/types';
+import type { LogixFastAuthMode } from '@shared/types';
 
-const FORM_STORAGE_KEY = 'slr_form_session';
-const SECURE_STORAGE_KEY = 'slr_secure_session';
+const FORM_STORAGE_KEY = 'logixfast_auth_form_session';
+const SECURE_STORAGE_KEY = 'logixfast_auth_secure_session';
 
 export type OtpPurpose = 'register' | 'login' | 'reset';
 
-export interface SlrOtpSession {
+export interface LogixFastAuthOtpSession {
   identifier: string;
   channel: string;
   pendingToken?: string;
   purpose: OtpPurpose;
-  mode: SlrMode;
+  mode: LogixFastAuthMode;
   expiresAt: number;
 }
 
-export interface SlrFormSession {
+export interface LogixFastAuthFormSession {
   loginEmail: string;
   register: {
     fullName: string;
@@ -28,18 +28,18 @@ export interface SlrFormSession {
   };
 }
 
-interface SlrSecureSession {
-  otp: SlrOtpSession | null;
+interface LogixFastAuthSecureSession {
+  otp: LogixFastAuthOtpSession | null;
   resetToken: string;
 }
 
-const defaultFormSession = (): SlrFormSession => ({
+const defaultFormSession = (): LogixFastAuthFormSession => ({
   loginEmail: '',
   register: { fullName: '', email: '', phone: '' },
   forgot: { email: '', phone: '', usePhone: false },
 });
 
-const defaultSecureSession = (): SlrSecureSession => ({
+const defaultSecureSession = (): LogixFastAuthSecureSession => ({
   otp: null,
   resetToken: '',
 });
@@ -69,17 +69,17 @@ function writeStorage<T>(key: string, storage: Storage, value: T): void {
   storage.setItem(key, JSON.stringify(value));
 }
 
-function loadSecureSession(): SlrSecureSession {
+function loadSecureSession(): LogixFastAuthSecureSession {
   return readStorage(SECURE_STORAGE_KEY, window.sessionStorage, defaultSecureSession);
 }
 
-function saveSecureSession(patch: Partial<SlrSecureSession>): SlrSecureSession {
+function saveSecureSession(patch: Partial<LogixFastAuthSecureSession>): LogixFastAuthSecureSession {
   const next = { ...loadSecureSession(), ...patch };
   writeStorage(SECURE_STORAGE_KEY, window.sessionStorage, next);
   return next;
 }
 
-export function loadFormSession(): SlrFormSession & SlrSecureSession {
+export function loadFormSession(): LogixFastAuthFormSession & LogixFastAuthSecureSession {
   const form = readStorage(FORM_STORAGE_KEY, window.localStorage, defaultFormSession);
   const secure = typeof window === 'undefined' ? defaultSecureSession() : loadSecureSession();
 
@@ -92,7 +92,7 @@ export function loadFormSession(): SlrFormSession & SlrSecureSession {
   };
 }
 
-export function saveFormSession(patch: Partial<SlrFormSession & SlrSecureSession>): SlrFormSession & SlrSecureSession {
+export function saveFormSession(patch: Partial<LogixFastAuthFormSession & LogixFastAuthSecureSession>): LogixFastAuthFormSession & LogixFastAuthSecureSession {
   const current = loadFormSession();
   const next = { ...current, ...patch };
 
@@ -118,11 +118,11 @@ export function saveFormSession(patch: Partial<SlrFormSession & SlrSecureSession
   return next;
 }
 
-export function saveOtpSession(session: SlrOtpSession | null): void {
+export function saveOtpSession(session: LogixFastAuthOtpSession | null): void {
   saveSecureSession({ otp: session });
 }
 
-export function getActiveOtpSession(): SlrOtpSession | null {
+export function getActiveOtpSession(): LogixFastAuthOtpSession | null {
   const { otp } = loadSecureSession();
   if (!otp || otp.expiresAt <= Date.now()) {
     if (otp) {
@@ -133,7 +133,7 @@ export function getActiveOtpSession(): SlrOtpSession | null {
   return otp;
 }
 
-export function getActiveOtpSessionForPurpose(purpose: OtpPurpose): SlrOtpSession | null {
+export function getActiveOtpSessionForPurpose(purpose: OtpPurpose): LogixFastAuthOtpSession | null {
   const session = getActiveOtpSession();
   return session?.purpose === purpose ? session : null;
 }

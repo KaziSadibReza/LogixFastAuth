@@ -2,13 +2,13 @@
 /**
  * Dedicated login page template loader.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Frontend; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Frontend; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Services\RedirectService;
-use SLR\Settings;
+use LogixFastAuth\Services\RedirectService;
+use LogixFastAuth\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -71,7 +71,7 @@ class Dedicated_Page {
 	}
 
 	/**
-	 * Keep only SLR plugin assets on the dedicated login page.
+	 * Keep only LogixFastAuth plugin assets on the dedicated login page.
 	 *
 	 * @return void
 	 */
@@ -84,7 +84,7 @@ class Dedicated_Page {
 
 		if ( $wp_scripts instanceof \WP_Scripts && ! empty( $wp_scripts->queue ) ) {
 			foreach ( array_values( $wp_scripts->queue ) as $handle ) {
-				if ( 0 !== strpos( $handle, 'slr-' ) ) {
+				if ( 0 !== strpos( $handle, 'logixfast-auth-' ) ) {
 					wp_dequeue_script( $handle );
 					wp_deregister_script( $handle );
 				}
@@ -93,7 +93,7 @@ class Dedicated_Page {
 
 		if ( $wp_styles instanceof \WP_Styles && ! empty( $wp_styles->queue ) ) {
 			foreach ( array_values( $wp_styles->queue ) as $handle ) {
-				if ( 0 !== strpos( $handle, 'slr-' ) ) {
+				if ( 0 !== strpos( $handle, 'logixfast-auth-' ) ) {
 					wp_dequeue_style( $handle );
 					wp_deregister_style( $handle );
 				}
@@ -120,7 +120,7 @@ class Dedicated_Page {
 			return;
 		}
 
-		$template = SLR_PLUGIN_DIR . 'templates/dedicated-login.php';
+		$template = LOGIXFAST_AUTH_PLUGIN_DIR . 'templates/dedicated-login.php';
 		if ( file_exists( $template ) ) {
 			include $template;
 			exit;

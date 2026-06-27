@@ -2,7 +2,7 @@
 /**
  * Tutor LMS Dashboard – Settings – Passkeys tab.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<div class="tutor-fs-4 tutor-fw-medium tutor-mb-24"><?php esc_html_e( 'Settings', 'smart-login-registration' ); ?></div>
+<div class="tutor-fs-4 tutor-fw-medium tutor-mb-24"><?php esc_html_e( 'Settings', 'logixfast-auth' ); ?></div>
 
 <div class="tutor-dashboard-content-inner">
 	<div class="tutor-mb-32">
@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<?php
 	// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals -- Template-scoped variable passed to partial.
-	$slr_pk_button_class = 'tutor-btn tutor-btn-primary tutor-btn-sm';
+	$logixfast_auth_pk_button_class = 'tutor-btn tutor-btn-primary tutor-btn-sm';
 	// phpcs:enable WordPress.NamingConventions.PrefixAllGlobals
-	require SLR_PLUGIN_DIR . 'templates/partials/passkey-manager.php';
+	require LOGIXFAST_AUTH_PLUGIN_DIR . 'templates/partials/passkey-manager.php';
 	?>
 </div>

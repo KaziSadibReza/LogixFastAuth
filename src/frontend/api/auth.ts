@@ -1,5 +1,5 @@
 import { apiRequest } from '@shared/api';
-import type { SlrConfig } from '@shared/types';
+import type { LogixFastAuthConfig } from '@shared/types';
 
 export interface AuthResponse {
   user_id?: number;
@@ -22,7 +22,7 @@ export interface RegisterData {
   phone: string;
   password: string;
   preferred_channel?: 'email' | 'phone';
-  slr_hp?: string;
+  logixfast_auth_hp?: string;
 }
 
 export interface LoginData {
@@ -31,11 +31,11 @@ export interface LoginData {
   password?: string;
   channel?: 'email' | 'phone';
   remember?: boolean;
-  slr_hp?: string;
+  logixfast_auth_hp?: string;
 }
 
-function getConfig(): SlrConfig {
-  return window.SLR_CONFIG!;
+function getConfig(): LogixFastAuthConfig {
+  return window.LOGIXFAST_AUTH_CONFIG!;
 }
 
 export function register(data: RegisterData): Promise<AuthResponse> {

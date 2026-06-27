@@ -13,17 +13,17 @@ interface SettingsRowProps {
 }
 
 export function SettingsGroup({ children, className = '' }: SettingsGroupProps) {
-  return <div className={`slr-settings-group ${className}`.trim()}>{children}</div>;
+  return <div className={`logixfast-auth-settings-group ${className}`.trim()}>{children}</div>;
 }
 
 export function SettingsRow({ title, description, children, className = '' }: SettingsRowProps) {
   return (
-    <div className={`slr-settings-row ${className}`.trim()}>
-      <div className="slr-settings-row-meta">
-        <div className="slr-settings-row-title">{title}</div>
-        {description && <p className="slr-settings-row-desc">{description}</p>}
+    <div className={`logixfast-auth-settings-row ${className}`.trim()}>
+      <div className="logixfast-auth-settings-row-meta">
+        <div className="logixfast-auth-settings-row-title">{title}</div>
+        {description && <p className="logixfast-auth-settings-row-desc">{description}</p>}
       </div>
-      <div className="slr-settings-row-control">{children}</div>
+      <div className="logixfast-auth-settings-row-control">{children}</div>
     </div>
   );
 }

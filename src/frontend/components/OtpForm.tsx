@@ -1,8 +1,8 @@
 import { FormEvent, useEffect, useState } from 'react';
 import { verifyOtp, resendOtp } from '../api/auth';
-import { SlrOtpInput } from './SlrOtpInput';
-import { useSlrToast } from './SlrToaster';
-import type { SlrConfig } from '@shared/types';
+import { LogixFastAuthOtpInput } from './LogixFastAuthOtpInput';
+import { useLogixFastAuthToast } from './LogixFastAuthToaster';
+import type { LogixFastAuthConfig } from '@shared/types';
 import {
   extendOtpSession,
   getStoredPendingToken,
@@ -13,7 +13,7 @@ import {
 import type { AuthRedirectResult } from '../utils/redirect';
 
 interface OtpFormProps {
-  config: SlrConfig;
+  config: LogixFastAuthConfig;
   identifier: string;
   channel: string;
   pendingToken?: string;
@@ -33,7 +33,7 @@ export function OtpForm({
   onBack,
   onSessionExpired,
 }: OtpFormProps) {
-  const toast = useSlrToast();
+  const toast = useLogixFastAuthToast();
   const [code, setCode] = useState('');
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
@@ -112,13 +112,13 @@ export function OtpForm({
 
   return (
     <form onSubmit={handleSubmit}>
-      <h2 id="slr-title" className="slr-title">{config.i18n.verifyOtp}</h2>
-      <p className="slr-otp-info">
+      <h2 id="logixfast-auth-title" className="logixfast-auth-title">{config.i18n.verifyOtp}</h2>
+      <p className="logixfast-auth-otp-info">
         {config.i18n.otpSent || 'We sent a 6-digit code to'} <strong>{identifier}</strong>
       </p>
 
-      <div className={hasError ? 'slr-field slr-field--error' : 'slr-field'}>
-        <SlrOtpInput
+      <div className={hasError ? 'logixfast-auth-field logixfast-auth-field--error' : 'logixfast-auth-field'}>
+        <LogixFastAuthOtpInput
           value={code}
           onChange={(value) => {
             setCode(value);
@@ -126,11 +126,11 @@ export function OtpForm({
           }}
         />
       </div>
-      <div className="slr-otp-actions">
-        <button type="submit" className="slr-btn slr-btn--primary" disabled={loading}>
+      <div className="logixfast-auth-otp-actions">
+        <button type="submit" className="logixfast-auth-btn logixfast-auth-btn--primary" disabled={loading}>
           {loading ? (
             <>
-              <span className="slr-loading-spinner" aria-hidden="true" />
+              <span className="logixfast-auth-loading-spinner" aria-hidden="true" />
               {config.i18n.loading}
             </>
           ) : (
@@ -138,10 +138,10 @@ export function OtpForm({
           )}
         </button>
 
-        <button type="button" className="slr-btn slr-btn--ghost" onClick={handleResend} disabled={resending || cooldown > 0}>
+        <button type="button" className="logixfast-auth-btn logixfast-auth-btn--ghost" onClick={handleResend} disabled={resending || cooldown > 0}>
           {resending ? (
             <>
-              <span className="slr-loading-spinner" aria-hidden="true" />
+              <span className="logixfast-auth-loading-spinner" aria-hidden="true" />
               {config.i18n.loading}
             </>
           ) : cooldown > 0 ? (
@@ -151,7 +151,7 @@ export function OtpForm({
           )}
         </button>
 
-        <button type="button" className="slr-btn slr-btn--ghost" onClick={onBack}>
+        <button type="button" className="logixfast-auth-btn logixfast-auth-btn--ghost" onClick={onBack}>
           ← Back
         </button>
       </div>

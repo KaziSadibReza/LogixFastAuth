@@ -28,7 +28,7 @@ export function AdminLayout({ i18n }: AdminLayoutProps) {
   const { dirty, save, reset, saving } = useSettings();
 
   return (
-    <div className="slr-app">
+    <div className="logixfast-auth-app">
       <Sidebar
         collapsed={sidebarCollapsed}
         mobileOpen={mobileOpen}
@@ -36,23 +36,23 @@ export function AdminLayout({ i18n }: AdminLayoutProps) {
         onToggleCollapse={() => setSidebarCollapsed((v) => !v)}
         i18n={i18n}
       />
-      <main className="slr-main">
-        <header className="slr-header">
-          <div className="slr-header-left">
+      <main className="logixfast-auth-main">
+        <header className="logixfast-auth-header">
+          <div className="logixfast-auth-header-left">
             <button
               type="button"
-              className="slr-hamburger"
+              className="logixfast-auth-hamburger"
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
             >
               <Menu size={20} strokeWidth={2} aria-hidden="true" />
             </button>
-            <div className="slr-header-title">
+            <div className="logixfast-auth-header-title">
               <h1>{i18n[meta.key] || i18n.title}</h1>
               <p>{meta.subtitle}</p>
             </div>
           </div>
-          <div className="slr-header-actions">
+          <div className="logixfast-auth-header-actions">
             {dirty && <Badge variant="warning" dot>Unsaved</Badge>}
             {dirty && (
               <Button variant="ghost" size="sm" onClick={reset} disabled={saving}>
@@ -64,7 +64,7 @@ export function AdminLayout({ i18n }: AdminLayoutProps) {
             </Button>
           </div>
         </header>
-        <div className="slr-content-wrapper">
+        <div className="logixfast-auth-content-wrapper">
           <Outlet />
         </div>
       </main>

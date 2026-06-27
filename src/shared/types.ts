@@ -1,4 +1,4 @@
-export interface SlrStyle {
+export interface LogixFastAuthStyle {
   primary: string;
   background: string;
   text: string;
@@ -7,7 +7,7 @@ export interface SlrStyle {
   spacing: string;
 }
 
-export interface SlrAuthConfig {
+export interface LogixFastAuthAuthConfig {
   emailOtp: boolean;
   phoneOtp: boolean;
   webauthn: boolean;
@@ -16,7 +16,7 @@ export interface SlrAuthConfig {
   hasSmsProvider: boolean;
 }
 
-export interface SlrConfig {
+export interface LogixFastAuthConfig {
   apiUrl: string;
   nonce: string;
   homeUrl: string;
@@ -32,18 +32,18 @@ export interface SlrConfig {
     replaceElementor: boolean;
   };
   defaultMode: 'login' | 'register';
-  auth: SlrAuthConfig;
+  auth: LogixFastAuthAuthConfig;
   otpTtl: number;
   registrationSessionTtl: number;
-  style: SlrStyle;
+  style: LogixFastAuthStyle;
   redirects: {
-    login: SlrRedirectRule;
-    register: SlrRedirectRule;
+    login: LogixFastAuthRedirectRule;
+    register: LogixFastAuthRedirectRule;
   };
   i18n: Record<string, string>;
 }
 
-export interface SlrAdminConfig {
+export interface LogixFastAuthAdminConfig {
   apiUrl: string;
   nonce: string;
   homeUrl: string;
@@ -53,17 +53,17 @@ export interface SlrAdminConfig {
   i18n: Record<string, string>;
 }
 
-export interface SlrSettings {
+export interface LogixFastAuthSettings {
   general: {
     dedicated_page_id: number;
     default_mode: string;
-    login_redirect_type: SlrRedirectType;
+    login_redirect_type: LogixFastAuthRedirectType;
     login_redirect_page_id: number;
     login_redirect_url: string;
-    register_redirect_type: SlrRedirectType;
+    register_redirect_type: LogixFastAuthRedirectType;
     register_redirect_page_id: number;
     register_redirect_url: string;
-    login_page_logged_in_redirect_type: SlrLoggedInRedirectType;
+    login_page_logged_in_redirect_type: LogixFastAuthLoggedInRedirectType;
     login_page_logged_in_redirect_page_id: number;
     login_page_logged_in_redirect_url: string;
     honeypot_enabled: boolean;
@@ -101,7 +101,7 @@ export interface SlrSettings {
     replace_tutor: boolean;
     replace_elementor: boolean;
   };
-  appearance: SlrStyle;
+  appearance: LogixFastAuthStyle;
   security: {
     rate_limit_attempts: number;
     rate_limit_window: number;
@@ -128,25 +128,25 @@ export interface SlrSettings {
   };
 }
 
-export type SlrRedirectType = 'stay' | 'default' | 'page' | 'url';
+export type LogixFastAuthRedirectType = 'stay' | 'default' | 'page' | 'url';
 
-export type SlrLoggedInRedirectType = 'default' | 'page' | 'url';
+export type LogixFastAuthLoggedInRedirectType = 'default' | 'page' | 'url';
 
-export interface SlrRedirectRule {
-  type: SlrRedirectType;
+export interface LogixFastAuthRedirectRule {
+  type: LogixFastAuthRedirectType;
   url: string;
   page_id: number;
   page_url: string;
 }
 
-export type SlrMode = 'login' | 'register';
+export type LogixFastAuthMode = 'login' | 'register';
 
 declare global {
   interface Window {
-    SLR_CONFIG?: SlrConfig;
-    SLR_ADMIN?: SlrAdminConfig;
-    SLR?: {
-      open: (mode: SlrMode) => void;
+    LOGIXFAST_AUTH_CONFIG?: LogixFastAuthConfig;
+    LOGIXFAST_AUTH_ADMIN?: LogixFastAuthAdminConfig;
+    LogixFastAuth?: {
+      open: (mode: LogixFastAuthMode) => void;
       close: () => void;
     };
   }

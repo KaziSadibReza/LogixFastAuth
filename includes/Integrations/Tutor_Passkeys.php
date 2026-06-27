@@ -2,12 +2,12 @@
 /**
  * Adds a "Passkeys" tab to the Tutor LMS dashboard Settings page.
  *
- * @package SLR
+ * @package LogixFastAuth
  */
 
-namespace SLR\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- SLR is the plugin prefix.
+namespace LogixFastAuth\Integrations; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
-use SLR\Settings;
+use LogixFastAuth\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -37,7 +37,7 @@ class Tutor_Passkeys {
 
 		$tabs['passkeys'] = array(
 			'url'   => esc_url( $url ),
-			'title' => __( 'Passkeys', 'smart-login-registration' ),
+			'title' => __( 'Passkeys', 'logixfast-auth' ),
 			'role'  => false,
 		);
 
@@ -59,7 +59,7 @@ class Tutor_Passkeys {
 			: '';
 
 		if ( 'settings' === $page_slug && 'passkeys' === $sub_page ) {
-			$template = SLR_PLUGIN_DIR . 'templates/dashboard-passkeys.php';
+			$template = LOGIXFAST_AUTH_PLUGIN_DIR . 'templates/dashboard-passkeys.php';
 			if ( file_exists( $template ) ) {
 				return $template;
 			}

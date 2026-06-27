@@ -4,7 +4,7 @@
  * Frontend source lives on GitHub — see readme.txt (Guideline #4).
  *
  * Usage: node scripts/package-org.mjs
- * Output: build/smart-login-registration/
+ * Output: build/logixfast-auth/
  */
 
 import { execSync } from 'child_process';
@@ -13,10 +13,10 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const OUTPUT = path.join(ROOT, 'build', 'smart-login-registration');
+const OUTPUT = path.join(ROOT, 'build', 'logixfast-auth');
 
 const PRODUCTION_PATHS = [
-	'smart-login-registration.php',
+	'logixfast-auth.php',
 	'uninstall.php',
 	'readme.txt',
 	'includes',

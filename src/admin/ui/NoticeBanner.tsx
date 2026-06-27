@@ -18,16 +18,16 @@ const icons = {
 
 export function NoticeBanner({ variant = 'info', title, children, onDismiss }: NoticeBannerProps) {
   return (
-    <div className={`slr-notice-banner slr-notice-banner--${variant}`} role="status">
-      <span className="slr-notice-banner__icon" aria-hidden="true">
+    <div className={`logixfast-auth-notice-banner logixfast-auth-notice-banner--${variant}`} role="status">
+      <span className="logixfast-auth-notice-banner__icon" aria-hidden="true">
         <Icon icon={icons[variant]} size={18} />
       </span>
-      <div className="slr-notice-banner__body">
+      <div className="logixfast-auth-notice-banner__body">
         <strong>{title}</strong>
-        <div className="slr-notice-banner__content">{children}</div>
+        <div className="logixfast-auth-notice-banner__content">{children}</div>
       </div>
       {onDismiss && (
-        <button type="button" className="slr-notice-banner__close" onClick={onDismiss} aria-label="Dismiss">
+        <button type="button" className="logixfast-auth-notice-banner__close" onClick={onDismiss} aria-label="Dismiss">
           <X size={16} strokeWidth={2} />
         </button>
       )}

@@ -37,10 +37,10 @@ export function HelpTooltip({ label, children }: HelpTooltipProps) {
   }, [open]);
 
   return (
-    <div className="slr-help-tooltip" ref={rootRef}>
+    <div className="logixfast-auth-help-tooltip" ref={rootRef}>
       <button
         type="button"
-        className="slr-help-tooltip__trigger"
+        className="logixfast-auth-help-tooltip__trigger"
         aria-label={label}
         aria-expanded={open}
         aria-controls={panelId}
@@ -49,9 +49,9 @@ export function HelpTooltip({ label, children }: HelpTooltipProps) {
         <Icon icon={CircleHelp} size={16} />
       </button>
       {open && (
-        <div className="slr-help-tooltip__panel" id={panelId} role="tooltip">
-          <strong className="slr-help-tooltip__title">{label}</strong>
-          <div className="slr-help-tooltip__content">{children}</div>
+        <div className="logixfast-auth-help-tooltip__panel" id={panelId} role="tooltip">
+          <strong className="logixfast-auth-help-tooltip__title">{label}</strong>
+          <div className="logixfast-auth-help-tooltip__content">{children}</div>
         </div>
       )}
     </div>

@@ -1,4 +1,4 @@
-import type { SlrStyle } from './types';
+import type { LogixFastAuthStyle } from './types';
 
 function hexToRgb(hex: string): [number, number, number] {
   const cleaned = hex.replace('#', '').trim();
@@ -35,22 +35,22 @@ function rgba(hex: string, alpha: number): string {
  * Apply appearance CSS variables to any element (typically documentElement).
  * Inline custom properties beat external :root rules from bundled CSS.
  */
-export function applyStyleVarsToElement(root: HTMLElement, style: SlrStyle | undefined): void {
+export function applyStyleVarsToElement(root: HTMLElement, style: LogixFastAuthStyle | undefined): void {
   if (!style) return;
 
   const primary = style.primary || '#d6336c';
 
-  root.style.setProperty('--slr-primary', primary);
-  root.style.setProperty('--slr-primary-dark', darken(primary, 0.18));
-  root.style.setProperty('--slr-primary-50', mixWithWhite(primary, 0.92));
-  root.style.setProperty('--slr-primary-100', mixWithWhite(primary, 0.85));
-  root.style.setProperty('--slr-background', style.background || '#ffffff');
-  root.style.setProperty('--slr-text', style.text || '#111827');
-  root.style.setProperty('--slr-blur', style.blur || '24px');
-  root.style.setProperty('--slr-radius', style.radius || '12px');
-  root.style.setProperty('--slr-spacing', style.spacing || '1rem');
-  root.style.setProperty('--slr-shadow-focus', `0 0 0 3px ${rgba(primary, 0.18)}`);
-  root.style.setProperty('--slr-shadow-primary', `0 8px 20px ${rgba(primary, 0.32)}`);
+  root.style.setProperty('--logixfast-auth-primary', primary);
+  root.style.setProperty('--logixfast-auth-primary-dark', darken(primary, 0.18));
+  root.style.setProperty('--logixfast-auth-primary-50', mixWithWhite(primary, 0.92));
+  root.style.setProperty('--logixfast-auth-primary-100', mixWithWhite(primary, 0.85));
+  root.style.setProperty('--logixfast-auth-background', style.background || '#ffffff');
+  root.style.setProperty('--logixfast-auth-text', style.text || '#111827');
+  root.style.setProperty('--logixfast-auth-blur', style.blur || '24px');
+  root.style.setProperty('--logixfast-auth-radius', style.radius || '12px');
+  root.style.setProperty('--logixfast-auth-spacing', style.spacing || '1rem');
+  root.style.setProperty('--logixfast-auth-shadow-focus', `0 0 0 3px ${rgba(primary, 0.18)}`);
+  root.style.setProperty('--logixfast-auth-shadow-primary', `0 8px 20px ${rgba(primary, 0.32)}`);
 }
 
 export function previewStageBackground(primary: string): string {
