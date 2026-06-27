@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals -- Template-scoped variables.
 
 $logixfast_auth_pk_button_class = isset( $logixfast_auth_pk_button_class ) ? (string) $logixfast_auth_pk_button_class : 'button button-primary';
-$logixfast_auth_pk_icon_svg     = \LogixFastAuth\Services\Passkey_Assets::get_icon_svg();
+$logixfast_auth_pk_icon_svg     = \LogixFastAuth\Services\Passkey_Assets::get_sanitized_icon_svg();
 ?>
 
 <div class="logixfast-auth-passkey-manager" id="logixfast-auth-passkey-manager">
@@ -36,7 +36,8 @@ $logixfast_auth_pk_icon_svg     = \LogixFastAuth\Services\Passkey_Assets::get_ic
 		<div class="logixfast-auth-pk-empty-icon" aria-hidden="true">
 			<?php
 			if ( '' !== $logixfast_auth_pk_icon_svg ) {
-				echo \LogixFastAuth\Services\Passkey_Assets::get_sanitized_icon_svg();
+				// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Sanitized by Passkey_Assets::get_sanitized_icon_svg().
+				echo $logixfast_auth_pk_icon_svg;
 			}
 			?>
 		</div>
