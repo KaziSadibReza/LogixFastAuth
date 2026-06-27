@@ -116,7 +116,7 @@ class StatsService {
 			'active_integrations'  => $active_integrations,
 			'dedicated_page_set'   => $page_id > 0 && $page instanceof \WP_Post,
 			'dedicated_page_title' => $page instanceof \WP_Post ? $page->post_title : '',
-			'plugin_version'       => defined( 'LOGIXFAST_AUTH_VERSION' ) ? LOGIXFAST_AUTH_VERSION : '1.0.0',
+			'plugin_version'       => defined( 'LOGIXFAST_AUTH_VERSION' ) ? LOGIXFAST_AUTH_VERSION : '1.0.2',
 		);
 
 		set_transient( self::STATS_CACHE_KEY, $stats, self::STATS_CACHE_TTL );

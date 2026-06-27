@@ -4,7 +4,7 @@ Tags: login, registration, otp, webauthn, woocommerce
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -81,7 +81,7 @@ This updates `assets/dist/` and `assets/dist/manifest.json`.
 
 = What data does this plugin send externally? =
 
-Nothing by default. External requests happen only when you configure Gmail SMTP, register an SMS provider, or when the UI loads Google Fonts. See the **External services** section above.
+Nothing by default. External requests happen only when you configure Gmail SMTP or register an SMS provider. See the **External services** section above.
 
 == Screenshots ==
 
@@ -90,6 +90,11 @@ Nothing by default. External requests happen only when you configure Gmail SMTP,
 3. Dedicated login page
 
 == Changelog ==
+
+= 1.0.2 =
+* Prepared release metadata for WordPress.org re-review
+* Bundled country flag assets locally and removed stale external asset references
+* Updated package metadata and translation template version
 
 = 1.0.1 =
 * Plugin Check and WordPress.org packaging improvements
@@ -101,6 +106,9 @@ Nothing by default. External requests happen only when you configure Gmail SMTP,
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Release metadata and WordPress.org package readiness update.
 
 = 1.0.1 =
 Maintenance release with security and WordPress.org compliance updates.

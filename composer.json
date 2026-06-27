@@ -1,7 +1,7 @@
 {
   "name": "kazi-sadib-reza/logixfast-auth",
   "description": "LogixFast Auth WordPress plugin",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "type": "wordpress-plugin",
   "license": "GPL-2.0-or-later",
   "require": {
