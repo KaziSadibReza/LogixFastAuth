@@ -3,8 +3,8 @@
     "file": "chunks/logixfast-auth-bridge-B-OPgLgY.js",
     "name": "logixfast-auth-bridge"
   },
-  "_main-BZHzO_ID.js": {
-    "file": "chunks/main-BZHzO_ID.js",
+  "_main-CVr3mL2f.js": {
+    "file": "chunks/main-CVr3mL2f.js",
     "name": "main",
     "imports": [
       "_logixfast-auth-bridge-B-OPgLgY.js"
@@ -15,6 +15,268 @@
     ],
     "css": [
       "frontend/main.css"
+    ],
+    "assets": [
+      "assets/AC.svg",
+      "assets/AD.svg",
+      "assets/AE.svg",
+      "assets/AF.svg",
+      "assets/AG.svg",
+      "assets/AI.svg",
+      "assets/AL.svg",
+      "assets/AM.svg",
+      "assets/AO.svg",
+      "assets/AQ.svg",
+      "assets/AR.svg",
+      "assets/AS.svg",
+      "assets/AT.svg",
+      "assets/AU.svg",
+      "assets/AW.svg",
+      "assets/AX.svg",
+      "assets/AZ.svg",
+      "assets/BA.svg",
+      "assets/BB.svg",
+      "assets/BD.svg",
+      "assets/BE.svg",
+      "assets/BF.svg",
+      "assets/BG.svg",
+      "assets/BH.svg",
+      "assets/BI.svg",
+      "assets/BJ.svg",
+      "assets/BL.svg",
+      "assets/BM.svg",
+      "assets/BN.svg",
+      "assets/BO.svg",
+      "assets/BQ.svg",
+      "assets/BQ-SA.svg",
+      "assets/BQ-SE.svg",
+      "assets/BR.svg",
+      "assets/BS.svg",
+      "assets/BT.svg",
+      "assets/BV.svg",
+      "assets/BW.svg",
+      "assets/BY.svg",
+      "assets/BZ.svg",
+      "assets/CA.svg",
+      "assets/CC.svg",
+      "assets/CD.svg",
+      "assets/CF.svg",
+      "assets/CG.svg",
+      "assets/CH.svg",
+      "assets/CI.svg",
+      "assets/CK.svg",
+      "assets/CL.svg",
+      "assets/CM.svg",
+      "assets/CN.svg",
+      "assets/CO.svg",
+      "assets/CR.svg",
+      "assets/CU.svg",
+      "assets/CV.svg",
+      "assets/CW.svg",
+      "assets/CX.svg",
+      "assets/CY.svg",
+      "assets/CZ.svg",
+      "assets/DE.svg",
+      "assets/DJ.svg",
+      "assets/DK.svg",
+      "assets/DM.svg",
+      "assets/DO.svg",
+      "assets/DZ.svg",
+      "assets/EC.svg",
+      "assets/EE.svg",
+      "assets/EG.svg",
+      "assets/EH.svg",
+      "assets/ER.svg",
+      "assets/ES-CT.svg",
+      "assets/ES.svg",
+      "assets/ET.svg",
+      "assets/EU.svg",
+      "assets/FI.svg",
+      "assets/FJ.svg",
+      "assets/FK.svg",
+      "assets/FM.svg",
+      "assets/FO.svg",
+      "assets/FR.svg",
+      "assets/GA.svg",
+      "assets/GB-ENG.svg",
+      "assets/GB-NIR.svg",
+      "assets/GB-SCT.svg",
+      "assets/GB-WLS.svg",
+      "assets/GB.svg",
+      "assets/GD.svg",
+      "assets/GE.svg",
+      "assets/GF.svg",
+      "assets/GG.svg",
+      "assets/GH.svg",
+      "assets/GI.svg",
+      "assets/GL.svg",
+      "assets/GM.svg",
+      "assets/GN.svg",
+      "assets/GQ.svg",
+      "assets/GR.svg",
+      "assets/GS.svg",
+      "assets/GT.svg",
+      "assets/GU.svg",
+      "assets/GW.svg",
+      "assets/GY.svg",
+      "assets/HK.svg",
+      "assets/HM.svg",
+      "assets/HN.svg",
+      "assets/HR.svg",
+      "assets/HT.svg",
+      "assets/HU.svg",
+      "assets/IC.svg",
+      "assets/ID.svg",
+      "assets/IE.svg",
+      "assets/IL.svg",
+      "assets/IM.svg",
+      "assets/IN.svg",
+      "assets/IO.svg",
+      "assets/IQ.svg",
+      "assets/IR.svg",
+      "assets/IS.svg",
+      "assets/IT.svg",
+      "assets/JE.svg",
+      "assets/JM.svg",
+      "assets/JO.svg",
+      "assets/JP.svg",
+      "assets/KE.svg",
+      "assets/KG.svg",
+      "assets/KH.svg",
+      "assets/KI.svg",
+      "assets/KM.svg",
+      "assets/KN.svg",
+      "assets/KP.svg",
+      "assets/KR.svg",
+      "assets/KW.svg",
+      "assets/KY.svg",
+      "assets/KZ.svg",
+      "assets/LA.svg",
+      "assets/LB.svg",
+      "assets/LC.svg",
+      "assets/LI.svg",
+      "assets/LK.svg",
+      "assets/LR.svg",
+      "assets/LS.svg",
+      "assets/LT.svg",
+      "assets/LU.svg",
+      "assets/LV.svg",
+      "assets/LY.svg",
+      "assets/MA.svg",
+      "assets/MC.svg",
+      "assets/MD.svg",
+      "assets/ME.svg",
+      "assets/MF.svg",
+      "assets/MG.svg",
+      "assets/MH.svg",
+      "assets/MK.svg",
+      "assets/ML.svg",
+      "assets/MM.svg",
+      "assets/MN.svg",
+      "assets/MO.svg",
+      "assets/MP.svg",
+      "assets/MQ.svg",
+      "assets/MR.svg",
+      "assets/MS.svg",
+      "assets/MT.svg",
+      "assets/MU.svg",
+      "assets/MV.svg",
+      "assets/MW.svg",
+      "assets/MX.svg",
+      "assets/MY.svg",
+      "assets/MZ.svg",
+      "assets/NA.svg",
+      "assets/NC.svg",
+      "assets/NE.svg",
+      "assets/NF.svg",
+      "assets/NG.svg",
+      "assets/NI.svg",
+      "assets/NL.svg",
+      "assets/NO.svg",
+      "assets/NP.svg",
+      "assets/NR.svg",
+      "assets/NU.svg",
+      "assets/NZ.svg",
+      "assets/OM.svg",
+      "assets/PA.svg",
+      "assets/PE.svg",
+      "assets/PF.svg",
+      "assets/PG.svg",
+      "assets/PH.svg",
+      "assets/PK.svg",
+      "assets/PL.svg",
+      "assets/PN.svg",
+      "assets/PR.svg",
+      "assets/PS.svg",
+      "assets/PT.svg",
+      "assets/PW.svg",
+      "assets/PY.svg",
+      "assets/QA.svg",
+      "assets/RO.svg",
+      "assets/RS.svg",
+      "assets/RU.svg",
+      "assets/RW.svg",
+      "assets/SA.svg",
+      "assets/SB.svg",
+      "assets/SC.svg",
+      "assets/SD.svg",
+      "assets/SE.svg",
+      "assets/SG.svg",
+      "assets/SH.svg",
+      "assets/SI.svg",
+      "assets/SJ.svg",
+      "assets/SK.svg",
+      "assets/SL.svg",
+      "assets/SM.svg",
+      "assets/SN.svg",
+      "assets/SO.svg",
+      "assets/SR.svg",
+      "assets/SS.svg",
+      "assets/ST.svg",
+      "assets/SV.svg",
+      "assets/SX.svg",
+      "assets/SY.svg",
+      "assets/SZ.svg",
+      "assets/TA.svg",
+      "assets/TC.svg",
+      "assets/TD.svg",
+      "assets/TF.svg",
+      "assets/TG.svg",
+      "assets/TH.svg",
+      "assets/TJ.svg",
+      "assets/TK.svg",
+      "assets/TL.svg",
+      "assets/TM.svg",
+      "assets/TN.svg",
+      "assets/TO.svg",
+      "assets/TR.svg",
+      "assets/TT.svg",
+      "assets/TV.svg",
+      "assets/TW.svg",
+      "assets/TZ.svg",
+      "assets/UA.svg",
+      "assets/UG.svg",
+      "assets/UM.svg",
+      "assets/UY.svg",
+      "assets/UZ.svg",
+      "assets/VA.svg",
+      "assets/VC.svg",
+      "assets/VE.svg",
+      "assets/VG.svg",
+      "assets/VI.svg",
+      "assets/VN.svg",
+      "assets/VU.svg",
+      "assets/WF.svg",
+      "assets/WS.svg",
+      "assets/XA.svg",
+      "assets/XC.svg",
+      "assets/XK.svg",
+      "assets/XO.svg",
+      "assets/YE.svg",
+      "assets/YT.svg",
+      "assets/ZA.svg",
+      "assets/ZM.svg",
+      "assets/ZW.svg"
     ]
   },
   "_main.css": {
@@ -26,6 +288,1066 @@
     "name": "index",
     "src": "node_modules/@simplewebauthn/browser/dist/bundle/index.js",
     "isDynamicEntry": true
+  },
+  "node_modules/country-flag-icons/3x2/AC.svg": {
+    "file": "assets/AC.svg",
+    "src": "node_modules/country-flag-icons/3x2/AC.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AD.svg": {
+    "file": "assets/AD.svg",
+    "src": "node_modules/country-flag-icons/3x2/AD.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AE.svg": {
+    "file": "assets/AE.svg",
+    "src": "node_modules/country-flag-icons/3x2/AE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AF.svg": {
+    "file": "assets/AF.svg",
+    "src": "node_modules/country-flag-icons/3x2/AF.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AG.svg": {
+    "file": "assets/AG.svg",
+    "src": "node_modules/country-flag-icons/3x2/AG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AI.svg": {
+    "file": "assets/AI.svg",
+    "src": "node_modules/country-flag-icons/3x2/AI.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AL.svg": {
+    "file": "assets/AL.svg",
+    "src": "node_modules/country-flag-icons/3x2/AL.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AM.svg": {
+    "file": "assets/AM.svg",
+    "src": "node_modules/country-flag-icons/3x2/AM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AO.svg": {
+    "file": "assets/AO.svg",
+    "src": "node_modules/country-flag-icons/3x2/AO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AQ.svg": {
+    "file": "assets/AQ.svg",
+    "src": "node_modules/country-flag-icons/3x2/AQ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AR.svg": {
+    "file": "assets/AR.svg",
+    "src": "node_modules/country-flag-icons/3x2/AR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AS.svg": {
+    "file": "assets/AS.svg",
+    "src": "node_modules/country-flag-icons/3x2/AS.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AT.svg": {
+    "file": "assets/AT.svg",
+    "src": "node_modules/country-flag-icons/3x2/AT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AU.svg": {
+    "file": "assets/AU.svg",
+    "src": "node_modules/country-flag-icons/3x2/AU.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AW.svg": {
+    "file": "assets/AW.svg",
+    "src": "node_modules/country-flag-icons/3x2/AW.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AX.svg": {
+    "file": "assets/AX.svg",
+    "src": "node_modules/country-flag-icons/3x2/AX.svg"
+  },
+  "node_modules/country-flag-icons/3x2/AZ.svg": {
+    "file": "assets/AZ.svg",
+    "src": "node_modules/country-flag-icons/3x2/AZ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BA.svg": {
+    "file": "assets/BA.svg",
+    "src": "node_modules/country-flag-icons/3x2/BA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BB.svg": {
+    "file": "assets/BB.svg",
+    "src": "node_modules/country-flag-icons/3x2/BB.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BD.svg": {
+    "file": "assets/BD.svg",
+    "src": "node_modules/country-flag-icons/3x2/BD.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BE.svg": {
+    "file": "assets/BE.svg",
+    "src": "node_modules/country-flag-icons/3x2/BE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BF.svg": {
+    "file": "assets/BF.svg",
+    "src": "node_modules/country-flag-icons/3x2/BF.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BG.svg": {
+    "file": "assets/BG.svg",
+    "src": "node_modules/country-flag-icons/3x2/BG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BH.svg": {
+    "file": "assets/BH.svg",
+    "src": "node_modules/country-flag-icons/3x2/BH.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BI.svg": {
+    "file": "assets/BI.svg",
+    "src": "node_modules/country-flag-icons/3x2/BI.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BJ.svg": {
+    "file": "assets/BJ.svg",
+    "src": "node_modules/country-flag-icons/3x2/BJ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BL.svg": {
+    "file": "assets/BL.svg",
+    "src": "node_modules/country-flag-icons/3x2/BL.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BM.svg": {
+    "file": "assets/BM.svg",
+    "src": "node_modules/country-flag-icons/3x2/BM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BN.svg": {
+    "file": "assets/BN.svg",
+    "src": "node_modules/country-flag-icons/3x2/BN.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BO.svg": {
+    "file": "assets/BO.svg",
+    "src": "node_modules/country-flag-icons/3x2/BO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BQ-BO.svg": {
+    "file": "assets/BQ.svg",
+    "src": "node_modules/country-flag-icons/3x2/BQ-BO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BQ-SA.svg": {
+    "file": "assets/BQ-SA.svg",
+    "src": "node_modules/country-flag-icons/3x2/BQ-SA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BQ-SE.svg": {
+    "file": "assets/BQ-SE.svg",
+    "src": "node_modules/country-flag-icons/3x2/BQ-SE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BQ.svg": {
+    "file": "assets/BQ.svg",
+    "src": "node_modules/country-flag-icons/3x2/BQ-BO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BR.svg": {
+    "file": "assets/BR.svg",
+    "src": "node_modules/country-flag-icons/3x2/BR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BS.svg": {
+    "file": "assets/BS.svg",
+    "src": "node_modules/country-flag-icons/3x2/BS.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BT.svg": {
+    "file": "assets/BT.svg",
+    "src": "node_modules/country-flag-icons/3x2/BT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BV.svg": {
+    "file": "assets/BV.svg",
+    "src": "node_modules/country-flag-icons/3x2/BV.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BW.svg": {
+    "file": "assets/BW.svg",
+    "src": "node_modules/country-flag-icons/3x2/BW.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BY.svg": {
+    "file": "assets/BY.svg",
+    "src": "node_modules/country-flag-icons/3x2/BY.svg"
+  },
+  "node_modules/country-flag-icons/3x2/BZ.svg": {
+    "file": "assets/BZ.svg",
+    "src": "node_modules/country-flag-icons/3x2/BZ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CA.svg": {
+    "file": "assets/CA.svg",
+    "src": "node_modules/country-flag-icons/3x2/CA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CC.svg": {
+    "file": "assets/CC.svg",
+    "src": "node_modules/country-flag-icons/3x2/CC.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CD.svg": {
+    "file": "assets/CD.svg",
+    "src": "node_modules/country-flag-icons/3x2/CD.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CF.svg": {
+    "file": "assets/CF.svg",
+    "src": "node_modules/country-flag-icons/3x2/CF.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CG.svg": {
+    "file": "assets/CG.svg",
+    "src": "node_modules/country-flag-icons/3x2/CG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CH.svg": {
+    "file": "assets/CH.svg",
+    "src": "node_modules/country-flag-icons/3x2/CH.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CI.svg": {
+    "file": "assets/CI.svg",
+    "src": "node_modules/country-flag-icons/3x2/CI.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CK.svg": {
+    "file": "assets/CK.svg",
+    "src": "node_modules/country-flag-icons/3x2/CK.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CL.svg": {
+    "file": "assets/CL.svg",
+    "src": "node_modules/country-flag-icons/3x2/CL.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CM.svg": {
+    "file": "assets/CM.svg",
+    "src": "node_modules/country-flag-icons/3x2/CM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CN.svg": {
+    "file": "assets/CN.svg",
+    "src": "node_modules/country-flag-icons/3x2/CN.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CO.svg": {
+    "file": "assets/CO.svg",
+    "src": "node_modules/country-flag-icons/3x2/CO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CR.svg": {
+    "file": "assets/CR.svg",
+    "src": "node_modules/country-flag-icons/3x2/CR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CU.svg": {
+    "file": "assets/CU.svg",
+    "src": "node_modules/country-flag-icons/3x2/CU.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CV.svg": {
+    "file": "assets/CV.svg",
+    "src": "node_modules/country-flag-icons/3x2/CV.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CW.svg": {
+    "file": "assets/CW.svg",
+    "src": "node_modules/country-flag-icons/3x2/CW.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CX.svg": {
+    "file": "assets/CX.svg",
+    "src": "node_modules/country-flag-icons/3x2/CX.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CY.svg": {
+    "file": "assets/CY.svg",
+    "src": "node_modules/country-flag-icons/3x2/CY.svg"
+  },
+  "node_modules/country-flag-icons/3x2/CZ.svg": {
+    "file": "assets/CZ.svg",
+    "src": "node_modules/country-flag-icons/3x2/CZ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/DE.svg": {
+    "file": "assets/DE.svg",
+    "src": "node_modules/country-flag-icons/3x2/DE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/DJ.svg": {
+    "file": "assets/DJ.svg",
+    "src": "node_modules/country-flag-icons/3x2/DJ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/DK.svg": {
+    "file": "assets/DK.svg",
+    "src": "node_modules/country-flag-icons/3x2/DK.svg"
+  },
+  "node_modules/country-flag-icons/3x2/DM.svg": {
+    "file": "assets/DM.svg",
+    "src": "node_modules/country-flag-icons/3x2/DM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/DO.svg": {
+    "file": "assets/DO.svg",
+    "src": "node_modules/country-flag-icons/3x2/DO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/DZ.svg": {
+    "file": "assets/DZ.svg",
+    "src": "node_modules/country-flag-icons/3x2/DZ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/EC.svg": {
+    "file": "assets/EC.svg",
+    "src": "node_modules/country-flag-icons/3x2/EC.svg"
+  },
+  "node_modules/country-flag-icons/3x2/EE.svg": {
+    "file": "assets/EE.svg",
+    "src": "node_modules/country-flag-icons/3x2/EE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/EG.svg": {
+    "file": "assets/EG.svg",
+    "src": "node_modules/country-flag-icons/3x2/EG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/EH.svg": {
+    "file": "assets/EH.svg",
+    "src": "node_modules/country-flag-icons/3x2/EH.svg"
+  },
+  "node_modules/country-flag-icons/3x2/ER.svg": {
+    "file": "assets/ER.svg",
+    "src": "node_modules/country-flag-icons/3x2/ER.svg"
+  },
+  "node_modules/country-flag-icons/3x2/ES-CT.svg": {
+    "file": "assets/ES-CT.svg",
+    "src": "node_modules/country-flag-icons/3x2/ES-CT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/ES.svg": {
+    "file": "assets/ES.svg",
+    "src": "node_modules/country-flag-icons/3x2/ES.svg"
+  },
+  "node_modules/country-flag-icons/3x2/ET.svg": {
+    "file": "assets/ET.svg",
+    "src": "node_modules/country-flag-icons/3x2/ET.svg"
+  },
+  "node_modules/country-flag-icons/3x2/EU.svg": {
+    "file": "assets/EU.svg",
+    "src": "node_modules/country-flag-icons/3x2/EU.svg"
+  },
+  "node_modules/country-flag-icons/3x2/FI.svg": {
+    "file": "assets/FI.svg",
+    "src": "node_modules/country-flag-icons/3x2/FI.svg"
+  },
+  "node_modules/country-flag-icons/3x2/FJ.svg": {
+    "file": "assets/FJ.svg",
+    "src": "node_modules/country-flag-icons/3x2/FJ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/FK.svg": {
+    "file": "assets/FK.svg",
+    "src": "node_modules/country-flag-icons/3x2/FK.svg"
+  },
+  "node_modules/country-flag-icons/3x2/FM.svg": {
+    "file": "assets/FM.svg",
+    "src": "node_modules/country-flag-icons/3x2/FM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/FO.svg": {
+    "file": "assets/FO.svg",
+    "src": "node_modules/country-flag-icons/3x2/FO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/FR.svg": {
+    "file": "assets/FR.svg",
+    "src": "node_modules/country-flag-icons/3x2/FR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GA.svg": {
+    "file": "assets/GA.svg",
+    "src": "node_modules/country-flag-icons/3x2/GA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GB-ENG.svg": {
+    "file": "assets/GB-ENG.svg",
+    "src": "node_modules/country-flag-icons/3x2/GB-ENG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GB-NIR.svg": {
+    "file": "assets/GB-NIR.svg",
+    "src": "node_modules/country-flag-icons/3x2/GB-NIR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GB-SCT.svg": {
+    "file": "assets/GB-SCT.svg",
+    "src": "node_modules/country-flag-icons/3x2/GB-SCT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GB-WLS.svg": {
+    "file": "assets/GB-WLS.svg",
+    "src": "node_modules/country-flag-icons/3x2/GB-WLS.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GB.svg": {
+    "file": "assets/GB.svg",
+    "src": "node_modules/country-flag-icons/3x2/GB.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GD.svg": {
+    "file": "assets/GD.svg",
+    "src": "node_modules/country-flag-icons/3x2/GD.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GE.svg": {
+    "file": "assets/GE.svg",
+    "src": "node_modules/country-flag-icons/3x2/GE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GF.svg": {
+    "file": "assets/GF.svg",
+    "src": "node_modules/country-flag-icons/3x2/GF.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GG.svg": {
+    "file": "assets/GG.svg",
+    "src": "node_modules/country-flag-icons/3x2/GG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GH.svg": {
+    "file": "assets/GH.svg",
+    "src": "node_modules/country-flag-icons/3x2/GH.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GI.svg": {
+    "file": "assets/GI.svg",
+    "src": "node_modules/country-flag-icons/3x2/GI.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GL.svg": {
+    "file": "assets/GL.svg",
+    "src": "node_modules/country-flag-icons/3x2/GL.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GM.svg": {
+    "file": "assets/GM.svg",
+    "src": "node_modules/country-flag-icons/3x2/GM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GN.svg": {
+    "file": "assets/GN.svg",
+    "src": "node_modules/country-flag-icons/3x2/GN.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GP.svg": {
+    "file": "assets/FR.svg",
+    "src": "node_modules/country-flag-icons/3x2/FR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GQ.svg": {
+    "file": "assets/GQ.svg",
+    "src": "node_modules/country-flag-icons/3x2/GQ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GR.svg": {
+    "file": "assets/GR.svg",
+    "src": "node_modules/country-flag-icons/3x2/GR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GS.svg": {
+    "file": "assets/GS.svg",
+    "src": "node_modules/country-flag-icons/3x2/GS.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GT.svg": {
+    "file": "assets/GT.svg",
+    "src": "node_modules/country-flag-icons/3x2/GT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GU.svg": {
+    "file": "assets/GU.svg",
+    "src": "node_modules/country-flag-icons/3x2/GU.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GW.svg": {
+    "file": "assets/GW.svg",
+    "src": "node_modules/country-flag-icons/3x2/GW.svg"
+  },
+  "node_modules/country-flag-icons/3x2/GY.svg": {
+    "file": "assets/GY.svg",
+    "src": "node_modules/country-flag-icons/3x2/GY.svg"
+  },
+  "node_modules/country-flag-icons/3x2/HK.svg": {
+    "file": "assets/HK.svg",
+    "src": "node_modules/country-flag-icons/3x2/HK.svg"
+  },
+  "node_modules/country-flag-icons/3x2/HM.svg": {
+    "file": "assets/HM.svg",
+    "src": "node_modules/country-flag-icons/3x2/HM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/HN.svg": {
+    "file": "assets/HN.svg",
+    "src": "node_modules/country-flag-icons/3x2/HN.svg"
+  },
+  "node_modules/country-flag-icons/3x2/HR.svg": {
+    "file": "assets/HR.svg",
+    "src": "node_modules/country-flag-icons/3x2/HR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/HT.svg": {
+    "file": "assets/HT.svg",
+    "src": "node_modules/country-flag-icons/3x2/HT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/HU.svg": {
+    "file": "assets/HU.svg",
+    "src": "node_modules/country-flag-icons/3x2/HU.svg"
+  },
+  "node_modules/country-flag-icons/3x2/IC.svg": {
+    "file": "assets/IC.svg",
+    "src": "node_modules/country-flag-icons/3x2/IC.svg"
+  },
+  "node_modules/country-flag-icons/3x2/ID.svg": {
+    "file": "assets/ID.svg",
+    "src": "node_modules/country-flag-icons/3x2/ID.svg"
+  },
+  "node_modules/country-flag-icons/3x2/IE.svg": {
+    "file": "assets/IE.svg",
+    "src": "node_modules/country-flag-icons/3x2/IE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/IL.svg": {
+    "file": "assets/IL.svg",
+    "src": "node_modules/country-flag-icons/3x2/IL.svg"
+  },
+  "node_modules/country-flag-icons/3x2/IM.svg": {
+    "file": "assets/IM.svg",
+    "src": "node_modules/country-flag-icons/3x2/IM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/IN.svg": {
+    "file": "assets/IN.svg",
+    "src": "node_modules/country-flag-icons/3x2/IN.svg"
+  },
+  "node_modules/country-flag-icons/3x2/IO.svg": {
+    "file": "assets/IO.svg",
+    "src": "node_modules/country-flag-icons/3x2/IO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/IQ.svg": {
+    "file": "assets/IQ.svg",
+    "src": "node_modules/country-flag-icons/3x2/IQ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/IR.svg": {
+    "file": "assets/IR.svg",
+    "src": "node_modules/country-flag-icons/3x2/IR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/IS.svg": {
+    "file": "assets/IS.svg",
+    "src": "node_modules/country-flag-icons/3x2/IS.svg"
+  },
+  "node_modules/country-flag-icons/3x2/IT.svg": {
+    "file": "assets/IT.svg",
+    "src": "node_modules/country-flag-icons/3x2/IT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/JE.svg": {
+    "file": "assets/JE.svg",
+    "src": "node_modules/country-flag-icons/3x2/JE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/JM.svg": {
+    "file": "assets/JM.svg",
+    "src": "node_modules/country-flag-icons/3x2/JM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/JO.svg": {
+    "file": "assets/JO.svg",
+    "src": "node_modules/country-flag-icons/3x2/JO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/JP.svg": {
+    "file": "assets/JP.svg",
+    "src": "node_modules/country-flag-icons/3x2/JP.svg"
+  },
+  "node_modules/country-flag-icons/3x2/KE.svg": {
+    "file": "assets/KE.svg",
+    "src": "node_modules/country-flag-icons/3x2/KE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/KG.svg": {
+    "file": "assets/KG.svg",
+    "src": "node_modules/country-flag-icons/3x2/KG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/KH.svg": {
+    "file": "assets/KH.svg",
+    "src": "node_modules/country-flag-icons/3x2/KH.svg"
+  },
+  "node_modules/country-flag-icons/3x2/KI.svg": {
+    "file": "assets/KI.svg",
+    "src": "node_modules/country-flag-icons/3x2/KI.svg"
+  },
+  "node_modules/country-flag-icons/3x2/KM.svg": {
+    "file": "assets/KM.svg",
+    "src": "node_modules/country-flag-icons/3x2/KM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/KN.svg": {
+    "file": "assets/KN.svg",
+    "src": "node_modules/country-flag-icons/3x2/KN.svg"
+  },
+  "node_modules/country-flag-icons/3x2/KP.svg": {
+    "file": "assets/KP.svg",
+    "src": "node_modules/country-flag-icons/3x2/KP.svg"
+  },
+  "node_modules/country-flag-icons/3x2/KR.svg": {
+    "file": "assets/KR.svg",
+    "src": "node_modules/country-flag-icons/3x2/KR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/KW.svg": {
+    "file": "assets/KW.svg",
+    "src": "node_modules/country-flag-icons/3x2/KW.svg"
+  },
+  "node_modules/country-flag-icons/3x2/KY.svg": {
+    "file": "assets/KY.svg",
+    "src": "node_modules/country-flag-icons/3x2/KY.svg"
+  },
+  "node_modules/country-flag-icons/3x2/KZ.svg": {
+    "file": "assets/KZ.svg",
+    "src": "node_modules/country-flag-icons/3x2/KZ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/LA.svg": {
+    "file": "assets/LA.svg",
+    "src": "node_modules/country-flag-icons/3x2/LA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/LB.svg": {
+    "file": "assets/LB.svg",
+    "src": "node_modules/country-flag-icons/3x2/LB.svg"
+  },
+  "node_modules/country-flag-icons/3x2/LC.svg": {
+    "file": "assets/LC.svg",
+    "src": "node_modules/country-flag-icons/3x2/LC.svg"
+  },
+  "node_modules/country-flag-icons/3x2/LI.svg": {
+    "file": "assets/LI.svg",
+    "src": "node_modules/country-flag-icons/3x2/LI.svg"
+  },
+  "node_modules/country-flag-icons/3x2/LK.svg": {
+    "file": "assets/LK.svg",
+    "src": "node_modules/country-flag-icons/3x2/LK.svg"
+  },
+  "node_modules/country-flag-icons/3x2/LR.svg": {
+    "file": "assets/LR.svg",
+    "src": "node_modules/country-flag-icons/3x2/LR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/LS.svg": {
+    "file": "assets/LS.svg",
+    "src": "node_modules/country-flag-icons/3x2/LS.svg"
+  },
+  "node_modules/country-flag-icons/3x2/LT.svg": {
+    "file": "assets/LT.svg",
+    "src": "node_modules/country-flag-icons/3x2/LT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/LU.svg": {
+    "file": "assets/LU.svg",
+    "src": "node_modules/country-flag-icons/3x2/LU.svg"
+  },
+  "node_modules/country-flag-icons/3x2/LV.svg": {
+    "file": "assets/LV.svg",
+    "src": "node_modules/country-flag-icons/3x2/LV.svg"
+  },
+  "node_modules/country-flag-icons/3x2/LY.svg": {
+    "file": "assets/LY.svg",
+    "src": "node_modules/country-flag-icons/3x2/LY.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MA.svg": {
+    "file": "assets/MA.svg",
+    "src": "node_modules/country-flag-icons/3x2/MA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MC.svg": {
+    "file": "assets/MC.svg",
+    "src": "node_modules/country-flag-icons/3x2/MC.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MD.svg": {
+    "file": "assets/MD.svg",
+    "src": "node_modules/country-flag-icons/3x2/MD.svg"
+  },
+  "node_modules/country-flag-icons/3x2/ME.svg": {
+    "file": "assets/ME.svg",
+    "src": "node_modules/country-flag-icons/3x2/ME.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MF.svg": {
+    "file": "assets/MF.svg",
+    "src": "node_modules/country-flag-icons/3x2/MF.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MG.svg": {
+    "file": "assets/MG.svg",
+    "src": "node_modules/country-flag-icons/3x2/MG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MH.svg": {
+    "file": "assets/MH.svg",
+    "src": "node_modules/country-flag-icons/3x2/MH.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MK.svg": {
+    "file": "assets/MK.svg",
+    "src": "node_modules/country-flag-icons/3x2/MK.svg"
+  },
+  "node_modules/country-flag-icons/3x2/ML.svg": {
+    "file": "assets/ML.svg",
+    "src": "node_modules/country-flag-icons/3x2/ML.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MM.svg": {
+    "file": "assets/MM.svg",
+    "src": "node_modules/country-flag-icons/3x2/MM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MN.svg": {
+    "file": "assets/MN.svg",
+    "src": "node_modules/country-flag-icons/3x2/MN.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MO.svg": {
+    "file": "assets/MO.svg",
+    "src": "node_modules/country-flag-icons/3x2/MO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MP.svg": {
+    "file": "assets/MP.svg",
+    "src": "node_modules/country-flag-icons/3x2/MP.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MQ.svg": {
+    "file": "assets/MQ.svg",
+    "src": "node_modules/country-flag-icons/3x2/MQ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MR.svg": {
+    "file": "assets/MR.svg",
+    "src": "node_modules/country-flag-icons/3x2/MR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MS.svg": {
+    "file": "assets/MS.svg",
+    "src": "node_modules/country-flag-icons/3x2/MS.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MT.svg": {
+    "file": "assets/MT.svg",
+    "src": "node_modules/country-flag-icons/3x2/MT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MU.svg": {
+    "file": "assets/MU.svg",
+    "src": "node_modules/country-flag-icons/3x2/MU.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MV.svg": {
+    "file": "assets/MV.svg",
+    "src": "node_modules/country-flag-icons/3x2/MV.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MW.svg": {
+    "file": "assets/MW.svg",
+    "src": "node_modules/country-flag-icons/3x2/MW.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MX.svg": {
+    "file": "assets/MX.svg",
+    "src": "node_modules/country-flag-icons/3x2/MX.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MY.svg": {
+    "file": "assets/MY.svg",
+    "src": "node_modules/country-flag-icons/3x2/MY.svg"
+  },
+  "node_modules/country-flag-icons/3x2/MZ.svg": {
+    "file": "assets/MZ.svg",
+    "src": "node_modules/country-flag-icons/3x2/MZ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NA.svg": {
+    "file": "assets/NA.svg",
+    "src": "node_modules/country-flag-icons/3x2/NA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NC.svg": {
+    "file": "assets/NC.svg",
+    "src": "node_modules/country-flag-icons/3x2/NC.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NE.svg": {
+    "file": "assets/NE.svg",
+    "src": "node_modules/country-flag-icons/3x2/NE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NF.svg": {
+    "file": "assets/NF.svg",
+    "src": "node_modules/country-flag-icons/3x2/NF.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NG.svg": {
+    "file": "assets/NG.svg",
+    "src": "node_modules/country-flag-icons/3x2/NG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NI.svg": {
+    "file": "assets/NI.svg",
+    "src": "node_modules/country-flag-icons/3x2/NI.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NL.svg": {
+    "file": "assets/NL.svg",
+    "src": "node_modules/country-flag-icons/3x2/NL.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NO.svg": {
+    "file": "assets/NO.svg",
+    "src": "node_modules/country-flag-icons/3x2/NO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NP.svg": {
+    "file": "assets/NP.svg",
+    "src": "node_modules/country-flag-icons/3x2/NP.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NR.svg": {
+    "file": "assets/NR.svg",
+    "src": "node_modules/country-flag-icons/3x2/NR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NU.svg": {
+    "file": "assets/NU.svg",
+    "src": "node_modules/country-flag-icons/3x2/NU.svg"
+  },
+  "node_modules/country-flag-icons/3x2/NZ.svg": {
+    "file": "assets/NZ.svg",
+    "src": "node_modules/country-flag-icons/3x2/NZ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/OM.svg": {
+    "file": "assets/OM.svg",
+    "src": "node_modules/country-flag-icons/3x2/OM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PA.svg": {
+    "file": "assets/PA.svg",
+    "src": "node_modules/country-flag-icons/3x2/PA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PE.svg": {
+    "file": "assets/PE.svg",
+    "src": "node_modules/country-flag-icons/3x2/PE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PF.svg": {
+    "file": "assets/PF.svg",
+    "src": "node_modules/country-flag-icons/3x2/PF.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PG.svg": {
+    "file": "assets/PG.svg",
+    "src": "node_modules/country-flag-icons/3x2/PG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PH.svg": {
+    "file": "assets/PH.svg",
+    "src": "node_modules/country-flag-icons/3x2/PH.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PK.svg": {
+    "file": "assets/PK.svg",
+    "src": "node_modules/country-flag-icons/3x2/PK.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PL.svg": {
+    "file": "assets/PL.svg",
+    "src": "node_modules/country-flag-icons/3x2/PL.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PM.svg": {
+    "file": "assets/FR.svg",
+    "src": "node_modules/country-flag-icons/3x2/FR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PN.svg": {
+    "file": "assets/PN.svg",
+    "src": "node_modules/country-flag-icons/3x2/PN.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PR.svg": {
+    "file": "assets/PR.svg",
+    "src": "node_modules/country-flag-icons/3x2/PR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PS.svg": {
+    "file": "assets/PS.svg",
+    "src": "node_modules/country-flag-icons/3x2/PS.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PT.svg": {
+    "file": "assets/PT.svg",
+    "src": "node_modules/country-flag-icons/3x2/PT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PW.svg": {
+    "file": "assets/PW.svg",
+    "src": "node_modules/country-flag-icons/3x2/PW.svg"
+  },
+  "node_modules/country-flag-icons/3x2/PY.svg": {
+    "file": "assets/PY.svg",
+    "src": "node_modules/country-flag-icons/3x2/PY.svg"
+  },
+  "node_modules/country-flag-icons/3x2/QA.svg": {
+    "file": "assets/QA.svg",
+    "src": "node_modules/country-flag-icons/3x2/QA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/RE.svg": {
+    "file": "assets/FR.svg",
+    "src": "node_modules/country-flag-icons/3x2/FR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/RO.svg": {
+    "file": "assets/RO.svg",
+    "src": "node_modules/country-flag-icons/3x2/RO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/RS.svg": {
+    "file": "assets/RS.svg",
+    "src": "node_modules/country-flag-icons/3x2/RS.svg"
+  },
+  "node_modules/country-flag-icons/3x2/RU.svg": {
+    "file": "assets/RU.svg",
+    "src": "node_modules/country-flag-icons/3x2/RU.svg"
+  },
+  "node_modules/country-flag-icons/3x2/RW.svg": {
+    "file": "assets/RW.svg",
+    "src": "node_modules/country-flag-icons/3x2/RW.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SA.svg": {
+    "file": "assets/SA.svg",
+    "src": "node_modules/country-flag-icons/3x2/SA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SB.svg": {
+    "file": "assets/SB.svg",
+    "src": "node_modules/country-flag-icons/3x2/SB.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SC.svg": {
+    "file": "assets/SC.svg",
+    "src": "node_modules/country-flag-icons/3x2/SC.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SD.svg": {
+    "file": "assets/SD.svg",
+    "src": "node_modules/country-flag-icons/3x2/SD.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SE.svg": {
+    "file": "assets/SE.svg",
+    "src": "node_modules/country-flag-icons/3x2/SE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SG.svg": {
+    "file": "assets/SG.svg",
+    "src": "node_modules/country-flag-icons/3x2/SG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SH.svg": {
+    "file": "assets/SH.svg",
+    "src": "node_modules/country-flag-icons/3x2/SH.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SI.svg": {
+    "file": "assets/SI.svg",
+    "src": "node_modules/country-flag-icons/3x2/SI.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SJ.svg": {
+    "file": "assets/SJ.svg",
+    "src": "node_modules/country-flag-icons/3x2/SJ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SK.svg": {
+    "file": "assets/SK.svg",
+    "src": "node_modules/country-flag-icons/3x2/SK.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SL.svg": {
+    "file": "assets/SL.svg",
+    "src": "node_modules/country-flag-icons/3x2/SL.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SM.svg": {
+    "file": "assets/SM.svg",
+    "src": "node_modules/country-flag-icons/3x2/SM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SN.svg": {
+    "file": "assets/SN.svg",
+    "src": "node_modules/country-flag-icons/3x2/SN.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SO.svg": {
+    "file": "assets/SO.svg",
+    "src": "node_modules/country-flag-icons/3x2/SO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SR.svg": {
+    "file": "assets/SR.svg",
+    "src": "node_modules/country-flag-icons/3x2/SR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SS.svg": {
+    "file": "assets/SS.svg",
+    "src": "node_modules/country-flag-icons/3x2/SS.svg"
+  },
+  "node_modules/country-flag-icons/3x2/ST.svg": {
+    "file": "assets/ST.svg",
+    "src": "node_modules/country-flag-icons/3x2/ST.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SV.svg": {
+    "file": "assets/SV.svg",
+    "src": "node_modules/country-flag-icons/3x2/SV.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SX.svg": {
+    "file": "assets/SX.svg",
+    "src": "node_modules/country-flag-icons/3x2/SX.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SY.svg": {
+    "file": "assets/SY.svg",
+    "src": "node_modules/country-flag-icons/3x2/SY.svg"
+  },
+  "node_modules/country-flag-icons/3x2/SZ.svg": {
+    "file": "assets/SZ.svg",
+    "src": "node_modules/country-flag-icons/3x2/SZ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TA.svg": {
+    "file": "assets/TA.svg",
+    "src": "node_modules/country-flag-icons/3x2/TA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TC.svg": {
+    "file": "assets/TC.svg",
+    "src": "node_modules/country-flag-icons/3x2/TC.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TD.svg": {
+    "file": "assets/TD.svg",
+    "src": "node_modules/country-flag-icons/3x2/TD.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TF.svg": {
+    "file": "assets/TF.svg",
+    "src": "node_modules/country-flag-icons/3x2/TF.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TG.svg": {
+    "file": "assets/TG.svg",
+    "src": "node_modules/country-flag-icons/3x2/TG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TH.svg": {
+    "file": "assets/TH.svg",
+    "src": "node_modules/country-flag-icons/3x2/TH.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TJ.svg": {
+    "file": "assets/TJ.svg",
+    "src": "node_modules/country-flag-icons/3x2/TJ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TK.svg": {
+    "file": "assets/TK.svg",
+    "src": "node_modules/country-flag-icons/3x2/TK.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TL.svg": {
+    "file": "assets/TL.svg",
+    "src": "node_modules/country-flag-icons/3x2/TL.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TM.svg": {
+    "file": "assets/TM.svg",
+    "src": "node_modules/country-flag-icons/3x2/TM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TN.svg": {
+    "file": "assets/TN.svg",
+    "src": "node_modules/country-flag-icons/3x2/TN.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TO.svg": {
+    "file": "assets/TO.svg",
+    "src": "node_modules/country-flag-icons/3x2/TO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TR.svg": {
+    "file": "assets/TR.svg",
+    "src": "node_modules/country-flag-icons/3x2/TR.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TT.svg": {
+    "file": "assets/TT.svg",
+    "src": "node_modules/country-flag-icons/3x2/TT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TV.svg": {
+    "file": "assets/TV.svg",
+    "src": "node_modules/country-flag-icons/3x2/TV.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TW.svg": {
+    "file": "assets/TW.svg",
+    "src": "node_modules/country-flag-icons/3x2/TW.svg"
+  },
+  "node_modules/country-flag-icons/3x2/TZ.svg": {
+    "file": "assets/TZ.svg",
+    "src": "node_modules/country-flag-icons/3x2/TZ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/UA.svg": {
+    "file": "assets/UA.svg",
+    "src": "node_modules/country-flag-icons/3x2/UA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/UG.svg": {
+    "file": "assets/UG.svg",
+    "src": "node_modules/country-flag-icons/3x2/UG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/UM.svg": {
+    "file": "assets/UM.svg",
+    "src": "node_modules/country-flag-icons/3x2/UM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/US.svg": {
+    "file": "assets/UM.svg",
+    "src": "node_modules/country-flag-icons/3x2/UM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/UY.svg": {
+    "file": "assets/UY.svg",
+    "src": "node_modules/country-flag-icons/3x2/UY.svg"
+  },
+  "node_modules/country-flag-icons/3x2/UZ.svg": {
+    "file": "assets/UZ.svg",
+    "src": "node_modules/country-flag-icons/3x2/UZ.svg"
+  },
+  "node_modules/country-flag-icons/3x2/VA.svg": {
+    "file": "assets/VA.svg",
+    "src": "node_modules/country-flag-icons/3x2/VA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/VC.svg": {
+    "file": "assets/VC.svg",
+    "src": "node_modules/country-flag-icons/3x2/VC.svg"
+  },
+  "node_modules/country-flag-icons/3x2/VE.svg": {
+    "file": "assets/VE.svg",
+    "src": "node_modules/country-flag-icons/3x2/VE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/VG.svg": {
+    "file": "assets/VG.svg",
+    "src": "node_modules/country-flag-icons/3x2/VG.svg"
+  },
+  "node_modules/country-flag-icons/3x2/VI.svg": {
+    "file": "assets/VI.svg",
+    "src": "node_modules/country-flag-icons/3x2/VI.svg"
+  },
+  "node_modules/country-flag-icons/3x2/VN.svg": {
+    "file": "assets/VN.svg",
+    "src": "node_modules/country-flag-icons/3x2/VN.svg"
+  },
+  "node_modules/country-flag-icons/3x2/VU.svg": {
+    "file": "assets/VU.svg",
+    "src": "node_modules/country-flag-icons/3x2/VU.svg"
+  },
+  "node_modules/country-flag-icons/3x2/WF.svg": {
+    "file": "assets/WF.svg",
+    "src": "node_modules/country-flag-icons/3x2/WF.svg"
+  },
+  "node_modules/country-flag-icons/3x2/WS.svg": {
+    "file": "assets/WS.svg",
+    "src": "node_modules/country-flag-icons/3x2/WS.svg"
+  },
+  "node_modules/country-flag-icons/3x2/XA.svg": {
+    "file": "assets/XA.svg",
+    "src": "node_modules/country-flag-icons/3x2/XA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/XC.svg": {
+    "file": "assets/XC.svg",
+    "src": "node_modules/country-flag-icons/3x2/XC.svg"
+  },
+  "node_modules/country-flag-icons/3x2/XK.svg": {
+    "file": "assets/XK.svg",
+    "src": "node_modules/country-flag-icons/3x2/XK.svg"
+  },
+  "node_modules/country-flag-icons/3x2/XO.svg": {
+    "file": "assets/XO.svg",
+    "src": "node_modules/country-flag-icons/3x2/XO.svg"
+  },
+  "node_modules/country-flag-icons/3x2/YE.svg": {
+    "file": "assets/YE.svg",
+    "src": "node_modules/country-flag-icons/3x2/YE.svg"
+  },
+  "node_modules/country-flag-icons/3x2/YT.svg": {
+    "file": "assets/YT.svg",
+    "src": "node_modules/country-flag-icons/3x2/YT.svg"
+  },
+  "node_modules/country-flag-icons/3x2/ZA.svg": {
+    "file": "assets/ZA.svg",
+    "src": "node_modules/country-flag-icons/3x2/ZA.svg"
+  },
+  "node_modules/country-flag-icons/3x2/ZM.svg": {
+    "file": "assets/ZM.svg",
+    "src": "node_modules/country-flag-icons/3x2/ZM.svg"
+  },
+  "node_modules/country-flag-icons/3x2/ZW.svg": {
+    "file": "assets/ZW.svg",
+    "src": "node_modules/country-flag-icons/3x2/ZW.svg"
   },
   "src/frontend/bootstrap.ts": {
     "file": "frontend/bootstrap.js",
@@ -42,7 +1364,7 @@
     "src": "src/frontend/main-page.tsx",
     "isEntry": true,
     "imports": [
-      "_main-BZHzO_ID.js",
+      "_main-CVr3mL2f.js",
       "_logixfast-auth-bridge-B-OPgLgY.js"
     ]
   },
@@ -52,7 +1374,7 @@
     "src": "src/frontend/main-popup.tsx",
     "isEntry": true,
     "imports": [
-      "_main-BZHzO_ID.js",
+      "_main-CVr3mL2f.js",
       "_logixfast-auth-bridge-B-OPgLgY.js"
     ]
   }

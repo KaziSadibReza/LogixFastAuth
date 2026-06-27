@@ -4,6 +4,7 @@ import { resolve } from 'path';
 
 export default defineConfig({
   plugins: [react()],
+  base: './',
   resolve: {
     alias: {
       '@shared': resolve(__dirname, 'src/shared'),
@@ -12,6 +13,7 @@ export default defineConfig({
   build: {
     outDir: 'assets/dist',
     emptyOutDir: true,
+    assetsInlineLimit: 0,
     manifest: 'manifest.json',
     rollupOptions: {
       input: {
