@@ -1,9 +1,0 @@
-node_modules/
-vendor/
-.worktree-production/
-build/
-composer.phar
-.DS_Store
-*.log
-.env
-.env.*

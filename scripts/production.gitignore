@@ -1,5 +1,0 @@
-node_modules/
-src/
-.worktree-production/
-*.log
-.DS_Store

@@ -3,7 +3,7 @@
  * Plugin Name: LogixFast Auth
  * Plugin URI:  https://github.com/KaziSadibReza/LogixFastAuth
  * Description: Fast, secure authentication ecosystem with React UI, OTP, WebAuthn, and deep WooCommerce/Tutor integration.
- * Version:     1.0.2
+ * Version:     1.0.3
  * Author:      Kazi Sadib Reza
  * Author URI:  https://github.com/KaziSadibReza
  * Text Domain: logixfast-auth
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // phpcs:disable WordPress.NamingConventions.PrefixAllGlobals -- Shared LOGIXFAST_AUTH_ bootstrap constants; Plugin Check infers longer logixfast_auth_* sub-prefixes from hooks/options.
-define( 'LOGIXFAST_AUTH_VERSION', '1.0.2' );
+define( 'LOGIXFAST_AUTH_VERSION', '1.0.3' );
 define( 'LOGIXFAST_AUTH_PLUGIN_FILE', __FILE__ );
 define( 'LOGIXFAST_AUTH_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'LOGIXFAST_AUTH_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
