@@ -55,11 +55,25 @@ class Settings {
 				'honeypot_enabled'         => true,
 			),
 			'auth'           => array(
-				'email_otp_enabled'   => false,
-				'phone_otp_enabled'   => false,
-				'webauthn_enabled'    => false,
-				'otp_login_enabled'   => false,
-				'require_phone'       => true,
+				'email_otp_enabled'    => true,
+				'phone_otp_enabled'    => false,
+				'webauthn_enabled'     => false,
+				'otp_login_enabled'    => false,
+				'require_phone'        => true,
+				'login_allow_email'    => true,
+				'login_allow_phone'    => true,
+				'login_allow_username' => false,
+				'show_username_field'      => false,
+				'use_custom_placeholders'  => false,
+				'placeholders'             => array(
+					'login_identifier'   => '',
+					'register_username'  => '',
+					'register_full_name' => '',
+					'register_email'     => '',
+					'register_phone'     => '',
+					'register_password'  => '',
+					'login_password'     => '',
+				),
 			),
 			'mail'           => array(
 				'transport'       => 'wp_mail',
@@ -158,6 +172,217 @@ class Settings {
 	}
 
 	/**
+	 * Enabled login identifier methods from auth settings.
+	 *
+	 * @param array|null $auth Auth settings section.
+	 * @return array<int, string> email|phone|username
+	 */
+	public static function get_login_methods( $auth = null ) {
+		if ( ! is_array( $auth ) ) {
+			$auth = self::get( 'auth' );
+		}
+
+		$methods = array();
+		if ( self::to_bool( $auth['login_allow_email'] ?? true ) ) {
+			$methods[] = 'email';
+		}
+		if ( self::to_bool( $auth['login_allow_phone'] ?? true ) ) {
+			$methods[] = 'phone';
+		}
+		if ( self::to_bool( $auth['login_allow_username'] ?? false ) ) {
+			$methods[] = 'username';
+		}
+
+		if ( empty( $methods ) ) {
+			$methods[] = 'email';
+		}
+
+		return $methods;
+	}
+
+	/**
+	 * Human-readable login identifier label from enabled methods.
+	 *
+	 * @param array|null $auth Auth settings section.
+	 * @return string
+	 */
+	public static function build_login_identifier_label( $auth = null ) {
+		$labels = array();
+		foreach ( self::get_login_methods( $auth ) as $method ) {
+			if ( 'email' === $method ) {
+				$labels[] = __( 'Email', 'logixfast-auth' );
+			} elseif ( 'phone' === $method ) {
+				$labels[] = __( 'Phone', 'logixfast-auth' );
+			} elseif ( 'username' === $method ) {
+				$labels[] = __( 'Username', 'logixfast-auth' );
+			}
+		}
+
+		return self::join_list( $labels );
+	}
+
+	/**
+	 * Default login identifier placeholder from enabled methods.
+	 *
+	 * @param array|null $auth Auth settings section.
+	 * @return string
+	 */
+	public static function build_login_identifier_placeholder_default( $auth = null ) {
+		$methods = self::get_login_methods( $auth );
+
+		if ( count( $methods ) > 1 ) {
+			return self::build_login_identifier_label( $auth );
+		}
+
+		$method = $methods[0] ?? 'email';
+
+		if ( 'email' === $method ) {
+			return 'you@example.com';
+		}
+
+		if ( 'phone' === $method ) {
+			return __( 'Phone number', 'logixfast-auth' );
+		}
+
+		return __( 'Username', 'logixfast-auth' );
+	}
+
+	/**
+	 * Default placeholder strings for auth forms.
+	 *
+	 * @param array|null $auth Auth settings section.
+	 * @return array<string, string>
+	 */
+	public static function get_placeholder_defaults( $auth = null ) {
+		return array(
+			'login_identifier'   => self::build_login_identifier_placeholder_default( $auth ),
+			'register_username'  => __( 'Username', 'logixfast-auth' ),
+			'register_full_name' => __( 'Jane Doe', 'logixfast-auth' ),
+			'register_email'     => __( 'you@example.com', 'logixfast-auth' ),
+			'register_phone'     => __( 'Phone number', 'logixfast-auth' ),
+			'register_password'  => __( 'Min 8 characters', 'logixfast-auth' ),
+			'login_password'     => __( 'Enter your password', 'logixfast-auth' ),
+		);
+	}
+
+	/**
+	 * Resolve admin placeholder overrides with smart defaults.
+	 *
+	 * @param array|null $auth Auth settings section.
+	 * @return array<string, string>
+	 */
+	public static function resolve_placeholders( $auth = null ) {
+		if ( ! is_array( $auth ) ) {
+			$auth = self::get( 'auth' );
+		}
+
+		$defaults  = self::get_placeholder_defaults( $auth );
+		$use_custom = self::to_bool( $auth['use_custom_placeholders'] ?? false );
+
+		if ( ! $use_custom ) {
+			return $defaults;
+		}
+
+		$overrides = is_array( $auth['placeholders'] ?? null ) ? $auth['placeholders'] : array();
+		$resolved  = array();
+
+		foreach ( $defaults as $key => $default ) {
+			$custom = isset( $overrides[ $key ] ) ? trim( (string) $overrides[ $key ] ) : '';
+			$resolved[ $key ] = '' !== $custom ? $custom : $default;
+		}
+
+		return $resolved;
+	}
+
+	/**
+	 * Build login-required error message from enabled methods.
+	 *
+	 * @param array|null $auth Auth settings section.
+	 * @return string
+	 */
+	public static function build_login_required_message( $auth = null ) {
+		$label = self::build_login_identifier_label( $auth );
+
+		/* translators: %s: login identifier label, e.g. Email, phone, or username. */
+		return sprintf( __( '%1$s and password are required.', 'logixfast-auth' ), $label );
+	}
+
+	/**
+	 * Join a list with commas and "or".
+	 *
+	 * @param array<int, string> $items List items.
+	 * @return string
+	 */
+	private static function join_list( $items ) {
+		$count = count( $items );
+		if ( 0 === $count ) {
+			return '';
+		}
+		if ( 1 === $count ) {
+			return $items[0];
+		}
+		if ( 2 === $count ) {
+			/* translators: 1: first item, 2: second item. */
+			return sprintf( __( '%1$s or %2$s', 'logixfast-auth' ), $items[0], $items[1] );
+		}
+
+		$last = array_pop( $items );
+		/* translators: 1: comma-separated items, 2: last item. */
+		return sprintf( __( '%1$s, or %2$s', 'logixfast-auth' ), implode( ', ', $items ), $last );
+	}
+
+	/**
+	 * Sanitize auth settings section.
+	 *
+	 * @param array $section Raw auth settings.
+	 * @return array
+	 */
+	public static function sanitize_auth_section( $section ) {
+		if ( ! is_array( $section ) ) {
+			return self::get_default_settings()['auth'];
+		}
+
+		$defaults = self::get_default_settings()['auth'];
+		$bool_keys = array(
+			'email_otp_enabled',
+			'phone_otp_enabled',
+			'webauthn_enabled',
+			'otp_login_enabled',
+			'require_phone',
+			'login_allow_email',
+			'login_allow_phone',
+			'login_allow_username',
+			'show_username_field',
+			'use_custom_placeholders',
+		);
+
+		foreach ( $bool_keys as $key ) {
+			if ( array_key_exists( $key, $section ) ) {
+				$section[ $key ] = self::to_bool( $section[ $key ] );
+			}
+		}
+
+		$placeholders = is_array( $section['placeholders'] ?? null ) ? $section['placeholders'] : array();
+		$sanitized_placeholders = array();
+		foreach ( $defaults['placeholders'] as $key => $default_value ) {
+			$sanitized_placeholders[ $key ] = isset( $placeholders[ $key ] )
+				? sanitize_text_field( (string) $placeholders[ $key ] )
+				: (string) $default_value;
+		}
+		$section['placeholders'] = $sanitized_placeholders;
+
+		if (
+			empty( $section['login_allow_email'] )
+			&& empty( $section['login_allow_phone'] )
+			&& empty( $section['login_allow_username'] )
+		) {
+			$section['login_allow_email'] = true;
+		}
+
+		return array_merge( $defaults, $section );
+	}
+
+	/**
 	 * Get public frontend config (no secrets).
 	 *
 	 * @return array
@@ -178,6 +403,10 @@ class Settings {
 			}
 		}
 
+		$auth         = $all['auth'] ?? array();
+		$placeholders = self::resolve_placeholders( $auth );
+		$login_label  = self::build_login_identifier_label( $auth );
+
 		return array(
 			'apiUrl'      => rest_url( 'logixfast-auth/v1' ),
 			'assets'      => array(
@@ -197,12 +426,16 @@ class Settings {
 			'otpTtl'                 => (int) ( $all['security']['otp_ttl'] ?? 600 ),
 			'registrationSessionTtl' => max( (int) ( $all['security']['otp_ttl'] ?? 600 ) * 6, 3600 ),
 			'auth'        => array(
-				'emailOtp'    => (bool) $all['auth']['email_otp_enabled'],
-				'phoneOtp'    => (bool) $all['auth']['phone_otp_enabled'],
-				'webauthn'    => (bool) $all['auth']['webauthn_enabled'],
-				'otpLogin'    => (bool) $all['auth']['otp_login_enabled'],
-				'requirePhone' => (bool) $all['auth']['require_phone'],
-				'hasSmsProvider' => ! empty( apply_filters( 'logixfast_auth_sms_providers', array() ) ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
+				'emailOtp'           => self::to_bool( $auth['email_otp_enabled'] ?? false ),
+				'phoneOtp'           => self::to_bool( $auth['phone_otp_enabled'] ?? false ),
+				'webauthn'           => self::to_bool( $auth['webauthn_enabled'] ?? false ),
+				'otpLogin'           => self::to_bool( $auth['otp_login_enabled'] ?? false ),
+				'requirePhone'       => self::to_bool( $auth['require_phone'] ?? true ),
+				'loginAllowEmail'    => self::to_bool( $auth['login_allow_email'] ?? true ),
+				'loginAllowPhone'    => self::to_bool( $auth['login_allow_phone'] ?? true ),
+				'loginAllowUsername' => self::to_bool( $auth['login_allow_username'] ?? false ),
+				'showUsernameField'  => self::to_bool( $auth['show_username_field'] ?? false ),
+				'hasSmsProvider'     => ! empty( apply_filters( 'logixfast_auth_sms_providers', array() ) ), // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 			),
 			'style'       => $all['appearance'],
 			'redirects'   => \LogixFastAuth\Services\RedirectService::get_public_config(),
@@ -215,8 +448,23 @@ class Settings {
 				'registerSubtitle'   => __( 'Just a few details to get started.', 'logixfast-auth' ),
 				'fullName'           => __( 'Full Name', 'logixfast-auth' ),
 				'email'              => __( 'Email', 'logixfast-auth' ),
-				'emailOrPhone'       => __( 'Email or phone number', 'logixfast-auth' ),
+				'emailOrPhone'       => $login_label,
+				'loginIdentifier'    => $login_label,
+				'username'           => __( 'Username', 'logixfast-auth' ),
 				'phone'              => __( 'Phone Number', 'logixfast-auth' ),
+				'usernameAvailable'  => __( 'Username is available.', 'logixfast-auth' ),
+				'usernameTaken'      => __( 'Username is already taken.', 'logixfast-auth' ),
+				'usernameInvalid'    => __( 'Please enter a valid username.', 'logixfast-auth' ),
+				'usernameSuggested'  => __( 'Suggested from your email. You can change it if you like.', 'logixfast-auth' ),
+				'placeholders'       => array(
+					'loginIdentifier'   => $placeholders['login_identifier'],
+					'registerUsername'  => $placeholders['register_username'],
+					'registerFullName'  => $placeholders['register_full_name'],
+					'registerEmail'     => $placeholders['register_email'],
+					'registerPhone'     => $placeholders['register_phone'],
+					'registerPassword'  => $placeholders['register_password'],
+					'loginPassword'     => $placeholders['login_password'],
+				),
 				'password'           => __( 'Password', 'logixfast-auth' ),
 				'confirmPassword'    => __( 'Confirm Password', 'logixfast-auth' ),
 				'passwordsMismatch'  => __( 'Passwords do not match.', 'logixfast-auth' ),
@@ -240,7 +488,7 @@ class Settings {
 				'remember'           => __( 'Remember me', 'logixfast-auth' ),
 				'errorGeneric'       => __( 'Something went wrong. Please try again.', 'logixfast-auth' ),
 				'errorRequired'      => __( 'Please fill in all required fields.', 'logixfast-auth' ),
-				'errorLoginRequired'   => __( 'Email or phone and password are required.', 'logixfast-auth' ),
+				'errorLoginRequired'   => self::build_login_required_message( $auth ),
 				'errorInvalidEmail'    => __( 'Please enter a valid email address.', 'logixfast-auth' ),
 				'errorPhone'         => __( 'Please enter a valid phone number.', 'logixfast-auth' ),
 				'errorPasswordMin'     => __( 'Password must be at least 8 characters.', 'logixfast-auth' ),

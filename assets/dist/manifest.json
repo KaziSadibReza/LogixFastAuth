@@ -3,8 +3,8 @@
     "file": "chunks/logixfast-auth-bridge-B-OPgLgY.js",
     "name": "logixfast-auth-bridge"
   },
-  "_main-CVr3mL2f.js": {
-    "file": "chunks/main-CVr3mL2f.js",
+  "_main-DFIF04_i.js": {
+    "file": "chunks/main-DFIF04_i.js",
     "name": "main",
     "imports": [
       "_logixfast-auth-bridge-B-OPgLgY.js"
@@ -1364,7 +1364,7 @@
     "src": "src/frontend/main-page.tsx",
     "isEntry": true,
     "imports": [
-      "_main-CVr3mL2f.js",
+      "_main-DFIF04_i.js",
       "_logixfast-auth-bridge-B-OPgLgY.js"
     ]
   },
@@ -1374,7 +1374,7 @@
     "src": "src/frontend/main-popup.tsx",
     "isEntry": true,
     "imports": [
-      "_main-CVr3mL2f.js",
+      "_main-DFIF04_i.js",
       "_logixfast-auth-bridge-B-OPgLgY.js"
     ]
   }

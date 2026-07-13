@@ -31,24 +31,28 @@ export function ForgotPasswordForm({
   const saved = loadFormSession();
   const pendingReset = getActiveOtpSessionForPurpose('reset');
 
-  const [email, setEmail] = useState(saved.forgot.email || saved.loginEmail || initialEmail);
+  const [identifier, setIdentifier] = useState(saved.forgot.email || saved.loginEmail || initialEmail);
   const [phone, setPhone] = useState(saved.forgot.phone);
   const [usePhone, setUsePhone] = useState(saved.forgot.usePhone);
   const [loading, setLoading] = useState(false);
 
-  const persistForgotFields = (nextEmail: string, nextPhone: string, nextUsePhone: boolean) => {
+  const loginLabel = config.i18n.loginIdentifier || config.i18n.emailOrPhone || 'Email or phone number';
+  const loginPlaceholder =
+    config.i18n.placeholders?.loginIdentifier || config.i18n.loginIdentifier || 'Email or phone number';
+
+  const persistForgotFields = (nextIdentifier: string, nextPhone: string, nextUsePhone: boolean) => {
     const current = loadFormSession();
     saveFormSession({
-      forgot: { email: nextEmail, phone: nextPhone, usePhone: nextUsePhone },
-      loginEmail: nextUsePhone ? current.loginEmail : nextEmail,
+      forgot: { email: nextIdentifier, phone: nextPhone, usePhone: nextUsePhone },
+      loginEmail: nextUsePhone ? current.loginEmail : nextIdentifier,
     });
   };
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    if (!usePhone && !email.trim()) {
-      toast.error(config.i18n.errorInvalidEmail || 'Please enter a valid email address.');
+    if (!usePhone && !identifier.trim()) {
+      toast.error(config.i18n.errorLoginRequired || 'Please enter your email, phone, or username.');
       return;
     }
 
@@ -57,19 +61,21 @@ export function ForgotPasswordForm({
       return;
     }
 
-    const identifier = usePhone ? phone.trim() : email.trim();
+    const activeIdentifier = usePhone ? phone.trim() : identifier.trim();
     const channel = usePhone ? 'phone' : 'email';
 
-    if (pendingReset && pendingReset.identifier === identifier && pendingReset.channel === channel) {
+    if (pendingReset && pendingReset.identifier === activeIdentifier && pendingReset.channel === channel) {
       onResumeOtp();
       return;
     }
 
     setLoading(true);
     try {
-      const result = await forgotPassword(usePhone ? { phone: identifier } : { email: identifier });
-      persistForgotFields(usePhone ? '' : identifier, usePhone ? identifier : '', usePhone);
-      onOtpRequired(identifier, result.channel || channel);
+      const result = await forgotPassword(
+        usePhone ? { phone: activeIdentifier } : { email: activeIdentifier }
+      );
+      persistForgotFields(usePhone ? '' : activeIdentifier, usePhone ? activeIdentifier : '', usePhone);
+      onOtpRequired(result.identifier || activeIdentifier, result.channel || channel);
     } catch (err) {
       toast.error(err instanceof Error ? err.message : config.i18n.errorGeneric);
     } finally {
@@ -97,19 +103,19 @@ export function ForgotPasswordForm({
       )}
 
       {!usePhone ? (
-        <LogixFastAuthField label={config.i18n.email} htmlFor="logixfast-auth-forgot-email" required>
+        <LogixFastAuthField label={loginLabel} htmlFor="logixfast-auth-forgot-identifier" required>
           <LogixFastAuthInput
-            id="logixfast-auth-forgot-email"
+            id="logixfast-auth-forgot-identifier"
             icon={Mail}
-            type="email"
-            value={email}
+            type="text"
+            value={identifier}
             onChange={(e) => {
               const value = e.target.value;
-              setEmail(value);
+              setIdentifier(value);
               persistForgotFields(value, phone, usePhone);
             }}
-            autoComplete="email"
-            placeholder="you@example.com"
+            autoComplete="username"
+            placeholder={loginPlaceholder}
           />
         </LogixFastAuthField>
       ) : (
@@ -118,7 +124,7 @@ export function ForgotPasswordForm({
           value={phone}
           onChange={(value) => {
             setPhone(value);
-            persistForgotFields(email, value, usePhone);
+            persistForgotFields(identifier, value, usePhone);
           }}
           required
         />
@@ -131,7 +137,7 @@ export function ForgotPasswordForm({
           onClick={() => {
             const nextUsePhone = !usePhone;
             setUsePhone(nextUsePhone);
-            persistForgotFields(email, phone, nextUsePhone);
+            persistForgotFields(identifier, phone, nextUsePhone);
           }}
         >
           {usePhone

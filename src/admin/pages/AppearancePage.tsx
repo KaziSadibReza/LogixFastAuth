@@ -1,5 +1,4 @@
-import { Droplets, Eye, LayoutGrid, Maximize2, Palette, Sparkles } from 'lucide-react';
-import { AppearancePreview } from '../components/AppearancePreview';
+import { Droplets, LayoutGrid, Maximize2, Palette, Sparkles } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
 import { AppearancePageSkeleton, Card, ColorInput, Field, Icon, Input, PresetIconCard } from '../ui';
 
@@ -120,24 +119,6 @@ export function AppearancePage() {
           </div>
         </Card>
       </div>
-
-      <Card
-        className="logixfast-auth-card--flush-body logixfast-auth-card--preview"
-        title={
-          <span className="logixfast-auth-card-title-row">
-            <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--primary">
-              <Icon icon={Eye} size={18} />
-            </span>
-            Live preview
-          </span>
-        }
-        description="Switch login/register, popup vs dedicated page, and device size. Use fullscreen for a closer look."
-        bodyClassName="logixfast-auth-card-body--flush"
-      >
-        <div className="logixfast-auth-appearance-preview-wrap">
-          <AppearancePreview appearance={a} />
-        </div>
-      </Card>
     </>
   );
 }

@@ -8,8 +8,6 @@
 namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 use LogixFastAuth\Database\WebAuthnRepository;
-use LogixFastAuth\Integrations\Tutor_Sync;
-use LogixFastAuth\Integrations\WooCommerce_Sync;
 use LogixFastAuth\Settings;
 use WP_Error;
 use WP_User;
@@ -81,11 +79,14 @@ class AuthService {
 			}
 		}
 
+		$username = $this->resolve_username_for_registration( $data, $email );
+
 		return array(
 			'full_name' => $full_name,
 			'email'     => $email,
 			'phone'     => $phone,
 			'password'  => $password,
+			'username'  => $username,
 		);
 	}
 
@@ -137,6 +138,14 @@ class AuthService {
 			);
 		}
 
+		if ( ! empty( $pending['username'] ) && username_exists( $pending['username'] ) ) {
+			return new WP_Error(
+				'logixfast_auth_register_unavailable',
+				__( 'Unable to create an account with these details. If you already have an account, please sign in.', 'logixfast-auth' ),
+				array( 'status' => 400 )
+			);
+		}
+
 		return $this->create_user( $pending );
 	}
 
@@ -180,7 +189,7 @@ class AuthService {
 		$password  = $data['password'];
 
 		$name_parts = $this->split_name( $full_name );
-		$username   = $this->generate_username( $email );
+		$username   = ! empty( $data['username'] ) ? (string) $data['username'] : $this->generate_username( $email );
 
 		if ( ! empty( $phone ) && $this->resolve_user_id_by_phone( $phone ) ) {
 			return new WP_Error(
@@ -229,15 +238,7 @@ class AuthService {
 	 * @return void
 	 */
 	private function finalize_registration( $user_id, $profile_data, $data ) {
-		WooCommerce_Sync::sync_user( $user_id, $profile_data );
-
-		Tutor_Sync::on_register(
-			$user_id,
-			array(
-				'phone' => $profile_data['phone'] ?? '',
-			)
-		);
-
+		do_action( 'logixfast_auth_after_registration', $user_id, $profile_data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 		do_action( 'logixfast_auth_user_registered', $user_id, $data ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 	}
 
@@ -258,12 +259,20 @@ class AuthService {
 		}
 
 		if ( empty( $identifier ) || empty( $password ) ) {
-			return new WP_Error( 'logixfast_auth_missing_credentials', __( 'Email or phone and password are required.', 'logixfast-auth' ), array( 'status' => 400 ) );
+			return new WP_Error(
+				'logixfast_auth_missing_credentials',
+				Settings::build_login_required_message(),
+				array( 'status' => 400 )
+			);
 		}
 
 		$user = $this->resolve_user_for_password_login( $identifier );
 		if ( ! $user ) {
-			return new WP_Error( 'logixfast_auth_invalid_credentials', __( 'Invalid email/phone or password.', 'logixfast-auth' ), array( 'status' => 401 ) );
+			return new WP_Error(
+				'logixfast_auth_invalid_credentials',
+				__( 'Invalid email/phone or password.', 'logixfast-auth' ),
+				array( 'status' => 401 )
+			);
 		}
 
 		$credentials = array(
@@ -382,17 +391,81 @@ class AuthService {
 	 */
 	private function resolve_user_for_password_login( $identifier ) {
 		$identifier = trim( (string) $identifier );
-
-		if ( is_email( $identifier ) ) {
-			return $this->resolve_user_by_email( $identifier );
-		}
-
-		$user_id = $this->resolve_user_id_by_phone( $identifier );
-		if ( ! $user_id ) {
+		if ( '' === $identifier ) {
 			return null;
 		}
 
-		$user = get_user_by( 'id', $user_id );
+		$methods = Settings::get_login_methods();
+		$tried   = array();
+
+		if ( in_array( 'email', $methods, true ) && is_email( $identifier ) ) {
+			$user = $this->resolve_user_by_email( $identifier );
+			if ( $user instanceof WP_User ) {
+				return $user;
+			}
+			$tried[] = 'email';
+		}
+
+		if ( in_array( 'phone', $methods, true ) ) {
+			$user_id = $this->resolve_user_id_by_phone( $identifier );
+			if ( $user_id ) {
+				$user = get_user_by( 'id', $user_id );
+				if ( $user instanceof WP_User ) {
+					return $user;
+				}
+			}
+			$tried[] = 'phone';
+		}
+
+		if ( in_array( 'username', $methods, true ) ) {
+			$user = $this->resolve_user_by_username( $identifier );
+			if ( $user instanceof WP_User ) {
+				return $user;
+			}
+			$tried[] = 'username';
+		}
+
+		// Ambiguous input: try remaining enabled methods in default order.
+		if ( in_array( 'email', $methods, true ) && ! in_array( 'email', $tried, true ) ) {
+			$user = $this->resolve_user_by_email( $identifier );
+			if ( $user instanceof WP_User ) {
+				return $user;
+			}
+		}
+
+		if ( in_array( 'phone', $methods, true ) && ! in_array( 'phone', $tried, true ) ) {
+			$user_id = $this->resolve_user_id_by_phone( $identifier );
+			if ( $user_id ) {
+				$user = get_user_by( 'id', $user_id );
+				if ( $user instanceof WP_User ) {
+					return $user;
+				}
+			}
+		}
+
+		if ( in_array( 'username', $methods, true ) && ! in_array( 'username', $tried, true ) ) {
+			$user = $this->resolve_user_by_username( $identifier );
+			if ( $user instanceof WP_User ) {
+				return $user;
+			}
+		}
+
+		return null;
+	}
+
+	/**
+	 * Resolve a user by WordPress login name.
+	 *
+	 * @param string $username Username.
+	 * @return WP_User|null
+	 */
+	private function resolve_user_by_username( $username ) {
+		$username = sanitize_user( (string) $username, true );
+		if ( '' === $username ) {
+			return null;
+		}
+
+		$user = get_user_by( 'login', $username );
 		return $user instanceof WP_User ? $user : null;
 	}
 
@@ -540,8 +613,8 @@ class AuthService {
 		}
 
 		do_action( 'wp_login', $user->user_login, $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- WordPress core hook.
+		do_action( 'logixfast_auth_after_login', $user ); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedHooknameFound -- LogixFastAuth plugin hook.
 
-		Tutor_Sync::on_login_success( $user );
 		StatsService::record_login();
 
 		$redirect     = RedirectService::resolve_login( $user );
@@ -606,12 +679,25 @@ class AuthService {
 			return (int) $user->ID;
 		}
 
-		$user_id = $this->resolve_user_id_by_phone( $identifier );
-		if ( ! $user_id ) {
-			return new WP_Error( 'logixfast_auth_user_not_found', __( 'No account found with that phone number.', 'logixfast-auth' ), array( 'status' => 404 ) );
+		if ( 'phone' === $channel ) {
+			$user_id = $this->resolve_user_id_by_phone( $identifier );
+			if ( ! $user_id ) {
+				return new WP_Error( 'logixfast_auth_user_not_found', __( 'No account found with that phone number.', 'logixfast-auth' ), array( 'status' => 404 ) );
+			}
+
+			return $user_id;
 		}
 
-		return $user_id;
+		if ( 'username' === $channel ) {
+			$user = $this->resolve_user_by_username( $identifier );
+			if ( ! $user ) {
+				return new WP_Error( 'logixfast_auth_user_not_found', __( 'No account found with that username.', 'logixfast-auth' ), array( 'status' => 404 ) );
+			}
+
+			return (int) $user->ID;
+		}
+
+		return new WP_Error( 'logixfast_auth_invalid_channel', __( 'Invalid reset channel.', 'logixfast-auth' ), array( 'status' => 400 ) );
 	}
 
 	/**
@@ -726,7 +812,7 @@ class AuthService {
 	 * @param string $email Email address.
 	 * @return string
 	 */
-	private function generate_username( $email ) {
+	public function generate_username( $email ) {
 		$base = sanitize_user( strstr( $email, '@', true ), true );
 		if ( empty( $base ) ) {
 			$base = 'user';
@@ -741,6 +827,70 @@ class AuthService {
 		}
 
 		return $username;
+	}
+
+	/**
+	 * Validate a username using WordPress core rules.
+	 *
+	 * @param string $username Username.
+	 * @return true|WP_Error
+	 */
+	public function validate_username_input( $username ) {
+		$username = sanitize_user( (string) $username, true );
+		if ( '' === $username ) {
+			return new WP_Error( 'logixfast_auth_invalid_username', __( 'Please enter a valid username.', 'logixfast-auth' ), array( 'status' => 400 ) );
+		}
+
+		$valid = validate_username( $username );
+		if ( is_wp_error( $valid ) ) {
+			return new WP_Error( 'logixfast_auth_invalid_username', __( 'Please enter a valid username.', 'logixfast-auth' ), array( 'status' => 400 ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Check whether a username is available.
+	 *
+	 * @param string $username Username.
+	 * @return true|WP_Error
+	 */
+	public function ensure_username_available( $username ) {
+		$valid = $this->validate_username_input( $username );
+		if ( is_wp_error( $valid ) ) {
+			return $valid;
+		}
+
+		$username = sanitize_user( (string) $username, true );
+		if ( username_exists( $username ) ) {
+			return new WP_Error( 'logixfast_auth_username_taken', __( 'Username is already taken.', 'logixfast-auth' ), array( 'status' => 400 ) );
+		}
+
+		return true;
+	}
+
+	/**
+	 * Resolve registration username from payload and settings.
+	 *
+	 * @param array  $data  Registration payload.
+	 * @param string $email Sanitized email.
+	 * @return string|WP_Error
+	 */
+	private function resolve_username_for_registration( $data, $email ) {
+		$settings = Settings::get( 'auth' );
+		$show_field = Settings::to_bool( $settings['show_username_field'] ?? false );
+		$raw_username = sanitize_user( (string) ( $data['username'] ?? '' ), true );
+
+		if ( ! $show_field || '' === $raw_username ) {
+			return $this->generate_username( $email );
+		}
+
+		$valid = $this->ensure_username_available( $raw_username );
+		if ( is_wp_error( $valid ) ) {
+			return $valid;
+		}
+
+		return sanitize_user( $raw_username, true );
 	}
 
 }

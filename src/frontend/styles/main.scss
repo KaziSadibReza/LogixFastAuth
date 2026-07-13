@@ -360,6 +360,20 @@
   margin-bottom: calc(var(--logixfast-auth-spacing) * 0.9);
 }
 
+.logixfast-auth-field-hint {
+  margin: 6px 0 0;
+  font-size: 0.8125rem;
+  color: var(--logixfast-auth-muted);
+
+  &--success {
+    color: var(--logixfast-auth-success);
+  }
+
+  &--error {
+    color: var(--logixfast-auth-error);
+  }
+}
+
 .logixfast-auth-label {
   display: inline-flex;
   align-items: center;

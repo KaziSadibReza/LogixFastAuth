@@ -79,6 +79,40 @@ class AuthController {
 				'permission_callback' => '__return_true', // Public reset completion; requires valid reset token and OTP.
 			)
 		);
+
+		register_rest_route(
+			'logixfast-auth/v1',
+			'/auth/check-username',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'check_username' ),
+				'permission_callback' => '__return_true',
+				'args'                => array(
+					'username' => array(
+						'required'          => true,
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_user',
+					),
+				),
+			)
+		);
+
+		register_rest_route(
+			'logixfast-auth/v1',
+			'/auth/suggest-username',
+			array(
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => array( $this, 'suggest_username' ),
+				'permission_callback' => '__return_true',
+				'args'                => array(
+					'email' => array(
+						'required'          => true,
+						'type'              => 'string',
+						'sanitize_callback' => 'sanitize_email',
+					),
+				),
+			)
+		);
 	}
 
 	/**
@@ -303,11 +337,32 @@ class AuthController {
 			return $rate;
 		}
 
-		$email = sanitize_email( $data['email'] ?? '' );
-		$phone = sanitize_text_field( $data['phone'] ?? '' );
+		$email    = sanitize_email( $data['email'] ?? '' );
+		$phone    = sanitize_text_field( $data['phone'] ?? '' );
+		$username = sanitize_user( (string) ( $data['username'] ?? '' ), true );
 
-		$channel    = ! empty( $phone ) ? 'phone' : 'email';
-		$identifier = 'phone' === $channel ? $phone : $email;
+		if ( ! empty( $phone ) ) {
+			$channel    = 'phone';
+			$identifier = $phone;
+		} elseif ( ! empty( $username ) ) {
+			$channel    = 'username';
+			$identifier = $username;
+		} else {
+			$raw = trim( (string) ( $data['email'] ?? '' ) );
+			if ( is_email( $raw ) ) {
+				$channel    = 'email';
+				$identifier = sanitize_email( $raw );
+			} else {
+				$auth_settings = Settings::get( 'auth' );
+				if ( ! empty( $auth_settings['login_allow_username'] ) ) {
+					$channel    = 'username';
+					$identifier = sanitize_user( $raw, true );
+				} else {
+					$channel    = 'email';
+					$identifier = sanitize_email( $raw );
+				}
+			}
+		}
 
 		if ( empty( $identifier ) ) {
 			return new \WP_Error( 'logixfast_auth_missing_identifier', __( 'Email or phone is required.', 'logixfast-auth' ), array( 'status' => 400 ) );
@@ -316,6 +371,9 @@ class AuthController {
 		$auth = Settings::get( 'auth' );
 		if ( 'phone' === $channel && empty( $auth['phone_otp_enabled'] ) ) {
 			return new \WP_Error( 'logixfast_auth_phone_reset_disabled', __( 'Phone reset is not available.', 'logixfast-auth' ), array( 'status' => 400 ) );
+		}
+		if ( 'username' === $channel && empty( $auth['login_allow_username'] ) ) {
+			return new \WP_Error( 'logixfast_auth_username_reset_disabled', __( 'Username reset is not available.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$auth_service = new AuthService();
@@ -328,14 +386,31 @@ class AuthController {
 			) );
 		}
 
-		$otp = ( new OtpService() )->send( $identifier, $channel, 'reset' );
+		$otp_identifier = $identifier;
+		$otp_channel    = $channel;
+
+		if ( 'username' === $channel ) {
+			$user = get_user_by( 'id', $user_id );
+			if ( ! $user instanceof \WP_User ) {
+				return rest_ensure_response( array(
+					'sent'    => true,
+					'channel' => $channel,
+				) );
+			}
+
+			$otp_identifier = $user->user_email;
+			$otp_channel    = 'email';
+		}
+
+		$otp = ( new OtpService() )->send( $otp_identifier, $otp_channel, 'reset' );
 		if ( is_wp_error( $otp ) ) {
 			return $otp;
 		}
 
 		return rest_ensure_response( array(
-			'sent'    => true,
-			'channel' => $channel,
+			'sent'       => true,
+			'channel'    => $otp_channel,
+			'identifier' => $otp_identifier,
 		) );
 	}
 
@@ -376,5 +451,89 @@ class AuthController {
 		}
 
 		return rest_ensure_response( array_merge( $result, $auth_result ) );
+	}
+
+	/**
+	 * Check whether a username is valid and available.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function check_username( $request ) {
+		$rate = RateLimiter::throttle_scoped( 'username_check' );
+		if ( is_wp_error( $rate ) ) {
+			return $rate;
+		}
+
+		$username = sanitize_user( (string) $request->get_param( 'username' ), true );
+		if ( strlen( $username ) < 3 ) {
+			return rest_ensure_response(
+				array(
+					'valid'     => false,
+					'available' => false,
+					'reason'    => 'too_short',
+				)
+			);
+		}
+
+		$auth_service = new AuthService();
+		$valid        = $auth_service->validate_username_input( $username );
+		if ( is_wp_error( $valid ) ) {
+			return rest_ensure_response(
+				array(
+					'valid'     => false,
+					'available' => false,
+					'reason'    => 'invalid',
+				)
+			);
+		}
+
+		return rest_ensure_response(
+			array(
+				'valid'     => true,
+				'available' => ! username_exists( $username ),
+				'username'  => $username,
+			)
+		);
+	}
+
+	/**
+	 * Suggest an available username from an email address.
+	 *
+	 * @param \WP_REST_Request $request Request.
+	 * @return \WP_REST_Response|\WP_Error
+	 */
+	public function suggest_username( $request ) {
+		$rate = RateLimiter::throttle_scoped( 'username_check' );
+		if ( is_wp_error( $rate ) ) {
+			return $rate;
+		}
+
+		$email = sanitize_email( (string) $request->get_param( 'email' ) );
+		if ( ! is_email( $email ) ) {
+			return new \WP_Error(
+				'logixfast_auth_invalid_email',
+				__( 'Please enter a valid email address.', 'logixfast-auth' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		$auth_service = new AuthService();
+		$username     = $auth_service->generate_username( $email );
+		$valid        = $auth_service->validate_username_input( $username );
+		if ( is_wp_error( $valid ) ) {
+			return new \WP_Error(
+				'logixfast_auth_invalid_username',
+				__( 'Could not generate a valid username.', 'logixfast-auth' ),
+				array( 'status' => 400 )
+			);
+		}
+
+		return rest_ensure_response(
+			array(
+				'username'  => $username,
+				'available' => true,
+			)
+		);
 	}
 }

@@ -176,9 +176,7 @@ class SettingsController {
 	 * @return array
 	 */
 	private function sanitize_auth( $section ) {
-		$section['webauthn_enabled'] = Settings::to_bool( $section['webauthn_enabled'] ?? false );
-
-		return $section;
+		return Settings::sanitize_auth_section( $section );
 	}
 
 	/**

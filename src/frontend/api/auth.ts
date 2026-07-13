@@ -21,6 +21,7 @@ export interface RegisterData {
   email: string;
   phone: string;
   password: string;
+  username?: string;
   preferred_channel?: 'email' | 'phone';
   logixfast_auth_hp?: string;
 }
@@ -54,6 +55,22 @@ export function login(data: LoginData): Promise<AuthResponse> {
   });
 }
 
+export function checkUsername(username: string): Promise<{ valid: boolean; available: boolean; reason?: string; username?: string }> {
+  const config = getConfig();
+  const params = new URLSearchParams({ username });
+  return apiRequest(config.apiUrl, config.nonce, `/auth/check-username?${params.toString()}`, {
+    method: 'GET',
+  });
+}
+
+export function suggestUsername(email: string): Promise<{ username: string; available: boolean }> {
+  const config = getConfig();
+  const params = new URLSearchParams({ email });
+  return apiRequest(config.apiUrl, config.nonce, `/auth/suggest-username?${params.toString()}`, {
+    method: 'GET',
+  });
+}
+
 export interface VerifyOtpOptions {
   pendingToken?: string;
   purpose?: string;
@@ -78,7 +95,7 @@ export function verifyOtp(
   });
 }
 
-export function forgotPassword(data: { email?: string; phone?: string }): Promise<{ sent: boolean; channel: string }> {
+export function forgotPassword(data: { email?: string; phone?: string; username?: string }): Promise<{ sent: boolean; channel: string; identifier?: string }> {
   const config = getConfig();
   return apiRequest(config.apiUrl, config.nonce, '/auth/forgot-password', {
     method: 'POST',

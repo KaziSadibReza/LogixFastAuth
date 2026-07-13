@@ -57,9 +57,6 @@ class Admin_Assets {
 			Assets::enqueue_classic_script( 'logixfast-auth-admin', 'admin.js', array(), true );
 		}
 
-		$frontend_css_files = Assets::get_entry_css_files( Assets::ENTRY_POPUP );
-		$frontend_css_urls  = ! empty( $frontend_css_files ) ? array_values( $frontend_css_files ) : array();
-
 		wp_localize_script(
 			'logixfast-auth-admin',
 			'LOGIXFAST_AUTH_ADMIN',
@@ -69,7 +66,6 @@ class Admin_Assets {
 				'homeUrl'            => admin_url(),
 				'profilePasskeysUrl' => admin_url( 'profile.php#logixfast-auth-passkey-manager' ),
 				'pages'              => rest_url( 'logixfast-auth/v1/settings/pages' ),
-				'frontendCssUrls'  => $frontend_css_urls,
 				'i18n'    => array(
 					'title'        => __( 'LogixFast Auth', 'logixfast-auth' ),
 					'general'      => __( 'General', 'logixfast-auth' ),

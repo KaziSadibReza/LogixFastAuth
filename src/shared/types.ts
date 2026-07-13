@@ -13,8 +13,26 @@ export interface LogixFastAuthAuthConfig {
   webauthn: boolean;
   otpLogin: boolean;
   requirePhone: boolean;
+  loginAllowEmail: boolean;
+  loginAllowPhone: boolean;
+  loginAllowUsername: boolean;
+  showUsernameField: boolean;
   hasSmsProvider: boolean;
 }
+
+export interface LogixFastAuthPlaceholders {
+  loginIdentifier: string;
+  registerUsername: string;
+  registerFullName: string;
+  registerEmail: string;
+  registerPhone: string;
+  registerPassword: string;
+  loginPassword: string;
+}
+
+export type LogixFastAuthI18n = Record<string, string> & {
+  placeholders?: LogixFastAuthPlaceholders;
+};
 
 export interface LogixFastAuthConfig {
   apiUrl: string;
@@ -40,7 +58,7 @@ export interface LogixFastAuthConfig {
     login: LogixFastAuthRedirectRule;
     register: LogixFastAuthRedirectRule;
   };
-  i18n: Record<string, string>;
+  i18n: LogixFastAuthI18n;
 }
 
 export interface LogixFastAuthAdminConfig {
@@ -49,7 +67,6 @@ export interface LogixFastAuthAdminConfig {
   homeUrl: string;
   profilePasskeysUrl: string;
   pages: string;
-  frontendCssUrls?: string[];
   i18n: Record<string, string>;
 }
 
@@ -74,6 +91,20 @@ export interface LogixFastAuthSettings {
     webauthn_enabled: boolean;
     otp_login_enabled: boolean;
     require_phone: boolean;
+    login_allow_email: boolean;
+    login_allow_phone: boolean;
+    login_allow_username: boolean;
+    show_username_field: boolean;
+    use_custom_placeholders: boolean;
+    placeholders: {
+      login_identifier: string;
+      register_username: string;
+      register_full_name: string;
+      register_email: string;
+      register_phone: string;
+      register_password: string;
+      login_password: string;
+    };
     has_sms_provider?: boolean;
     has_tutor_lms?: boolean;
   };

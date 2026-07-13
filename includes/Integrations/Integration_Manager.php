@@ -46,11 +46,13 @@ class Integration_Manager {
 		if ( Integration_Availability::is_woocommerce_available() ) {
 			new WooCommerce_Login();
 			new WooCommerce_Passkeys();
+			new WooCommerce_Sync();
 		}
 
 		if ( Integration_Availability::is_tutor_available() ) {
 			new Tutor_Login();
 			new Tutor_Passkeys();
+			new Tutor_Sync();
 		}
 	}
 

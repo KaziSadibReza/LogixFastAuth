@@ -88,9 +88,13 @@ export function LoginForm({
     e.preventDefault();
 
     const validation = validateLoginFields(email, password, {
-	  required: config.i18n.errorLoginRequired || 'Email or phone and password are required.',
+      required: config.i18n.errorLoginRequired || 'Email or phone and password are required.',
       email: config.i18n.errorInvalidEmail || 'Please enter a valid email address.',
-	  phone: config.i18n.errorPhone || 'Please enter a valid phone number.',
+      phone: config.i18n.errorPhone || 'Please enter a valid phone number.',
+    }, {
+      allowEmail: config.auth.loginAllowEmail !== false,
+      allowPhone: config.auth.loginAllowPhone !== false,
+      allowUsername: config.auth.loginAllowUsername,
     });
 
     if (validation) {
@@ -104,7 +108,7 @@ export function LoginForm({
     try {
 	  const identifier = email.trim();
 	  const result = await login({
-		...(identifier.includes('@') ? { email: identifier } : { phone: identifier }),
+		email: identifier,
 		password,
 		remember,
 		logixfast_auth_hp: '',
@@ -269,7 +273,7 @@ export function LoginForm({
 
   return (
     <form onSubmit={handlePasswordSubmit} noValidate>
-	  <LogixFastAuthField label={config.i18n.emailOrPhone || 'Email or phone number'} htmlFor="logixfast-auth-login-email" required hasError={fieldErrors.email}>
+	  <LogixFastAuthField label={config.i18n.loginIdentifier || config.i18n.emailOrPhone || 'Email or phone number'} htmlFor="logixfast-auth-login-email" required hasError={fieldErrors.email}>
         <LogixFastAuthInput
           id="logixfast-auth-login-email"
           icon={Mail}
@@ -282,7 +286,7 @@ export function LoginForm({
             clearField('email');
           }}
 		  autoComplete="username"
-		  placeholder="you@example.com or +8801XXXXXXXXX"
+		  placeholder={config.i18n.placeholders?.loginIdentifier || config.i18n.loginIdentifier || 'Email or phone number'}
           hasError={fieldErrors.email}
         />
       </LogixFastAuthField>
@@ -300,7 +304,7 @@ export function LoginForm({
           autoComplete={passwordAutoComplete}
           readOnly={!passwordFieldReady}
           onFocus={() => setPasswordFieldReady(true)}
-          placeholder="Enter your password"
+          placeholder={config.i18n.placeholders?.loginPassword || 'Enter your password'}
           hasError={fieldErrors.password}
           suffix={
             <button

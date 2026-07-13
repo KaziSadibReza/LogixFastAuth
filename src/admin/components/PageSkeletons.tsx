@@ -198,25 +198,6 @@ function SkeletonAppearanceFields({ count = 3 }: { count?: number }) {
   );
 }
 
-function SkeletonPreviewFrame() {
-  return (
-    <div className="logixfast-auth-appearance-preview-wrap logixfast-auth-skeleton-frame-preview">
-      <div className="logixfast-auth-appearance-preview-toolbar logixfast-auth-skeleton-frame-preview__toolbar">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="logixfast-auth-skeleton-frame-preview__toolbar-group">
-            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--text" style={{ width: 36, height: 10 }} />
-            <span className="logixfast-auth-skeleton logixfast-auth-skeleton--pill" style={{ width: 120, height: 28 }} />
-          </div>
-        ))}
-        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--btn" style={{ width: 100 }} />
-      </div>
-      <div className="logixfast-auth-appearance-preview__stage">
-        <span className="logixfast-auth-skeleton logixfast-auth-skeleton--preview" />
-      </div>
-    </div>
-  );
-}
-
 function SkeletonFieldMappings({ count = 3 }: { count?: number }) {
   return (
     <div className="logixfast-auth-integrations-panel">
@@ -412,9 +393,6 @@ export function AppearancePageSkeleton() {
           <SkeletonAppearanceFields count={3} />
         </SkeletonCardFrame>
       </SkeletonColumns>
-      <SkeletonCardFrame flush className="logixfast-auth-card--preview">
-        <SkeletonPreviewFrame />
-      </SkeletonCardFrame>
     </>
   );
 }

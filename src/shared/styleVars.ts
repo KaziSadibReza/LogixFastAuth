@@ -52,7 +52,3 @@ export function applyStyleVarsToElement(root: HTMLElement, style: LogixFastAuthS
   root.style.setProperty('--logixfast-auth-shadow-focus', `0 0 0 3px ${rgba(primary, 0.18)}`);
   root.style.setProperty('--logixfast-auth-shadow-primary', `0 8px 20px ${rgba(primary, 0.32)}`);
 }
-
-export function previewStageBackground(primary: string): string {
-  return `radial-gradient(circle at 20% 20%, ${rgba(primary, 0.06)}, transparent 45%), radial-gradient(circle at 80% 80%, rgba(79, 70, 229, 0.05), transparent 40%), #f4f6f8`;
-}

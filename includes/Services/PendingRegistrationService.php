@@ -80,6 +80,7 @@ class PendingRegistrationService {
 			'email'     => $email,
 			'phone'     => $phone,
 			'password'  => (string) ( $data['password'] ?? '' ),
+			'username'  => sanitize_user( (string) ( $data['username'] ?? '' ), true ),
 		);
 
 		$json = wp_json_encode( $payload );
