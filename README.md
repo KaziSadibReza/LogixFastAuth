@@ -142,51 +142,64 @@ logixfast-auth/
 | --- | --- |
 | `npm run dev` | Vite dev server with HMR — requires `LOGIXFAST_AUTH_DEV` in `wp-config.php` (see above) |
 | `npm run build` | Compile `src/` → `assets/dist/` |
-| `npm run sync:production` | Sync runtime build to `production` git branch |
-| `npm run publish:production -- --message "..." --push` | Build, commit, and push `production` |
-| `npm run package:org` | Build WordPress.org ZIP folder (includes `src/` per Guideline #4) |
+| `npm run sync:production` | Build and sync runtime files to the local `production` git worktree |
+| `npm run publish:production` | Build, commit, and push the `production` git branch to GitHub |
+| `npm run sync:svn` | Build and sync runtime files to the local WordPress.org SVN checkout |
+| `npm run publish:svn` | Build, sync, and commit to `https://plugins.svn.wordpress.org/logixfast-auth` |
+| `npm run release` | Publish to GitHub `production` and WordPress.org SVN in one step |
 
 ---
 
-## Git branches
+## Git branches and release targets
 
-| Branch | Contents | Use |
+| Target | Contents | Use |
 | --- | --- | --- |
-| `development` | Full source, `src/`, build config, scripts | Daily development |
-| `production` | PHP, `assets/dist/`, `vendor/`, `readme.txt` only | Lean installs from GitHub |
+| `development` | Full source, `src/`, Vite/TS config, scripts | Daily development with `npm run dev` |
+| `production` (git) | PHP, `assets/dist/`, `vendor/`, `readme.txt` only | Lean installs from GitHub |
+| WordPress.org SVN | Same runtime tree as `production` + `assets/` banners/icons | Official plugin directory releases |
 
-Publish flow:
+**Development workflow**
 
 ```bash
 git checkout development
+npm install
+composer install
+npm run dev   # local HMR — enable LOGIXFAST_AUTH_DEV in wp-config.php
+```
+
+**Release workflow (v1.0.3 example)**
+
+```bash
+git checkout development
+# bump version in logixfast-auth.php, readme.txt Stable tag, package.json, composer.json
 git add .
-git commit -m "feat: your change"
+git commit -m "release: v1.0.3"
 git push origin development
 
-npm run publish:production -- --message "release: v1.0.1" --push
+npm run release
+# or separately:
+npm run publish:production -- --message "release: v1.0.3"
+npm run publish:svn -- --message "Release 1.0.3"
 ```
+
+Local checkouts created by the scripts (outside this repo):
+
+| Path | Purpose |
+| --- | --- |
+| `../.logixfast-auth-production-worktree` | Git `production` branch worktree |
+| `../.logixfast-auth-svn` | WordPress.org SVN checkout |
 
 ---
 
 ## WordPress.org release
 
-WordPress.org requires **human-readable source** for compiled JavaScript ([Guideline #4](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/#4-code-must-be-mostly-human-readable)).
-
-```bash
-npm run package:org
-```
-
-Output: `build/logixfast-auth/` — **runtime only** (same as the `production` branch).
-
-| Included | Not included |
-| --- | --- |
-| `includes/`, `templates/`, `assets/dist/`, `vendor/` | `src/`, `vite.config.ts`, `phpcs.xml`, `package.json` |
+Runtime plugin files are synced to SVN `trunk/` and `tags/{version}/`. Directory banners and icons live in `.wordpress-org/` in the development repo and are copied to SVN `assets/` (not shipped inside the plugin ZIP).
 
 Source for reviewers is linked in **`readme.txt`** → GitHub `development` branch ([Guideline #4](https://developer.wordpress.org/plugins/wordpress-org/detailed-plugin-guidelines/#4-code-must-be-mostly-human-readable)).
 
-1. Run **Plugin Check** on `build/logixfast-auth/`
-2. ZIP `logixfast-auth/`
-3. Upload to WordPress.org
+1. Run **Plugin Check** on the SVN `trunk/` checkout (or the production worktree)
+2. `npm run publish:svn -- --message "Release x.y.z"`
+3. WordPress.org serves updates from the SVN tag matching `Stable tag` in `readme.txt`
 
 **Do not** run Plugin Check on the development folder root — it contains `.gitignore`, `.distignore`, and other dev-only files.
 

@@ -1,6 +1,7 @@
 node_modules/
 vendor/
 .worktree-production/
+.logixfast-auth-svn/
 build/
 composer.phar
 .DS_Store

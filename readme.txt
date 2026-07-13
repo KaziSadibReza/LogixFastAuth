@@ -4,7 +4,7 @@ Tags: login, registration, otp, webauthn, woocommerce
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.2
+Stable tag: 1.0.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,13 @@ Nothing by default. External requests happen only when you configure Gmail SMTP 
 
 == Changelog ==
 
+= 1.0.3 =
+* Login identifiers (email, phone, username) and optional username registration
+* Custom auth placeholders and email OTP default-on
+* Tutor LMS 4 passkeys settings tab compatibility
+* WooCommerce and Tutor compat helpers for passkey surfaces
+* Release workflow: development branch for dev, production git branch and WordPress.org SVN for releases
+
 = 1.0.2 =
 * Prepared release metadata for WordPress.org re-review
 * Bundled country flag assets locally and removed stale external asset references
@@ -106,6 +113,9 @@ Nothing by default. External requests happen only when you configure Gmail SMTP 
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.0.3 =
+Login identifiers, username registration, Tutor 4 passkeys fix, and release tooling updates.
 
 = 1.0.2 =
 Release metadata and WordPress.org package readiness update.

@@ -1,6 +1,6 @@
 {
   "name": "logixfast-auth",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,8 +9,10 @@
     "postbuild": "node -e \"const fs=require('fs');const p='assets/dist/manifest.json';console.log(fs.existsSync(p)?'manifest.json generated at assets/dist/manifest.json':'WARN: manifest.json missing — run npm run build');\"",
     "preview": "vite preview",
     "sync:production": "node scripts/sync-production.mjs",
-    "package:org": "node scripts/package-org.mjs",
-    "publish:production": "node scripts/sync-production.mjs --push"
+    "sync:svn": "node scripts/sync-svn.mjs",
+    "publish:production": "node scripts/sync-production.mjs --push",
+    "publish:svn": "node scripts/sync-svn.mjs --commit",
+    "release": "node scripts/sync-production.mjs --push && node scripts/sync-svn.mjs --commit"
   },
   "dependencies": {
     "@simplewebauthn/browser": "^11.0.0",
