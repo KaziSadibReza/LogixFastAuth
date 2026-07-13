@@ -7,6 +7,10 @@
 
 namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
+use LogixFastAuth\Integrations\Integration_Availability;
+use LogixFastAuth\Integrations\Tutor_Compat;
+use LogixFastAuth\Integrations\WooCommerce_Compat;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -81,26 +85,15 @@ class Passkey_Assets {
 	 * @return bool
 	 */
 	public static function is_public_passkeys_screen() {
-		if ( function_exists( 'is_account_page' ) && is_account_page() && is_user_logged_in() ) {
-			global $wp;
-			if ( is_object( $wp ) && array_key_exists( 'passkeys', $wp->query_vars ) ) {
-				return true;
-			}
-		}
-
-		if ( function_exists( 'is_wc_endpoint_url' ) && is_wc_endpoint_url( 'passkeys' ) ) {
+		if ( WooCommerce_Compat::is_passkeys_screen() ) {
 			return true;
 		}
 
-		global $wp_query;
-		if ( ! $wp_query instanceof \WP_Query ) {
-			return false;
+		if ( Integration_Availability::is_tutor_available() && Tutor_Compat::is_passkeys_settings_screen() ) {
+			return true;
 		}
 
-		$page_slug = $wp_query->get( 'tutor_dashboard_page' );
-		$sub_page  = $wp_query->get( 'tutor_dashboard_sub_page' );
-
-		return 'settings' === $page_slug && 'passkeys' === $sub_page;
+		return false;
 	}
 
 	/**

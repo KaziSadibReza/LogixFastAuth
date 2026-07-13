@@ -8,6 +8,8 @@
 namespace LogixFastAuth\Services; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 use LogixFastAuth\Integrations\Integration_Availability;
+use LogixFastAuth\Integrations\Tutor_Compat;
+use LogixFastAuth\Integrations\WooCommerce_Compat;
 use LogixFastAuth\Settings;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -40,11 +42,11 @@ class Passkey_Surfaces {
 		);
 
 		if ( Integration_Availability::is_tutor_available() && function_exists( 'tutor_utils' ) ) {
-			$urls['tutor'] = (string) tutor_utils()->get_tutor_dashboard_page_permalink( 'settings/passkeys' );
+			$urls['tutor'] = Tutor_Compat::get_passkeys_settings_url();
 		}
 
-		if ( Integration_Availability::is_woocommerce_available() && function_exists( 'wc_get_account_endpoint_url' ) ) {
-			$urls['woocommerce'] = (string) wc_get_account_endpoint_url( 'passkeys' );
+		if ( Integration_Availability::is_woocommerce_available() ) {
+			$urls['woocommerce'] = WooCommerce_Compat::get_passkeys_account_url();
 		}
 
 		return $urls;
