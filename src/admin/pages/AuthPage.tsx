@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 import {
+  AtSign,
   GraduationCap,
   LogIn,
   Mail,
@@ -27,6 +28,9 @@ import {
   Toggle,
   Field,
   Input,
+  Checkbox,
+  Textarea,
+  NoticeBanner,
 } from '../ui';
 
 import type { LogixFastAuthSettings } from '@shared/types';
@@ -94,6 +98,13 @@ const loginMethodToggles: LoginMethodToggle[] = [
   { key: 'login_allow_username', label: 'Allow username login', icon: UserRound, desc: 'Users can sign in with their WordPress username.' },
 ];
 
+const emailProviderPresets: { key: string; label: string }[] = [
+  { key: 'gmail', label: 'Gmail' },
+  { key: 'microsoft', label: 'Microsoft / Outlook' },
+  { key: 'yahoo', label: 'Yahoo' },
+  { key: 'icloud', label: 'iCloud' },
+];
+
 export function AuthPage() {
   const { settings, updateSection, loading } = useSettings();
 
@@ -129,6 +140,18 @@ export function AuthPage() {
         />
       </Field>
     );
+  };
+
+  const restrictionEnabled = Boolean(a.email_provider_restriction_enabled);
+  const allowedProviders = a.email_allowed_providers ?? [];
+  const customDomains = a.email_allowed_custom_domains ?? [];
+  const hasAllowedProvider = allowedProviders.length > 0 || customDomains.some((domain) => domain.trim() !== '');
+
+  const toggleEmailProvider = (key: string, checked: boolean) => {
+    const next = checked
+      ? Array.from(new Set([...allowedProviders, key]))
+      : allowedProviders.filter((provider) => provider !== key);
+    updateSection('auth', { email_allowed_providers: next });
   };
 
   const toggleLoginMethod = (key: LoginMethodToggle['key'], checked: boolean) => {
@@ -422,6 +445,78 @@ export function AuthPage() {
               </div>
             </div>
           </div>
+        </div>
+      </Card>
+
+      <Card
+        className="logixfast-auth-card--flush-body"
+        title={
+          <span className="logixfast-auth-card-title-row">
+            <span className="logixfast-auth-card-title-icon logixfast-auth-card-title-icon--primary">
+              <Icon icon={AtSign} size={18} />
+            </span>
+            Email Provider Restrictions
+          </span>
+        }
+        description="Control which email providers and domains can be used for new registrations."
+        bodyClassName="logixfast-auth-card-body--flush"
+      >
+        <div className="logixfast-auth-email-provider-panel">
+          <div className="logixfast-auth-setting-row logixfast-auth-email-provider-panel__toggle">
+            <div className="logixfast-auth-setting-row-text">
+              <div className="logixfast-auth-setting-row-title">Enable email provider restriction</div>
+              <p className="logixfast-auth-setting-row-desc">
+                This restriction applies to new registrations only. Existing users can continue signing in.
+              </p>
+            </div>
+            <Toggle
+              checked={restrictionEnabled}
+              onChange={(e) => updateSection('auth', { email_provider_restriction_enabled: e.target.checked })}
+              ariaLabel="Enable email provider restriction"
+            />
+          </div>
+
+          {restrictionEnabled && (
+            <div className="logixfast-auth-email-provider-panel__controls">
+              {!hasAllowedProvider && (
+                <NoticeBanner variant="warning" title="No providers selected">
+                  <p>No email providers are currently allowed. New email registrations will be blocked.</p>
+                </NoticeBanner>
+              )}
+
+              <div className="logixfast-auth-email-provider-presets">
+                <h4 className="logixfast-auth-email-provider-panel__heading">Allowed providers</h4>
+                <div className="logixfast-auth-email-provider-presets__grid">
+                  {emailProviderPresets.map((provider) => (
+                    <Checkbox
+                      key={provider.key}
+                      label={provider.label}
+                      checked={allowedProviders.includes(provider.key)}
+                      onChange={(e) => toggleEmailProvider(provider.key, e.target.checked)}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <Field
+                label="Custom allowed domains"
+                htmlFor="logixfast-auth-custom-email-domains"
+                help="One domain per line, for example company.com"
+              >
+                <Textarea
+                  id="logixfast-auth-custom-email-domains"
+                  rows={4}
+                  value={customDomains.join('\n')}
+                  onChange={(e) =>
+                    updateSection('auth', {
+                      email_allowed_custom_domains: e.target.value.split(/\r?\n/),
+                    })
+                  }
+                  placeholder={'company.com\nuniversity.edu'}
+                />
+              </Field>
+            </div>
+          )}
         </div>
       </Card>
 

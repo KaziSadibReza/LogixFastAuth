@@ -352,6 +352,9 @@ export function AuthPageSkeleton() {
       <SkeletonCardFrame flush>
         <SkeletonRegFieldsColumns />
       </SkeletonCardFrame>
+      <SkeletonCardFrame flush>
+        <SkeletonSettingList rows={2} />
+      </SkeletonCardFrame>
     </>
   );
 }

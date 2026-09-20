@@ -8,6 +8,7 @@
 namespace LogixFastAuth\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 use LogixFastAuth\Services\AuthService;
+use LogixFastAuth\Services\EmailProviderPolicy;
 use LogixFastAuth\Services\StatsService;
 use LogixFastAuth\Services\OtpService;
 use LogixFastAuth\Services\RateLimiter;
@@ -516,6 +517,11 @@ class AuthController {
 				__( 'Please enter a valid email address.', 'logixfast-auth' ),
 				array( 'status' => 400 )
 			);
+		}
+
+		$provider_check = ( new EmailProviderPolicy() )->validate( $email );
+		if ( is_wp_error( $provider_check ) ) {
+			return $provider_check;
 		}
 
 		$auth_service = new AuthService();

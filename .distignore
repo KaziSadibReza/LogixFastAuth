@@ -17,6 +17,11 @@ build/
 .wordpress-org
 phpcs.xml.dist
 phpcs.xml
+phpunit.xml.dist
+phpunit.xml
+tests
+.phpunit.cache
+.phpunit.result.cache
 composer.phar
 .env
 .env.*

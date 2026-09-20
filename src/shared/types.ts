@@ -96,6 +96,9 @@ export interface LogixFastAuthSettings {
     login_allow_username: boolean;
     show_username_field: boolean;
     use_custom_placeholders: boolean;
+    email_provider_restriction_enabled?: boolean;
+    email_allowed_providers?: string[];
+    email_allowed_custom_domains?: string[];
     placeholders: {
       login_identifier: string;
       register_username: string;

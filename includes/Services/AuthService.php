@@ -46,6 +46,11 @@ class AuthService {
 			return new WP_Error( 'logixfast_auth_invalid_email', __( 'Please enter a valid email address.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
+		$provider_check = ( new EmailProviderPolicy() )->validate( $email );
+		if ( is_wp_error( $provider_check ) ) {
+			return $provider_check;
+		}
+
 		if ( strlen( (string) $password ) < 8 ) {
 			return new WP_Error( 'logixfast_auth_password_short', __( 'Password must be at least 8 characters.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
@@ -120,6 +125,14 @@ class AuthService {
 		$pending = ( new PendingRegistrationService() )->consume( $token, $identifier, $channel );
 		if ( is_wp_error( $pending ) ) {
 			return $pending;
+		}
+
+		$email = sanitize_email( $pending['email'] ?? '' );
+		if ( is_email( $email ) ) {
+			$provider_check = ( new EmailProviderPolicy() )->validate( $email );
+			if ( is_wp_error( $provider_check ) ) {
+				return $provider_check;
+			}
 		}
 
 		if ( email_exists( $pending['email'] ) ) {

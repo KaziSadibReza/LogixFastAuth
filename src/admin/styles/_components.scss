@@ -2706,6 +2706,43 @@
   gap: 12px;
 }
 
+.logixfast-auth-email-provider-panel {
+  padding: 20px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.logixfast-auth-email-provider-panel__toggle {
+  margin: 0;
+  padding-bottom: 4px;
+}
+
+.logixfast-auth-email-provider-panel__controls {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.logixfast-auth-email-provider-panel__heading {
+  margin: 0 0 12px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--logixfast-auth-text-300);
+}
+
+.logixfast-auth-email-provider-presets__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 20px;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
 .logixfast-auth-placeholder-panel {
   padding: 20px 24px 24px;
   display: flex;

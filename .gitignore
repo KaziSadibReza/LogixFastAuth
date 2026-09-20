@@ -1,10 +1,14 @@
 node_modules/
 vendor/
+.phpunit.cache/
+.phpunit.result.cache
 .worktree-production/
 .logixfast-auth-svn/
 build/
 composer.phar
 .DS_Store
+Thumbs.db
+Desktop.ini
 *.log
 .env
 .env.*
