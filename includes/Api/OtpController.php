@@ -8,6 +8,7 @@
 namespace LogixFastAuth\Api; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 use LogixFastAuth\Services\AuthService;
+use LogixFastAuth\Services\EmailProviderPolicy;
 use LogixFastAuth\Services\RedirectService;
 use LogixFastAuth\Services\StatsService;
 use LogixFastAuth\Services\OtpService;
@@ -253,6 +254,13 @@ class OtpController {
 
 		if ( 'email' === $channel && ! is_email( $identifier ) ) {
 			return new \WP_Error( 'logixfast_auth_invalid_email', __( 'Please enter a valid email address.', 'logixfast-auth' ), array( 'status' => 400 ) );
+		}
+
+		if ( 'email' === $channel && 'register' === $purpose ) {
+			$provider_check = ( new EmailProviderPolicy() )->validate( $identifier );
+			if ( is_wp_error( $provider_check ) ) {
+				return $provider_check;
+			}
 		}
 
 		if ( 'register' === $purpose && empty( $pending_token ) ) {

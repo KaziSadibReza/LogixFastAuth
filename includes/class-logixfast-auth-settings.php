@@ -8,6 +8,7 @@
 namespace LogixFastAuth; // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedNamespaceFound -- LogixFastAuth is the plugin prefix.
 
 use LogixFastAuth\Integrations\Integration_Availability;
+use LogixFastAuth\Services\EmailProviderPolicy;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -65,6 +66,9 @@ class Settings {
 				'login_allow_username' => false,
 				'show_username_field'      => false,
 				'use_custom_placeholders'  => false,
+				'email_provider_restriction_enabled' => false,
+				'email_allowed_providers'            => array(),
+				'email_allowed_custom_domains'       => array(),
 				'placeholders'             => array(
 					'login_identifier'   => '',
 					'register_username'  => '',
@@ -354,6 +358,7 @@ class Settings {
 			'login_allow_username',
 			'show_username_field',
 			'use_custom_placeholders',
+			'email_provider_restriction_enabled',
 		);
 
 		foreach ( $bool_keys as $key ) {
@@ -370,6 +375,8 @@ class Settings {
 				: (string) $default_value;
 		}
 		$section['placeholders'] = $sanitized_placeholders;
+		$section['email_allowed_providers']      = EmailProviderPolicy::sanitize_provider_keys( $section['email_allowed_providers'] ?? array() );
+		$section['email_allowed_custom_domains'] = EmailProviderPolicy::sanitize_custom_domains( $section['email_allowed_custom_domains'] ?? array() );
 
 		if (
 			empty( $section['login_allow_email'] )
@@ -490,6 +497,7 @@ class Settings {
 				'errorRequired'      => __( 'Please fill in all required fields.', 'logixfast-auth' ),
 				'errorLoginRequired'   => self::build_login_required_message( $auth ),
 				'errorInvalidEmail'    => __( 'Please enter a valid email address.', 'logixfast-auth' ),
+				'errorEmailProvider'   => __( 'This email provider is not allowed. Please use an approved email address.', 'logixfast-auth' ),
 				'errorPhone'         => __( 'Please enter a valid phone number.', 'logixfast-auth' ),
 				'errorPasswordMin'     => __( 'Password must be at least 8 characters.', 'logixfast-auth' ),
 				'errorOtp'           => __( 'Please enter the 6-digit code.', 'logixfast-auth' ),
