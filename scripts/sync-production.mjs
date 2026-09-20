@@ -109,6 +109,12 @@ function ensureWorktree() {
 		return;
 	}
 
+	runOrNull(`git fetch ${REMOTE} ${PRODUCTION_BRANCH}`);
+	if (runOrNull(`git show-ref --verify --quiet refs/remotes/${REMOTE}/${PRODUCTION_BRANCH}`)) {
+		run(`git worktree add -b ${PRODUCTION_BRANCH} "${WORKTREE}" ${REMOTE}/${PRODUCTION_BRANCH}`);
+		return;
+	}
+
 	run(`git worktree add -b ${PRODUCTION_BRANCH} "${WORKTREE}"`);
 }
 

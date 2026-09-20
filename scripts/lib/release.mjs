@@ -55,6 +55,10 @@ export function readPluginVersion() {
 }
 
 export function ensureDevelopmentBranch() {
+	if (process.env.GITHUB_REF === 'refs/heads/development') {
+		return;
+	}
+
 	const branch = runOrNull('git branch --show-current');
 	if (!branch) {
 		throw new Error('Detached HEAD detected. Checkout the development branch first.');

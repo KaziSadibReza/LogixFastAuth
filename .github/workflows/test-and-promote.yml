@@ -1,0 +1,56 @@
+name: Test and promote production
+
+on:
+  push:
+    branches:
+      - development
+
+permissions:
+  contents: write
+
+concurrency:
+  group: test-and-promote-production
+  cancel-in-progress: true
+
+jobs:
+  test-and-promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout development
+        uses: actions/checkout@v4
+        with:
+          ref: development
+          fetch-depth: 0
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+          coverage: none
+          tools: composer
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install PHP dependencies
+        run: composer install --prefer-dist --no-interaction
+
+      - name: Run PHP tests
+        run: composer test
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Fetch production branch
+        run: git fetch origin production || true
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Promote runtime files to production
+        run: node scripts/sync-production.mjs --push
