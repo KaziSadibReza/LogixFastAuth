@@ -45,7 +45,7 @@ jobs:
         run: npm ci
 
       - name: Fetch production branch
-        run: git fetch origin production || true
+        run: git fetch origin production:refs/remotes/origin/production || true
 
       - name: Configure git
         run: |

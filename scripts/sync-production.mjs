@@ -55,9 +55,9 @@ function parseArgs(argv) {
 	return args;
 }
 
-function branchExists(name) {
+function refExists(ref) {
 	try {
-		run(`git show-ref --verify --quiet refs/heads/${name}`);
+		run(`git show-ref --verify --quiet ${ref}`);
 		return true;
 	} catch {
 		return false;
@@ -97,21 +97,36 @@ function migrateLegacyWorktree() {
 
 function ensureWorktree() {
 	migrateLegacyWorktree();
+	runOrNull(`git fetch ${REMOTE} ${PRODUCTION_BRANCH}`);
+
+	const remoteBranch = `refs/remotes/${REMOTE}/${PRODUCTION_BRANCH}`;
+	const localBranch = `refs/heads/${PRODUCTION_BRANCH}`;
 
 	if (worktreeExists()) {
+		if (refExists(remoteBranch)) {
+			run(`git pull --ff-only ${REMOTE} ${PRODUCTION_BRANCH}`, {
+				cwd: WORKTREE,
+				stdio: 'inherit',
+			});
+		}
 		return;
 	}
 
 	fs.mkdirSync(WORKTREE, { recursive: true });
 
-	if (branchExists(PRODUCTION_BRANCH)) {
-		run(`git worktree add "${WORKTREE}" ${PRODUCTION_BRANCH}`);
+	if (refExists(remoteBranch) && !refExists(localBranch)) {
+		run(`git worktree add -b ${PRODUCTION_BRANCH} "${WORKTREE}" ${REMOTE}/${PRODUCTION_BRANCH}`);
 		return;
 	}
 
-	runOrNull(`git fetch ${REMOTE} ${PRODUCTION_BRANCH}`);
-	if (runOrNull(`git show-ref --verify --quiet refs/remotes/${REMOTE}/${PRODUCTION_BRANCH}`)) {
-		run(`git worktree add -b ${PRODUCTION_BRANCH} "${WORKTREE}" ${REMOTE}/${PRODUCTION_BRANCH}`);
+	if (refExists(localBranch)) {
+		run(`git worktree add "${WORKTREE}" ${PRODUCTION_BRANCH}`);
+		if (refExists(remoteBranch)) {
+			run(`git pull --ff-only ${REMOTE} ${PRODUCTION_BRANCH}`, {
+				cwd: WORKTREE,
+				stdio: 'inherit',
+			});
+		}
 		return;
 	}
 
