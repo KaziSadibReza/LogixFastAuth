@@ -100,6 +100,17 @@ class OtpController {
 					'cooldown' => (int) ( $security['otp_resend_cooldown'] ?? 60 ),
 				) );
 			}
+
+			$bound = $this->bind_email_delivery( $user_id, $identifier, $channel );
+			if ( null === $bound ) {
+				$security = Settings::get( 'security' );
+				return rest_ensure_response( array(
+					'sent'     => true,
+					'channel'  => $channel,
+					'cooldown' => (int) ( $security['otp_resend_cooldown'] ?? 60 ),
+				) );
+			}
+			$identifier = $bound;
 		}
 
 		if ( 'reset' === $purpose ) {
@@ -110,6 +121,15 @@ class OtpController {
 					'channel' => $channel,
 				) );
 			}
+
+			$bound = $this->bind_email_delivery( $user_id, $identifier, $channel );
+			if ( null === $bound ) {
+				return rest_ensure_response( array(
+					'sent'    => true,
+					'channel' => $channel,
+				) );
+			}
+			$identifier = $bound;
 		}
 
 		$result = ( new OtpService() )->send( $identifier, $channel, $purpose );
@@ -186,6 +206,10 @@ class OtpController {
 				return $user_id;
 			}
 
+			if ( null === $this->bind_email_delivery( $user_id, $identifier, $channel ) ) {
+				return new \WP_Error( 'logixfast_auth_otp_invalid', __( 'Invalid or expired code.', 'logixfast-auth' ), array( 'status' => 400 ) );
+			}
+
 			$reset_token = $auth_service->issue_password_reset_token( $user_id );
 			if ( is_wp_error( $reset_token ) ) {
 				return $reset_token;
@@ -223,6 +247,10 @@ class OtpController {
 		$user_id = $auth_service->resolve_user_for_login_otp( $identifier, $channel );
 		if ( is_wp_error( $user_id ) ) {
 			return $user_id;
+		}
+
+		if ( null === $this->bind_email_delivery( $user_id, $identifier, $channel ) ) {
+			return new \WP_Error( 'logixfast_auth_otp_invalid', __( 'Invalid or expired code.', 'logixfast-auth' ), array( 'status' => 400 ) );
 		}
 
 		$auth_result = $auth_service->authenticate_user( $user_id, ! empty( $data['remember'] ) );
@@ -277,6 +305,30 @@ class OtpController {
 		}
 
 		return true;
+	}
+
+	/**
+	 * Use the account email for delivery when the channel is email.
+	 *
+	 * Returns null when the submitted address is not that account's registered email.
+	 * Phone delivery is unchanged.
+	 *
+	 * @param int    $user_id    Resolved user ID.
+	 * @param string $identifier Submitted identifier.
+	 * @param string $channel    email|phone.
+	 * @return string|null Delivery identifier, or null to refuse.
+	 */
+	private function bind_email_delivery( $user_id, $identifier, $channel ) {
+		if ( 'email' !== $channel ) {
+			return $identifier;
+		}
+
+		$user = get_user_by( 'id', $user_id );
+		if ( ! $user instanceof \WP_User || ! AuthService::emails_match( $identifier, $user->user_email ) ) {
+			return null;
+		}
+
+		return $user->user_email;
 	}
 
 	/**

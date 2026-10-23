@@ -210,6 +210,9 @@ class SettingsController {
 		if ( ! empty( $settings['mail']['smtp_pass'] ) ) {
 			$settings['mail']['smtp_pass'] = '********';
 		}
+		if ( ! empty( $settings['mail']['google_smtp_pass'] ) ) {
+			$settings['mail']['google_smtp_pass'] = '********';
+		}
 		if ( ! empty( $settings['mail']['google_refresh_token'] ) ) {
 			$settings['mail']['google_refresh_token'] = '********';
 		}
@@ -262,6 +265,17 @@ class SettingsController {
 					unset( $section_data['smtp_pass'] );
 				} elseif ( ! empty( $section_data['smtp_pass'] ) ) {
 					$section_data['smtp_pass'] = MailService::encrypt_secret( $section_data['smtp_pass'] );
+				}
+
+				if ( isset( $section_data['google_smtp_user'] ) ) {
+					$section_data['google_smtp_user'] = sanitize_email( (string) $section_data['google_smtp_user'] );
+				}
+
+				if ( isset( $section_data['google_smtp_pass'] ) && '********' === $section_data['google_smtp_pass'] ) {
+					unset( $section_data['google_smtp_pass'] );
+				} elseif ( ! empty( $section_data['google_smtp_pass'] ) ) {
+					$app_password = preg_replace( '/\s+/', '', (string) $section_data['google_smtp_pass'] );
+					$section_data['google_smtp_pass'] = MailService::encrypt_secret( $app_password );
 				}
 
 				if ( isset( $section_data['google_refresh_token'] ) && '********' === $section_data['google_refresh_token'] ) {

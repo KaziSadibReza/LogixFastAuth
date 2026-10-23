@@ -523,15 +523,23 @@ class AuthService {
 			}
 		}
 
-		$local_part = strstr( $email, '@', true );
-		if ( is_string( $local_part ) && '' !== $local_part ) {
-			$user = get_user_by( 'login', sanitize_user( $local_part, true ) );
-			if ( $user instanceof WP_User ) {
-				return $user;
-			}
-		}
-
 		return null;
+	}
+
+	/**
+	 * Whether a submitted address is exactly the account's registered email.
+	 *
+	 * Comparison is case-insensitive. The local part is never matched to a username.
+	 *
+	 * @param string $submitted  Address from the request.
+	 * @param string $registered Account email.
+	 * @return bool
+	 */
+	public static function emails_match( $submitted, $registered ) {
+		$submitted  = strtolower( sanitize_email( (string) $submitted ) );
+		$registered = strtolower( sanitize_email( (string) $registered ) );
+
+		return '' !== $submitted && is_email( $submitted ) && $submitted === $registered;
 	}
 
 	/**

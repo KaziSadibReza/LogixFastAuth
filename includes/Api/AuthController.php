@@ -279,6 +279,17 @@ class AuthController {
 				) );
 			}
 
+			if ( 'email' === $channel ) {
+				$user = get_user_by( 'id', $user_id );
+				if ( ! $user instanceof \WP_User || ! AuthService::emails_match( $identifier, $user->user_email ) ) {
+					return rest_ensure_response( array(
+						'requiresOtp' => true,
+						'otpChannel'  => $channel,
+					) );
+				}
+				$identifier = $user->user_email;
+			}
+
 			$otp_rate = RateLimiter::throttle_scoped( 'otp_send', 'login:' . strtolower( $identifier ) );
 			if ( is_wp_error( $otp_rate ) ) {
 				return $otp_rate;
@@ -390,9 +401,16 @@ class AuthController {
 		$otp_identifier = $identifier;
 		$otp_channel    = $channel;
 
-		if ( 'username' === $channel ) {
+		if ( 'username' === $channel || 'email' === $channel ) {
 			$user = get_user_by( 'id', $user_id );
-			if ( ! $user instanceof \WP_User ) {
+			if ( ! $user instanceof \WP_User || ! is_email( $user->user_email ) ) {
+				return rest_ensure_response( array(
+					'sent'    => true,
+					'channel' => $channel,
+				) );
+			}
+
+			if ( 'email' === $channel && ! AuthService::emails_match( $identifier, $user->user_email ) ) {
 				return rest_ensure_response( array(
 					'sent'    => true,
 					'channel' => $channel,

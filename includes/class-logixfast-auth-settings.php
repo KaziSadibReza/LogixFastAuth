@@ -93,6 +93,8 @@ class Settings {
 				'google_client_id'       => '',
 				'google_client_secret'   => '',
 				'google_account_email'   => '',
+				'google_smtp_user'       => '',
+				'google_smtp_pass'       => '',
 			),
 		'integrations'   => array(
 			'replace_wp_login'        => false,

@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'kazi-sadib-reza/logixfast-auth',
-        'pretty_version' => '1.0.3',
-        'version' => '1.0.3.0',
+        'pretty_version' => '1.0.4',
+        'version' => '1.0.4.0',
         'reference' => null,
         'type' => 'wordpress-plugin',
         'install_path' => __DIR__ . '/../../',
@@ -44,8 +44,8 @@
             'dev_requirement' => false,
         ),
         'kazi-sadib-reza/logixfast-auth' => array(
-            'pretty_version' => '1.0.3',
-            'version' => '1.0.3.0',
+            'pretty_version' => '1.0.4',
+            'version' => '1.0.4.0',
             'reference' => null,
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../',
