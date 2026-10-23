@@ -4,7 +4,7 @@ Tags: login, registration, otp, webauthn, woocommerce
 Requires at least: 6.8
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,9 @@ Nothing by default. External requests happen only when you configure Gmail SMTP 
 
 == Changelog ==
 
+= 1.0.4 =
+* Security: password-reset and login codes are delivered only to an account's registered email address. An email address is no longer matched to a username. Reported by Naoki Kawahigashi.
+
 = 1.0.3 =
 * Login identifiers (email, phone, username) and optional username registration
 * Custom auth placeholders and email OTP default-on
@@ -113,6 +116,9 @@ Nothing by default. External requests happen only when you configure Gmail SMTP 
 * Initial release
 
 == Upgrade Notice ==
+
+= 1.0.4 =
+Security fix for password reset. Update immediately.
 
 = 1.0.3 =
 Login identifiers, username registration, Tutor 4 passkeys fix, and release tooling updates.
