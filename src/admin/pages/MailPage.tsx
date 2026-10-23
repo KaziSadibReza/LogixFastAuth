@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
 import {
   KeyRound,
   Lock,
@@ -13,8 +12,7 @@ import {
   UserRoundPlus,
   Zap,
 } from 'lucide-react';
-import { disconnectGoogle, getGoogleOAuthUrl, testSmtp } from '../api/settings';
-import { GoogleOAuthSetupGuide } from '../components/GoogleOAuthSetupGuide';
+import { disconnectGoogle, testSmtp } from '../api/settings';
 import { useSettings } from '../context/SettingsContext';
 import {
   Badge,
@@ -22,7 +20,6 @@ import {
   Card,
   Field,
   GoogleIcon,
-  HelpTooltip,
   Icon,
   Input,
   IntegrationIconCard,
@@ -57,7 +54,7 @@ const transports = [
   {
     value: 'google',
     title: 'Google SMTP',
-    description: 'Routes all WordPress email through Gmail OAuth.',
+    description: 'Send through Gmail with an email address and app password.',
     variant: 'google' as const,
     customIcon: <GoogleIcon size={22} />,
   },
@@ -66,28 +63,22 @@ const transports = [
 export function MailPage() {
   const { settings, updateSection, loading, save, reload, dirty } = useSettings();
   const [testing, setTesting] = useState(false);
-  const [connecting, setConnecting] = useState(false);
   const [disconnecting, setDisconnecting] = useState(false);
   const [conflictDismissed, setConflictDismissed] = useState(false);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [testEmail, setTestEmail] = useState('');
+  const [testEmailReady, setTestEmailReady] = useState(false);
   const toast = useToast();
 
   useEffect(() => {
-    const status = searchParams.get('google');
-    if (!status) return;
-
-    const message = searchParams.get('google_message');
-
-    if (status === 'connected') {
-      reload().then(() => toast.success('Google account connected. Gmail SMTP is ready.', 'Connected'));
-    } else if (status === 'error') {
-      toast.error(message ? decodeURIComponent(message) : 'Google connection failed.', 'Connection failed');
-    }
-
-    searchParams.delete('google');
-    searchParams.delete('google_message');
-    setSearchParams(searchParams, { replace: true });
-  }, [searchParams, setSearchParams, reload, toast]);
+    if (!settings || testEmailReady) return;
+    const mail = settings.mail;
+    const initial =
+      mail.transport === 'google' && mail.google_smtp_user?.trim()
+        ? mail.google_smtp_user.trim()
+        : mail.from_email;
+    setTestEmail(initial);
+    setTestEmailReady(true);
+  }, [settings, testEmailReady]);
 
   if (loading || !settings) {
     return <MailPageSkeleton />;
@@ -100,53 +91,33 @@ export function MailPage() {
   const conflictNames = smtpConflicts.map((plugin) => plugin.name).join(', ');
   const usingLogixFastAuthSmtp = m.transport === 'smtp' || m.transport === 'google';
 
+  const gmailReady = Boolean(m.google_smtp_user?.trim() && m.google_smtp_pass);
+  const gmailAddress = m.google_smtp_user?.trim() ?? '';
+  const usingGmailAccount = m.transport === 'google' && Boolean(gmailAddress);
   const transportBadge =
     m.transport === 'wp_mail'
       ? { variant: 'default' as const, label: 'WP default' }
-      : m.transport === 'google' && m.google_connected
-        ? { variant: 'success' as const, label: 'Google connected' }
+      : m.transport === 'google' && (gmailReady || m.google_connected)
+        ? { variant: 'success' as const, label: gmailReady ? 'Gmail ready' : 'Google connected' }
         : { variant: 'info' as const, label: 'Custom' };
 
   const handleTest = async () => {
-    if (!m.from_email) {
-      toast.warning('Set a From email first.');
+    const recipient = testEmail.trim();
+    if (!recipient) {
+      toast.warning('Enter the address that should receive the test.');
       return;
     }
     setTesting(true);
     try {
-      await testSmtp(m.from_email);
-      toast.success(`Test email sent to ${m.from_email}.`, 'Delivered');
+      if (dirty) {
+        await save();
+      }
+      await testSmtp(recipient);
+      toast.success(`Test email sent to ${recipient}.`, 'Delivered');
     } catch (e) {
       toast.error(e instanceof Error ? e.message : 'Failed to send.', 'SMTP test failed');
     } finally {
       setTesting(false);
-    }
-  };
-
-  const handleGoogleConnect = async () => {
-    if (!m.google_client_id?.trim()) {
-      toast.warning('Enter your Google Client ID and save changes first.');
-      return;
-    }
-
-    const hasSecret =
-      m.google_configured ||
-      (m.google_client_secret?.trim() && m.google_client_secret !== '********');
-    if (!hasSecret) {
-      toast.warning('Enter your Google Client Secret and save changes first.');
-      return;
-    }
-
-    setConnecting(true);
-    try {
-      if (dirty) {
-        await save();
-      }
-      const { url } = await getGoogleOAuthUrl();
-      window.location.href = url;
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : 'Could not start Google sign-in.', 'Google OAuth');
-      setConnecting(false);
     }
   };
 
@@ -265,85 +236,55 @@ export function MailPage() {
           )}
 
           {m.transport === 'google' && (
-            <div className="logixfast-auth-mail-transport-config logixfast-auth-mail-google-panel">
-              <div className="logixfast-auth-mail-google-columns">
-                <div className="logixfast-auth-mail-google-credentials">
-                  <div className="logixfast-auth-integration-panel-head logixfast-auth-integration-panel-head--with-help">
-                    <div>
-                      <h4 className="logixfast-auth-integration-panel-title">Google OAuth credentials</h4>
-                      <p className="logixfast-auth-integration-panel-desc">
-                        Create a Google Cloud OAuth app once, then connect with one click.
-                      </p>
-                    </div>
-                    <HelpTooltip label="How to get Google OAuth credentials">
-                      <GoogleOAuthSetupGuide />
-                    </HelpTooltip>
-                  </div>
-                  <div className="logixfast-auth-form-stack">
-                    <Field label="Client ID" required>
-                      <Input
-                        value={m.google_client_id ?? ''}
-                        onChange={(e) => updateSection('mail', { google_client_id: e.target.value })}
-                        placeholder="xxxx.apps.googleusercontent.com"
-                      />
-                    </Field>
-                    <Field label="Client Secret" help="Stored encrypted. Leave unchanged to keep saved secret.">
-                      <Input
-                        type="password"
-                        value={m.google_client_secret ?? ''}
-                        onChange={(e) => updateSection('mail', { google_client_secret: e.target.value })}
-                        placeholder="••••••••"
-                        icon={Lock}
-                      />
-                    </Field>
-                    {m.google_redirect_uri && (
-                      <Field label="Authorized redirect URI" help="Add this exact URL in Google Cloud Console.">
-                        <Input value={m.google_redirect_uri} readOnly />
-                      </Field>
-                    )}
-                  </div>
-                </div>
-
-                <div className="logixfast-auth-mail-google-divider" aria-hidden="true" />
-
-                <div className="logixfast-auth-mail-google-connect">
-                  {m.google_connected ? (
-                    <div className="logixfast-auth-google-connected-card">
-                      <div className="logixfast-auth-google-connected-card__icon">
-                        <GoogleIcon size={28} />
-                      </div>
-                      <div className="logixfast-auth-google-connected-card__body">
-                        <strong>Connected to Google</strong>
-                        <div className="logixfast-auth-google-connected-card__meta">
-                          <span>{m.google_account_email || m.from_email}</span>
-                          <Badge variant="success" dot>
-                            Active
-                          </Badge>
-                        </div>
-                      </div>
-                      <Button variant="secondary" onClick={handleGoogleDisconnect} loading={disconnecting}>
-                        Disconnect
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="logixfast-auth-google-connect-card">
-                      <div className="logixfast-auth-google-connect-card__icon">
-                        <GoogleIcon size={32} />
-                      </div>
-                      <h4>Connect Gmail in one click</h4>
-                      <p>Sign in with Google to authorize SMTP sending. No manual tokens needed.</p>
-                      <Button
-                        variant="primary"
-                        customIcon={<GoogleIcon size={18} />}
-                        onClick={handleGoogleConnect}
-                        loading={connecting}
-                      >
-                        Sign in with Google
-                      </Button>
-                    </div>
-                  )}
-                </div>
+            <div className="logixfast-auth-mail-transport-config">
+              <div className="logixfast-auth-form-grid logixfast-auth-form-grid--tight">
+                <Field label="Gmail address" required>
+                  <Input
+                    type="email"
+                    value={m.google_smtp_user ?? ''}
+                    onChange={(e) =>
+                      updateSection('mail', {
+                        google_smtp_user: e.target.value,
+                        from_email: e.target.value.trim(),
+                      })
+                    }
+                    placeholder="you@gmail.com"
+                    icon={Mail}
+                  />
+                </Field>
+                <Field
+                  label="App password"
+                  help="Not your normal Gmail password. Leave unchanged to keep the saved password."
+                >
+                  <Input
+                    type="password"
+                    value={m.google_smtp_pass ?? ''}
+                    onChange={(e) => updateSection('mail', { google_smtp_pass: e.target.value })}
+                    placeholder="16-character app password"
+                    icon={Lock}
+                  />
+                </Field>
               </div>
+              <p className="logixfast-auth-field-help">
+                Turn on 2-Step Verification, then create an app password at{' '}
+                <a href="https://myaccount.google.com/apppasswords" target="_blank" rel="noopener noreferrer">
+                  myaccount.google.com/apppasswords
+                </a>
+                . No Google Cloud Console project is required. Mail is sent through smtp.gmail.com.
+              </p>
+              {m.google_connected && !gmailReady && (
+                <div className="logixfast-auth-google-connected-card">
+                  <div className="logixfast-auth-google-connected-card__body">
+                    <strong>Older Google connection is still active</strong>
+                    <div className="logixfast-auth-google-connected-card__meta">
+                      <span>{m.google_account_email || 'Connected account'}</span>
+                    </div>
+                  </div>
+                  <Button variant="secondary" onClick={handleGoogleDisconnect} loading={disconnecting}>
+                    Disconnect
+                  </Button>
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -362,10 +303,15 @@ export function MailPage() {
           description="How your messages appear in the inbox."
         >
           <div className="logixfast-auth-form-grid">
-            <Field label="From email" required>
+            <Field
+              label="From email"
+              required
+              help={usingGmailAccount ? 'Updates only when you edit the Gmail address above.' : undefined}
+            >
               <Input
                 type="email"
-                value={m.from_email}
+                value={usingGmailAccount ? gmailAddress : m.from_email}
+                readOnly={usingGmailAccount}
                 onChange={(e) => updateSection('mail', { from_email: e.target.value })}
                 placeholder="noreply@yoursite.com"
                 icon={Mail}
@@ -391,9 +337,18 @@ export function MailPage() {
               Test delivery
             </span>
           }
-          description={`Send a test to ${m.from_email || 'your From email'}.`}
+          description="Choose who receives the test. This does not change the SMTP account."
         >
           <div className="logixfast-auth-mail-test-panel">
+            <Field label="Send test to">
+              <Input
+                type="email"
+                value={testEmail}
+                onChange={(e) => setTestEmail(e.target.value)}
+                placeholder="you@example.com"
+                icon={Mail}
+              />
+            </Field>
             <p className="logixfast-auth-mail-test-hint">
               Verifies your current transport settings before users receive OTP emails.
             </p>

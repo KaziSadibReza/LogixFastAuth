@@ -125,6 +125,8 @@ export interface LogixFastAuthSettings {
     google_client_id?: string;
     google_client_secret?: string;
     google_account_email?: string;
+    google_smtp_user?: string;
+    google_smtp_pass?: string;
     google_configured?: boolean;
     google_redirect_uri?: string;
   };

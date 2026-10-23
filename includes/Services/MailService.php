@@ -86,7 +86,7 @@ class MailService {
 		}
 
 		if ( 'google' === $transport ) {
-			return ! empty( $settings['google_connected'] ) && ! empty( $settings['google_refresh_token'] );
+			return self::has_google_credentials( $settings );
 		}
 
 		return false;
@@ -181,8 +181,12 @@ class MailService {
 			)
 		);
 
-		if ( 'google' === ( $settings['transport'] ?? 'wp_mail' ) && empty( $settings['google_connected'] ) ) {
-			return new WP_Error( 'logixfast_auth_google_not_connected', __( 'Google SMTP is not connected.', 'logixfast-auth' ), array( 'status' => 503 ) );
+		if ( 'google' === ( $settings['transport'] ?? 'wp_mail' ) && ! self::has_google_credentials( $settings ) ) {
+			return new WP_Error(
+				'logixfast_auth_google_not_connected',
+				__( 'Add your Gmail address and app password, then save.', 'logixfast-auth' ),
+				array( 'status' => 503 )
+			);
 		}
 
 		$headers = array( 'Content-Type: ' . $args['content_type'] . '; charset=UTF-8' );
@@ -237,7 +241,7 @@ class MailService {
 
 		if ( 'smtp' === $transport ) {
 			$this->apply_smtp_transport( $phpmailer, $settings );
-		} elseif ( 'google' === $transport && ! empty( $settings['google_connected'] ) ) {
+		} elseif ( 'google' === $transport && self::has_google_credentials( $settings ) ) {
 			$this->apply_google_transport( $phpmailer, $settings );
 		} else {
 			return;
@@ -272,6 +276,23 @@ class MailService {
 	}
 
 	/**
+	 * Whether Google SMTP can authenticate with an app password or a saved OAuth token.
+	 *
+	 * @param array $settings Mail settings.
+	 * @return bool
+	 */
+	public static function has_google_credentials( $settings ) {
+		$user = sanitize_email( (string) ( $settings['google_smtp_user'] ?? '' ) );
+		$pass = trim( (string) ( $settings['google_smtp_pass'] ?? '' ) );
+
+		if ( is_email( $user ) && '' !== $pass ) {
+			return true;
+		}
+
+		return ! empty( $settings['google_connected'] ) && ! empty( $settings['google_refresh_token'] );
+	}
+
+	/**
 	 * Apply custom SMTP settings to PHPMailer.
 	 *
 	 * @param PHPMailer $phpmailer Mailer instance.
@@ -294,13 +315,32 @@ class MailService {
 	}
 
 	/**
-	 * Apply Gmail OAuth SMTP settings to PHPMailer.
+	 * Apply Gmail SMTP settings to PHPMailer.
+	 *
+	 * Uses a Gmail address and app password. An existing OAuth refresh token is
+	 * used only when no app password is saved.
 	 *
 	 * @param PHPMailer $phpmailer Mailer instance.
 	 * @param array     $settings  Mail settings.
 	 * @return void
 	 */
 	private function apply_google_transport( $phpmailer, $settings ) {
+		$user = sanitize_email( (string) ( $settings['google_smtp_user'] ?? '' ) );
+		$pass = $this->decrypt_secret( $settings['google_smtp_pass'] ?? '' );
+
+		if ( '' !== $user && '' !== $pass ) {
+			$phpmailer->isSMTP();
+			$phpmailer->Host       = 'smtp.gmail.com';
+			$phpmailer->Port       = 587;
+			$phpmailer->SMTPSecure = 'tls';
+			$phpmailer->SMTPAuth   = true;
+			$phpmailer->AuthType   = 'LOGIN';
+			$phpmailer->Username   = $user;
+			$phpmailer->Password   = $pass;
+			$phpmailer->CharSet    = 'UTF-8';
+			return;
+		}
+
 		$refresh_token = $this->decrypt_secret( $settings['google_refresh_token'] ?? '' );
 		if ( empty( $refresh_token ) ) {
 			return;
@@ -335,6 +375,10 @@ class MailService {
 	 * @return string
 	 */
 	private function resolve_from_email( $settings ) {
+		if ( 'google' === ( $settings['transport'] ?? '' ) && ! empty( $settings['google_smtp_user'] ) && is_email( $settings['google_smtp_user'] ) ) {
+			return (string) $settings['google_smtp_user'];
+		}
+
 		if ( 'google' === ( $settings['transport'] ?? '' ) && ! empty( $settings['google_account_email'] ) ) {
 			return (string) $settings['google_account_email'];
 		}

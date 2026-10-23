@@ -2069,6 +2069,14 @@
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid var(--logixfast-auth-border);
+
+  > .logixfast-auth-field-help {
+    margin: 14px 0 0;
+  }
+
+  > .logixfast-auth-google-connected-card {
+    margin-top: 16px;
+  }
 }
 
 .logixfast-auth-mail-google-columns {
